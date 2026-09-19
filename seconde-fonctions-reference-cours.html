@@ -1,0 +1,1031 @@
+<title>Fonctions de référence</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+:root {
+  --bg: #f5f2ed;
+  --bg-card: #fffdf8;
+  --heading: #8b4513;
+  --accent: #a0522d;
+  --accent-light: #c4956a;
+  --text: #3b2f2b;
+  --text-muted: #7a6a60;
+  --border: #d6c8b8;
+  --tab-bg: #e8dfd4;
+  --tab-active: #a0522d;
+  --tab-text: #5a4a3e;
+  --correct: #2e7d32;
+  --incorrect: #c62828;
+  --canvas-bg: #fffef9;
+  --canvas-grid: #e0d8ce;
+  --canvas-axis: #3b2f2b;
+  --code-bg: #ece4d8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1e1a16;
+    --bg-card: #2a2420;
+    --heading: #d4a574;
+    --accent: #d4a574;
+    --accent-light: #b08050;
+    --text: #e0d6cc;
+    --text-muted: #9a8a7e;
+    --border: #3e352e;
+    --tab-bg: #2e2822;
+    --tab-active: #d4a574;
+    --tab-text: #b0a090;
+    --correct: #66bb6a;
+    --incorrect: #ef5350;
+    --canvas-bg: #252018;
+    --canvas-grid: #3a332a;
+    --canvas-axis: #c0b0a0;
+    --code-bg: #2e2822;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1e1a16;
+  --bg-card: #2a2420;
+  --heading: #d4a574;
+  --accent: #d4a574;
+  --accent-light: #b08050;
+  --text: #e0d6cc;
+  --text-muted: #9a8a7e;
+  --border: #3e352e;
+  --tab-bg: #2e2822;
+  --tab-active: #d4a574;
+  --tab-text: #b0a090;
+  --correct: #66bb6a;
+  --incorrect: #ef5350;
+  --canvas-bg: #252018;
+  --canvas-grid: #3a332a;
+  --canvas-axis: #c0b0a0;
+  --code-bg: #2e2822;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding-inline: 16px;
+  padding-block: 0;
+  max-width: 960px;
+  margin: 0 auto;
+  line-height: 1.65;
+  font-size: 15px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  color: var(--heading);
+  text-wrap: balance;
+  line-height: 1.2;
+}
+h1 { font-size: 2rem; font-weight: 700; margin: 1.2em 0 0.3em; }
+h2 { font-size: 1.5rem; font-weight: 600; margin: 1.4em 0 0.5em; border-bottom: 2px solid var(--border); padding-bottom: 0.25em; }
+h3 { font-size: 1.15rem; font-weight: 600; margin: 1em 0 0.4em; }
+p { margin: 0.6em 0; }
+
+.subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0 0 1.5em;
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5em;
+  padding-bottom: 0;
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 10;
+  padding-top: 6px;
+}
+.tab-btn {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border: none;
+  background: var(--tab-bg);
+  color: var(--tab-text);
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { background: var(--accent-light); color: #fff; }
+.tab-btn.active { background: var(--tab-active); color: #fff; }
+.tab-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2em 1.4em;
+  margin: 1em 0;
+}
+
+/* Definition box */
+.def-box {
+  border-left: 4px solid var(--accent);
+  background: var(--bg-card);
+  padding: 1em 1.2em;
+  margin: 1em 0;
+  border-radius: 0 6px 6px 0;
+}
+.def-box .label {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3em;
+}
+
+/* Fractions */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  font-size: 0.92em;
+  margin: 0 2px;
+}
+.frac .num { border-bottom: 1px solid currentColor; padding: 0 4px 2px; line-height: 1.2; }
+.frac .den { padding: 2px 4px 0; line-height: 1.2; }
+
+/* Variation table */
+.var-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.var-table th, .var-table td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: center;
+}
+.var-table th {
+  background: var(--tab-bg);
+  color: var(--heading);
+  font-weight: 600;
+}
+.var-table .arrow { font-size: 1.3em; color: var(--accent); }
+
+/* Canvas wrapper */
+.canvas-wrap {
+  background: var(--canvas-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 1em 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.canvas-wrap canvas {
+  max-width: 100%;
+  height: auto;
+  cursor: crosshair;
+}
+.canvas-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Exercises */
+.exercise {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  margin: 1em 0;
+}
+.exercise h3 { margin-top: 0.3em; }
+.correction {
+  background: var(--code-bg);
+  border-left: 3px solid var(--correct);
+  padding: 0.8em 1em;
+  margin-top: 0.8em;
+  border-radius: 0 6px 6px 0;
+}
+.toggle-btn {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.6em;
+  transition: background 0.2s, color 0.2s;
+}
+.toggle-btn:hover { background: var(--accent); color: #fff; }
+.toggle-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* QCM */
+.qcm-question {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1em 1.2em;
+  margin: 0.8em 0;
+}
+.qcm-question .q-text { font-weight: 600; margin-bottom: 0.6em; }
+.qcm-option {
+  display: block;
+  padding: 6px 12px;
+  margin: 4px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-size: 0.92rem;
+}
+.qcm-option:hover { border-color: var(--accent); }
+.qcm-option.selected { border-color: var(--accent); background: var(--tab-bg); }
+.qcm-option.correct-answer { border-color: var(--correct); background: rgba(46,125,50,0.1); }
+.qcm-option.wrong-answer { border-color: var(--incorrect); background: rgba(198,40,40,0.08); }
+.qcm-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 1.2em 0;
+}
+.qcm-bar button {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 8px 24px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.qcm-bar button:hover { opacity: 0.85; }
+.qcm-bar button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.score-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--heading);
+  text-align: center;
+  margin: 0.8em 0;
+}
+
+/* Comparison checkboxes */
+.cb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin: 0.8em 0;
+  font-size: 0.88rem;
+}
+.cb-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.cb-row input[type="checkbox"] { accent-color: var(--accent); }
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  .tab-btn { font-size: 0.72rem; padding: 6px 8px; }
+  .card, .exercise, .qcm-question { padding: 0.8em; }
+  .def-box { padding: 0.8em; }
+  body { font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+
+<h1>Fonctions de r&eacute;f&eacute;rence</h1>
+<p class="subtitle">Classe de Seconde &mdash; Programme de math&eacute;matiques</p>
+
+<nav class="tab-bar" role="tablist" aria-label="Chapitres">
+  <button class="tab-btn active" role="tab" onclick="showTab(0)">Fonction carr&eacute;</button>
+  <button class="tab-btn" role="tab" onclick="showTab(1)">Fonction inverse</button>
+  <button class="tab-btn" role="tab" onclick="showTab(2)">Racine carr&eacute;e</button>
+  <button class="tab-btn" role="tab" onclick="showTab(3)">Fonction cube</button>
+  <button class="tab-btn" role="tab" onclick="showTab(4)">Valeur absolue</button>
+  <button class="tab-btn" role="tab" onclick="showTab(5)">Comparaison</button>
+  <button class="tab-btn" role="tab" onclick="showTab(6)">Exercices</button>
+  <button class="tab-btn" role="tab" onclick="showTab(7)">QCM</button>
+</nav>
+
+<!-- TAB 0: Fonction carré -->
+<section class="tab-content active" id="tab0">
+  <h2>La fonction carr&eacute;</h2>
+
+  <div class="def-box">
+    <div class="label">D&eacute;finition</div>
+    <p>La <strong>fonction carr&eacute;</strong> est d&eacute;finie sur &Ropf; par <strong>f(x) = x&sup2;</strong>.</p>
+    <p>Ensemble de d&eacute;finition : D<sub>f</sub> = &Ropf;</p>
+  </div>
+
+  <h3>Propri&eacute;t&eacute;s</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Parit&eacute; :</strong> f est <em>paire</em> car f(&minus;x) = (&minus;x)&sup2; = x&sup2; = f(x) pour tout x &isin; &Ropf;. Sa courbe est sym&eacute;trique par rapport &agrave; l'axe des ordonn&eacute;es.</li>
+      <li><strong>Signe :</strong> f(x) &ge; 0 pour tout x &isin; &Ropf;, et f(x) = 0 &hArr; x = 0.</li>
+      <li><strong>Images remarquables :</strong> f(0) = 0, f(1) = 1, f(&minus;1) = 1, f(2) = 4, f(&minus;3) = 9.</li>
+    </ul>
+  </div>
+
+  <h3>Variations</h3>
+  <div class="card">
+    <p>La fonction carr&eacute; est :</p>
+    <ul>
+      <li><strong>d&eacute;croissante</strong> sur ]&minus;&infin; ; 0]</li>
+      <li><strong>croissante</strong> sur [0 ; +&infin;[</li>
+    </ul>
+    <p>Le minimum est atteint en x = 0 avec f(0) = 0.</p>
+  </div>
+
+  <div style="overflow-x:auto">
+    <table class="var-table">
+      <tr><th>x</th><td>&minus;&infin;</td><td></td><td>0</td><td></td><td>+&infin;</td></tr>
+      <tr><th>f(x)=x&sup2;</th><td>+&infin;</td><td class="arrow">&searr;</td><td>0</td><td class="arrow">&nearr;</td><td>+&infin;</td></tr>
+    </table>
+  </div>
+
+  <h3>Repr&eacute;sentation graphique</h3>
+  <div class="canvas-wrap">
+    <canvas id="cvCarre" width="500" height="400"></canvas>
+    <div class="canvas-controls">D&eacute;placez la souris pour lire les coordonn&eacute;es</div>
+  </div>
+</section>
+
+<!-- TAB 1: Fonction inverse -->
+<section class="tab-content" id="tab1">
+  <h2>La fonction inverse</h2>
+
+  <div class="def-box">
+    <div class="label">D&eacute;finition</div>
+    <p>La <strong>fonction inverse</strong> est d&eacute;finie sur &Ropf;* par <strong>f(x) = <span class="frac"><span class="num">1</span><span class="den">x</span></span></strong>.</p>
+    <p>Ensemble de d&eacute;finition : D<sub>f</sub> = &Ropf;* = ]&minus;&infin; ; 0[ &cup; ]0 ; +&infin;[</p>
+  </div>
+
+  <h3>Propri&eacute;t&eacute;s</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Parit&eacute; :</strong> f est <em>impaire</em> car f(&minus;x) = <span class="frac"><span class="num">1</span><span class="den">&minus;x</span></span> = &minus;<span class="frac"><span class="num">1</span><span class="den">x</span></span> = &minus;f(x). La courbe admet l'origine comme centre de sym&eacute;trie.</li>
+      <li><strong>Signe :</strong> f(x) est du m&ecirc;me signe que x.</li>
+      <li><strong>Asymptotes :</strong> l'axe des abscisses (y = 0) est asymptote horizontale ; l'axe des ordonn&eacute;es (x = 0) est asymptote verticale.</li>
+    </ul>
+  </div>
+
+  <h3>Variations</h3>
+  <div class="card">
+    <p>La fonction inverse est <strong>strictement d&eacute;croissante</strong> sur chacun des intervalles ]&minus;&infin; ; 0[ et ]0 ; +&infin;[.</p>
+    <p><em>Attention :</em> on ne peut pas dire qu'elle est d&eacute;croissante sur &Ropf;* car cet ensemble n'est pas un intervalle.</p>
+  </div>
+
+  <div style="overflow-x:auto">
+    <table class="var-table">
+      <tr><th>x</th><td>&minus;&infin;</td><td></td><td>0</td><td></td><td>+&infin;</td></tr>
+      <tr><th>f(x)=1/x</th><td>0<sup>&minus;</sup></td><td class="arrow">&searr;</td><td>&Verbar;&Verbar;</td><td class="arrow">&searr;</td><td>0<sup>+</sup></td></tr>
+    </table>
+  </div>
+
+  <h3>Repr&eacute;sentation graphique</h3>
+  <div class="canvas-wrap">
+    <canvas id="cvInverse" width="500" height="400"></canvas>
+    <div class="canvas-controls">Hyperbole &mdash; d&eacute;placez la souris pour lire les coordonn&eacute;es</div>
+  </div>
+</section>
+
+<!-- TAB 2: Racine carrée -->
+<section class="tab-content" id="tab2">
+  <h2>La fonction racine carr&eacute;e</h2>
+
+  <div class="def-box">
+    <div class="label">D&eacute;finition</div>
+    <p>La <strong>fonction racine carr&eacute;e</strong> est d&eacute;finie sur [0 ; +&infin;[ par <strong>f(x) = &radic;x</strong>.</p>
+    <p>Ensemble de d&eacute;finition : D<sub>f</sub> = [0 ; +&infin;[</p>
+  </div>
+
+  <h3>Propri&eacute;t&eacute;s</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Signe :</strong> f(x) &ge; 0 pour tout x &ge; 0.</li>
+      <li><strong>Images remarquables :</strong> f(0) = 0, f(1) = 1, f(4) = 2, f(9) = 3.</li>
+      <li><strong>Relation cl&eacute; :</strong> &radic;x = y &hArr; x = y&sup2; (avec x &ge; 0 et y &ge; 0).</li>
+      <li>La fonction racine carr&eacute;e est la <em>r&eacute;ciproque</em> de la fonction carr&eacute;e restreinte &agrave; [0 ; +&infin;[.</li>
+    </ul>
+  </div>
+
+  <h3>Variations</h3>
+  <div class="card">
+    <p>La fonction racine carr&eacute;e est <strong>strictement croissante</strong> sur [0 ; +&infin;[.</p>
+  </div>
+
+  <div style="overflow-x:auto">
+    <table class="var-table">
+      <tr><th>x</th><td>0</td><td></td><td>+&infin;</td></tr>
+      <tr><th>f(x)=&radic;x</th><td>0</td><td class="arrow">&nearr;</td><td>+&infin;</td></tr>
+    </table>
+  </div>
+
+  <h3>Repr&eacute;sentation graphique</h3>
+  <div class="canvas-wrap">
+    <canvas id="cvRacine" width="500" height="400"></canvas>
+    <div class="canvas-controls">D&eacute;placez la souris pour lire les coordonn&eacute;es</div>
+  </div>
+</section>
+
+<!-- TAB 3: Fonction cube -->
+<section class="tab-content" id="tab3">
+  <h2>La fonction cube</h2>
+
+  <div class="def-box">
+    <div class="label">D&eacute;finition</div>
+    <p>La <strong>fonction cube</strong> est d&eacute;finie sur &Ropf; par <strong>f(x) = x&sup3;</strong>.</p>
+    <p>Ensemble de d&eacute;finition : D<sub>f</sub> = &Ropf;</p>
+  </div>
+
+  <h3>Propri&eacute;t&eacute;s</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Parit&eacute; :</strong> f est <em>impaire</em> car f(&minus;x) = (&minus;x)&sup3; = &minus;x&sup3; = &minus;f(x). La courbe admet l'origine comme centre de sym&eacute;trie.</li>
+      <li><strong>Signe :</strong> f(x) est du m&ecirc;me signe que x.</li>
+      <li><strong>Images remarquables :</strong> f(0) = 0, f(1) = 1, f(&minus;1) = &minus;1, f(2) = 8, f(&minus;2) = &minus;8.</li>
+    </ul>
+  </div>
+
+  <h3>Variations</h3>
+  <div class="card">
+    <p>La fonction cube est <strong>strictement croissante</strong> sur &Ropf;.</p>
+  </div>
+
+  <div style="overflow-x:auto">
+    <table class="var-table">
+      <tr><th>x</th><td>&minus;&infin;</td><td></td><td>+&infin;</td></tr>
+      <tr><th>f(x)=x&sup3;</th><td>&minus;&infin;</td><td class="arrow">&nearr;</td><td>+&infin;</td></tr>
+    </table>
+  </div>
+
+  <h3>Repr&eacute;sentation graphique</h3>
+  <div class="canvas-wrap">
+    <canvas id="cvCube" width="500" height="400"></canvas>
+    <div class="canvas-controls">D&eacute;placez la souris pour lire les coordonn&eacute;es</div>
+  </div>
+</section>
+
+<!-- TAB 4: Valeur absolue -->
+<section class="tab-content" id="tab4">
+  <h2>La fonction valeur absolue</h2>
+
+  <div class="def-box">
+    <div class="label">D&eacute;finition</div>
+    <p>La <strong>fonction valeur absolue</strong> est d&eacute;finie sur &Ropf; par <strong>f(x) = |x|</strong>.</p>
+    <p>On a : |x| = x si x &ge; 0, et |x| = &minus;x si x &lt; 0.</p>
+    <p>Ensemble de d&eacute;finition : D<sub>f</sub> = &Ropf;</p>
+  </div>
+
+  <h3>Propri&eacute;t&eacute;s</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Parit&eacute; :</strong> f est <em>paire</em> car f(&minus;x) = |&minus;x| = |x| = f(x). La courbe est sym&eacute;trique par rapport &agrave; l'axe des ordonn&eacute;es.</li>
+      <li><strong>Signe :</strong> f(x) &ge; 0 pour tout x &isin; &Ropf;, et f(x) = 0 &hArr; x = 0.</li>
+      <li><strong>Interpr&eacute;tation :</strong> |x| repr&eacute;sente la <em>distance</em> de x &agrave; 0 sur la droite des r&eacute;els. Plus g&eacute;n&eacute;ralement, |a &minus; b| est la distance entre a et b.</li>
+    </ul>
+  </div>
+
+  <h3>Variations</h3>
+  <div class="card">
+    <ul>
+      <li><strong>D&eacute;croissante</strong> sur ]&minus;&infin; ; 0]</li>
+      <li><strong>Croissante</strong> sur [0 ; +&infin;[</li>
+    </ul>
+    <p>Minimum en x = 0 : f(0) = 0.</p>
+  </div>
+
+  <div style="overflow-x:auto">
+    <table class="var-table">
+      <tr><th>x</th><td>&minus;&infin;</td><td></td><td>0</td><td></td><td>+&infin;</td></tr>
+      <tr><th>f(x)=|x|</th><td>+&infin;</td><td class="arrow">&searr;</td><td>0</td><td class="arrow">&nearr;</td><td>+&infin;</td></tr>
+    </table>
+  </div>
+
+  <h3>Repr&eacute;sentation graphique</h3>
+  <div class="canvas-wrap">
+    <canvas id="cvAbs" width="500" height="400"></canvas>
+    <div class="canvas-controls">Forme en V &mdash; d&eacute;placez la souris pour lire les coordonn&eacute;es</div>
+  </div>
+</section>
+
+<!-- TAB 5: Comparaison -->
+<section class="tab-content" id="tab5">
+  <h2>Comparaison des fonctions de r&eacute;f&eacute;rence</h2>
+
+  <div class="card">
+    <h3>Positions relatives</h3>
+    <ul>
+      <li><strong>Sur [0 ; 1] :</strong> x&sup2; &le; x &le; &radic;x (la parabole est sous la droite y = x, elle-m&ecirc;me sous la racine).</li>
+      <li><strong>Sur [1 ; +&infin;[ :</strong> &radic;x &le; x &le; x&sup2; (les positions s'inversent apr&egrave;s 1).</li>
+      <li>Au point x = 1, toutes ces fonctions co&iuml;ncident : f(1) = 1.</li>
+    </ul>
+
+    <h3>R&eacute;sum&eacute; des propri&eacute;t&eacute;s</h3>
+    <div style="overflow-x:auto">
+      <table class="var-table" style="font-size:0.82rem">
+        <tr><th>Fonction</th><th>D<sub>f</sub></th><th>Parit&eacute;</th><th>Variations</th></tr>
+        <tr><td>x&sup2;</td><td>&Ropf;</td><td>Paire</td><td>&searr; sur ]&minus;&infin;;0], &nearr; sur [0;+&infin;[</td></tr>
+        <tr><td>1/x</td><td>&Ropf;*</td><td>Impaire</td><td>&searr; sur chaque intervalle</td></tr>
+        <tr><td>&radic;x</td><td>[0;+&infin;[</td><td>&mdash;</td><td>&nearr; sur [0;+&infin;[</td></tr>
+        <tr><td>x&sup3;</td><td>&Ropf;</td><td>Impaire</td><td>&nearr; sur &Ropf;</td></tr>
+        <tr><td>|x|</td><td>&Ropf;</td><td>Paire</td><td>&searr; sur ]&minus;&infin;;0], &nearr; sur [0;+&infin;[</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>Graphe comparatif</h3>
+  <div class="canvas-wrap">
+    <div class="cb-row" id="cmpChecks">
+      <label><input type="checkbox" checked data-fn="carre" onchange="drawComparison()"> x&sup2;</label>
+      <label><input type="checkbox" checked data-fn="inverse" onchange="drawComparison()"> 1/x</label>
+      <label><input type="checkbox" checked data-fn="racine" onchange="drawComparison()"> &radic;x</label>
+      <label><input type="checkbox" checked data-fn="cube" onchange="drawComparison()"> x&sup3;</label>
+      <label><input type="checkbox" checked data-fn="abs" onchange="drawComparison()"> |x|</label>
+      <label><input type="checkbox" data-fn="id" onchange="drawComparison()"> y = x</label>
+    </div>
+    <canvas id="cvCompare" width="500" height="450"></canvas>
+    <div class="canvas-controls">D&eacute;placez la souris pour lire les coordonn&eacute;es</div>
+  </div>
+</section>
+
+<!-- TAB 6: Exercices -->
+<section class="tab-content" id="tab6">
+  <h2>Exercices</h2>
+
+  <div class="exercise">
+    <h3>Exercice 1 &mdash; Images et ant&eacute;c&eacute;dents</h3>
+    <p>1. Calculer f(&minus;3), f(0), f(5) pour f(x) = x&sup2;.</p>
+    <p>2. D&eacute;terminer les ant&eacute;c&eacute;dents de 16 par la fonction carr&eacute;.</p>
+    <p>3. Le nombre &minus;9 a-t-il un ant&eacute;c&eacute;dent par la fonction carr&eacute; ? Justifier.</p>
+    <button class="toggle-btn" onclick="toggleCorr(this)">Voir la correction</button>
+    <div class="correction" hidden>
+      <p><strong>1.</strong> f(&minus;3) = (&minus;3)&sup2; = 9 ; f(0) = 0 ; f(5) = 25.</p>
+      <p><strong>2.</strong> On cherche x tel que x&sup2; = 16, donc x = 4 ou x = &minus;4. Les ant&eacute;c&eacute;dents de 16 sont 4 et &minus;4.</p>
+      <p><strong>3.</strong> Non. Pour tout x &isin; &Ropf;, x&sup2; &ge; 0, donc x&sup2; ne peut pas &ecirc;tre &eacute;gal &agrave; &minus;9. Le nombre &minus;9 n'a pas d'ant&eacute;c&eacute;dent.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 2 &mdash; Comparaison sans calculatrice</h3>
+    <p>Sans calculatrice, comparer les nombres suivants :</p>
+    <p>1. (&minus;7)&sup2; et (&minus;5)&sup2;</p>
+    <p>2. &radic;3 et &radic;7</p>
+    <p>3. <span class="frac"><span class="num">1</span><span class="den">3</span></span> et <span class="frac"><span class="num">1</span><span class="den">5</span></span></p>
+    <button class="toggle-btn" onclick="toggleCorr(this)">Voir la correction</button>
+    <div class="correction" hidden>
+      <p><strong>1.</strong> On a &minus;7 &lt; &minus;5 &lt; 0. La fonction carr&eacute; est d&eacute;croissante sur ]&minus;&infin; ; 0], donc elle inverse l'ordre : (&minus;7)&sup2; &gt; (&minus;5)&sup2;, soit 49 &gt; 25.</p>
+      <p><strong>2.</strong> On a 3 &lt; 7 et les deux nombres sont positifs. La fonction racine carr&eacute;e est croissante sur [0;+&infin;[, donc &radic;3 &lt; &radic;7.</p>
+      <p><strong>3.</strong> On a 3 &lt; 5 et les deux nombres sont strictement positifs. La fonction inverse est d&eacute;croissante sur ]0;+&infin;[, donc <span class="frac"><span class="num">1</span><span class="den">3</span></span> &gt; <span class="frac"><span class="num">1</span><span class="den">5</span></span>.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 3 &mdash; R&eacute;solution d'&eacute;quations</h3>
+    <p>R&eacute;soudre dans &Ropf; :</p>
+    <p>1. x&sup2; = 49</p>
+    <p>2. x&sup3; = &minus;8</p>
+    <p>3. &radic;x = 5</p>
+    <p>4. |x| = 3</p>
+    <button class="toggle-btn" onclick="toggleCorr(this)">Voir la correction</button>
+    <div class="correction" hidden>
+      <p><strong>1.</strong> x&sup2; = 49 &hArr; x = 7 ou x = &minus;7. S = {&minus;7 ; 7}.</p>
+      <p><strong>2.</strong> x&sup3; = &minus;8 &hArr; x = &minus;2 (la fonction cube est strictement croissante, solution unique). S = {&minus;2}.</p>
+      <p><strong>3.</strong> Condition : x &ge; 0. &radic;x = 5 &hArr; x = 25. S = {25}.</p>
+      <p><strong>4.</strong> |x| = 3 &hArr; x = 3 ou x = &minus;3. S = {&minus;3 ; 3}.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 4 &mdash; In&eacute;quations</h3>
+    <p>R&eacute;soudre :</p>
+    <p>1. x&sup2; &le; 9</p>
+    <p>2. <span class="frac"><span class="num">1</span><span class="den">x</span></span> &gt; 2 (pour x &gt; 0)</p>
+    <button class="toggle-btn" onclick="toggleCorr(this)">Voir la correction</button>
+    <div class="correction" hidden>
+      <p><strong>1.</strong> x&sup2; &le; 9 &hArr; x&sup2; &minus; 9 &le; 0 &hArr; (x &minus; 3)(x + 3) &le; 0. Par un tableau de signes, S = [&minus;3 ; 3].</p>
+      <p><strong>2.</strong> Pour x &gt; 0 : <span class="frac"><span class="num">1</span><span class="den">x</span></span> &gt; 2 &hArr; <span class="frac"><span class="num">1</span><span class="den">x</span></span> &minus; 2 &gt; 0 &hArr; <span class="frac"><span class="num">1 &minus; 2x</span><span class="den">x</span></span> &gt; 0. Puisque x &gt; 0, le d&eacute;nominateur est positif, donc on cherche 1 &minus; 2x &gt; 0, soit x &lt; <span class="frac"><span class="num">1</span><span class="den">2</span></span>. S = ]0 ; <span class="frac"><span class="num">1</span><span class="den">2</span></span>[.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 5 &mdash; Probl&egrave;me de synth&egrave;se</h3>
+    <p>On consid&egrave;re les fonctions f(x) = x&sup2; et g(x) = 2x + 3.</p>
+    <p>1. R&eacute;soudre f(x) = g(x). Interpr&eacute;ter graphiquement.</p>
+    <p>2. R&eacute;soudre f(x) &lt; g(x). Interpr&eacute;ter graphiquement.</p>
+    <button class="toggle-btn" onclick="toggleCorr(this)">Voir la correction</button>
+    <div class="correction" hidden>
+      <p><strong>1.</strong> x&sup2; = 2x + 3 &hArr; x&sup2; &minus; 2x &minus; 3 = 0. &Delta; = 4 + 12 = 16. x<sub>1</sub> = <span class="frac"><span class="num">2 &minus; 4</span><span class="den">2</span></span> = &minus;1 et x<sub>2</sub> = <span class="frac"><span class="num">2 + 4</span><span class="den">2</span></span> = 3. Les courbes se coupent en (&minus;1 ; 1) et (3 ; 9).</p>
+      <p><strong>2.</strong> x&sup2; &lt; 2x + 3 &hArr; x&sup2; &minus; 2x &minus; 3 &lt; 0 &hArr; (x + 1)(x &minus; 3) &lt; 0. Par le tableau de signes : S = ]&minus;1 ; 3[. La parabole est sous la droite entre les deux points d'intersection.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TAB 7: QCM -->
+<section class="tab-content" id="tab7">
+  <h2>QCM &mdash; Fonctions de r&eacute;f&eacute;rence</h2>
+  <p>10 questions tir&eacute;es al&eacute;atoirement. Une seule r&eacute;ponse correcte par question.</p>
+  <div class="qcm-bar">
+    <button onclick="generateQCM()">Nouveau QCM</button>
+    <button onclick="checkQCM()">V&eacute;rifier</button>
+  </div>
+  <div class="score-display" id="qcmScore"></div>
+  <div id="qcmContainer"></div>
+</section>
+
+<script>
+/* ====== TAB NAVIGATION ====== */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+const initialized = new Set();
+
+function showTab(i) {
+  tabBtns.forEach((b,j) => { b.classList.toggle('active', j===i); b.setAttribute('aria-selected', j===i); });
+  tabContents.forEach((c,j) => c.classList.toggle('active', j===i));
+  if (!initialized.has(i)) { initSection(i); initialized.add(i); }
+  try { localStorage.setItem('fref-tab', i); } catch(e) {}
+}
+
+/* ====== CANVAS HELPERS ====== */
+function getCS(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function drawGrid(ctx, w, h, ox, oy, scaleX, scaleY) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = getCS('--canvas-bg');
+  ctx.fillRect(0, 0, w, h);
+
+  /* Grid */
+  ctx.strokeStyle = getCS('--canvas-grid');
+  ctx.lineWidth = 0.5;
+  for (let i = -20; i <= 20; i++) {
+    let px = ox + i * scaleX;
+    if (px >= 0 && px <= w) { ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.stroke(); }
+    let py = oy - i * scaleY;
+    if (py >= 0 && py <= h) { ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(w, py); ctx.stroke(); }
+  }
+
+  /* Axes */
+  ctx.strokeStyle = getCS('--canvas-axis');
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
+
+  /* Ticks and labels */
+  ctx.fillStyle = getCS('--canvas-axis');
+  ctx.font = '11px "Nunito Sans", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (let i = -20; i <= 20; i++) {
+    if (i === 0) continue;
+    let px = ox + i * scaleX;
+    if (px > 10 && px < w - 10) {
+      ctx.beginPath(); ctx.moveTo(px, oy - 3); ctx.lineTo(px, oy + 3); ctx.stroke();
+      ctx.fillText(i, px, oy + 5);
+    }
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let i = -20; i <= 20; i++) {
+    if (i === 0) continue;
+    let py = oy - i * scaleY;
+    if (py > 10 && py < h - 10) {
+      ctx.beginPath(); ctx.moveTo(ox - 3, py); ctx.lineTo(ox + 3, py); ctx.stroke();
+      ctx.fillText(i, ox - 6, py);
+    }
+  }
+  ctx.fillText('O', ox - 6, oy + 10);
+}
+
+function plotFn(ctx, fn, ox, oy, scaleX, scaleY, w, h, color, lw) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw || 2.5;
+  ctx.beginPath();
+  let started = false;
+  for (let px = 0; px <= w; px += 0.5) {
+    let x = (px - ox) / scaleX;
+    let y = fn(x);
+    if (!isFinite(y) || Math.abs(y) > 50) { started = false; continue; }
+    let py = oy - y * scaleY;
+    if (py < -50 || py > h + 50) { started = false; continue; }
+    if (!started) { ctx.moveTo(px, py); started = true; }
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+}
+
+function addMouseTracker(canvas, ox, oy, scaleX, scaleY, fn) {
+  const info = canvas.parentElement.querySelector('.canvas-controls');
+  const origText = info.textContent;
+  canvas.addEventListener('mousemove', function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const ratioX = canvas.width / rect.width;
+    const ratioY = canvas.height / rect.height;
+    const mx = (e.clientX - rect.left) * ratioX;
+    const my = (e.clientY - rect.top) * ratioY;
+    const x = (mx - ox) / scaleX;
+    const y = (oy - my) / scaleY;
+    let text = 'x = ' + x.toFixed(2) + '  ;  y = ' + y.toFixed(2);
+    if (fn) {
+      const fy = fn(x);
+      if (isFinite(fy)) text += '  |  f(' + x.toFixed(2) + ') = ' + fy.toFixed(2);
+    }
+    info.textContent = text;
+  });
+  canvas.addEventListener('mouseleave', function() { info.textContent = origText; });
+}
+
+/* ====== INIT SECTIONS ====== */
+function initSection(i) {
+  switch(i) {
+    case 0: drawCarre(); break;
+    case 1: drawInverse(); break;
+    case 2: drawRacine(); break;
+    case 3: drawCube(); break;
+    case 4: drawAbs(); break;
+    case 5: drawComparison(); break;
+    case 7: generateQCM(); break;
+  }
+}
+
+function drawCarre() {
+  const cv = document.getElementById('cvCarre');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const ox = w / 2, oy = h * 0.82;
+  const sc = 40;
+  drawGrid(ctx, w, h, ox, oy, sc, sc);
+  plotFn(ctx, x => x*x, ox, oy, sc, sc, w, h, getCS('--accent'));
+  /* Label */
+  ctx.fillStyle = getCS('--accent');
+  ctx.font = 'italic 14px "Cormorant Garamond", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('f(x) = x²', ox + 2.5*sc, oy - 6*sc);
+  addMouseTracker(cv, ox, oy, sc, sc, x => x*x);
+}
+
+function drawInverse() {
+  const cv = document.getElementById('cvInverse');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const ox = w / 2, oy = h / 2;
+  const sc = 50;
+  drawGrid(ctx, w, h, ox, oy, sc, sc);
+  /* Draw two branches separately */
+  const fn = x => 1/x;
+  ctx.strokeStyle = getCS('--accent');
+  ctx.lineWidth = 2.5;
+  /* Positive branch */
+  ctx.beginPath();
+  let started = false;
+  for (let px = ox + 2; px <= w; px += 0.5) {
+    let x = (px - ox) / sc;
+    let y = fn(x);
+    if (!isFinite(y) || y > 10 || y < -10) { started = false; continue; }
+    let py = oy - y * sc;
+    if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  /* Negative branch */
+  ctx.beginPath();
+  started = false;
+  for (let px = 0; px <= ox - 2; px += 0.5) {
+    let x = (px - ox) / sc;
+    let y = fn(x);
+    if (!isFinite(y) || y > 10 || y < -10) { started = false; continue; }
+    let py = oy - y * sc;
+    if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  /* Asymptotes dashed */
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = getCS('--text-muted');
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = getCS('--accent');
+  ctx.font = 'italic 14px "Cormorant Garamond", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('f(x) = 1/x', ox + 1.5*sc, oy - 2.5*sc);
+  addMouseTracker(cv, ox, oy, sc, sc, fn);
+}
+
+function drawRacine() {
+  const cv = document.getElementById('cvRacine');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const ox = w * 0.12, oy = h * 0.82;
+  const sc = 45;
+  drawGrid(ctx, w, h, ox, oy, sc, sc);
+  const fn = x => x >= 0 ? Math.sqrt(x) : NaN;
+  plotFn(ctx, fn, ox, oy, sc, sc, w, h, getCS('--accent'));
+  ctx.fillStyle = getCS('--accent');
+  ctx.font = 'italic 14px "Cormorant Garamond", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('f(x) = √x', ox + 5*sc, oy - 2.3*sc);
+  addMouseTracker(cv, ox, oy, sc, sc, fn);
+}
+
+function drawCube() {
+  const cv = document.getElementById('cvCube');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const ox = w / 2, oy = h / 2;
+  const sc = 30;
+  drawGrid(ctx, w, h, ox, oy, sc, sc);
+  const fn = x => x*x*x;
+  plotFn(ctx, fn, ox, oy, sc, sc, w, h, getCS('--accent'));
+  ctx.fillStyle = getCS('--accent');
+  ctx.font = 'italic 14px "Cormorant Garamond", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('f(x) = x³', ox + 1.5*sc, oy - 4*sc);
+  addMouseTracker(cv, ox, oy, sc, sc, fn);
+}
+
+function drawAbs() {
+  const cv = document.getElementById('cvAbs');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const ox = w / 2, oy = h * 0.82;
+  const sc = 45;
+  drawGrid(ctx, w, h, ox, oy, sc, sc);
+  const fn = x => Math.abs(x);
+  plotFn(ctx, fn, ox, oy, sc, sc, w, h, getCS('--accent'));
+  ctx.fillStyle = getCS('--accent');
+  ctx.font = 'italic 14px "Cormorant Garamond", serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('f(x) = |x|', ox + 2.5*sc, oy - 3*sc);
+  addMouseTracker(cv, ox, oy, sc, sc, fn);
+}
+
+/* ====== COMPARISON ====== */
+const fnColors = {
+  carre: '#c0392b',
+  inverse: '#2980b9',
+  racine: '#27ae60',
+  cube: '#8e44ad',
+  abs: '#d35400',
+  id: '#7f8c8d'
+};
+
+function drawComparison() {
+  const cv = document.getElementById('cvCompare');
+  const ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height;
+  const ox = w * 0.4, oy = h * 0.6;
+  const sc = 50;
+  drawGrid(ctx, w, h, ox, oy, sc, sc);
+
+  const checks = document.querySelectorAll('#cmpChecks input[type="checkbox"]');
+  const fns = {
+    carre: x => x*x,
+    inverse: x => 1/x,
+    racine: x => x >= 0 ? Math.sqrt(x) : NaN,
+    cube: x => x*x*x,
+    abs: x => Math.abs(x),
+    id: x => x
+  };
+  const labels = {
+    carre: 'x²', inverse: '1/x', racine: '√x', cube: 'x³', abs: '|x|', id: 'y=x'
+  };
+
+  let legendY = 20;
+  checks.forEach(cb => {
+    const key = cb.dataset.fn;
+    if (!cb.checked) return;
+    plotFn(ctx, fns[key], ox, oy, sc, sc, w, h, fnColors[key], 2);
+    /* Legend */
+    ctx.fillStyle = fnColors[key];
+    ctx.font = 'bold 12px "Nunito Sans", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.beginPath();
+    ctx.moveTo(w - 100, legendY);
+    ctx.lineTo(w - 70, legendY);
+    ctx.strokeStyle = fnColors[key];
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillText(labels[key], w - 65, legendY + 4);
+    legendY += 18;
+  });
+
+  addMouseTracker(cv, ox, oy, sc, sc, null);
+}
+
+/* ====== EXERCISES ====== */
+function toggleCorr(btn) {
+  const corr = btn.nextElementSibling;
+  corr.hidden = !corr.hidden;
+  btn.textContent = corr.hidden ? 'Voir la correction' : 'Masquer la correction';
+}
+
+/* ====== QCM ====== */
+const qcmBank = [
+  { q: "L'ensemble de définition de la fonction carré est :", opts: ["ℝ", "ℝ*", "[0;+∞[", "]-∞;0]"], ans: 0 },
+  { q: "La fonction carré est :", opts: ["Croissante sur ℝ", "Décroissante sur ℝ", "Croissante sur [0;+∞[", "Décroissante sur [0;+∞["], ans: 2 },
+  { q: "La fonction carré est :", opts: ["Paire", "Impaire", "Ni paire ni impaire", "Périodique"], ans: 0 },
+  { q: "L'image de −3 par la fonction carré est :", opts: ["−9", "9", "−6", "6"], ans: 1 },
+  { q: "L'ensemble de définition de la fonction inverse est :", opts: ["ℝ", "ℝ*", "[0;+∞[", "ℝ+"], ans: 1 },
+  { q: "La fonction inverse est :", opts: ["Paire", "Impaire", "Ni paire ni impaire", "Croissante sur ℝ*"], ans: 1 },
+  { q: "La fonction inverse est décroissante sur :", opts: ["ℝ*", "]0;+∞[", "]-∞;0[", "Chacun des intervalles ]-∞;0[ et ]0;+∞["], ans: 3 },
+  { q: "L'ensemble de définition de la fonction racine carrée est :", opts: ["ℝ", "ℝ*", "[0;+∞[", "]-∞;0]"], ans: 2 },
+  { q: "√9 = ", opts: ["3", "−3", "±3", "81"], ans: 0 },
+  { q: "La fonction racine carrée est :", opts: ["Décroissante sur [0;+∞[", "Croissante sur [0;+∞[", "Paire", "Impaire"], ans: 1 },
+  { q: "La fonction cube est :", opts: ["Paire", "Impaire", "Ni paire ni impaire", "Décroissante sur ℝ"], ans: 1 },
+  { q: "(−2)³ = ", opts: ["8", "−8", "6", "−6"], ans: 1 },
+  { q: "La fonction valeur absolue est :", opts: ["Paire", "Impaire", "Ni paire ni impaire", "Définie sur ℝ*"], ans: 0 },
+  { q: "|−5| = ", opts: ["−5", "5", "25", "0"], ans: 1 },
+  { q: "Sur [0;1], quel est l'ordre correct ?", opts: ["x² ≤ x ≤ √x", "√x ≤ x ≤ x²", "x ≤ x² ≤ √x", "x² ≤ √x ≤ x"], ans: 0 },
+  { q: "Sur [1;+∞[, quel est l'ordre correct ?", opts: ["x² ≤ x ≤ √x", "√x ≤ x ≤ x²", "x ≤ √x ≤ x²", "√x ≤ x² ≤ x"], ans: 1 },
+  { q: "La courbe de la fonction inverse admet :", opts: ["Un axe de symétrie", "Un centre de symétrie (l'origine)", "Aucune symétrie", "Deux axes de symétrie"], ans: 1 },
+  { q: "Le minimum de la fonction carré est atteint en :", opts: ["x = 1", "x = −1", "x = 0", "Il n'existe pas"], ans: 2 },
+  { q: "x² = 25 a pour solutions :", opts: ["x = 5", "x = −5", "x = 5 ou x = −5", "x = √25"], ans: 2 },
+  { q: "La fonction cube est définie sur :", opts: ["[0;+∞[", "ℝ*", "ℝ", "]-∞;0]"], ans: 2 }
+];
+
+let currentQCM = [];
+
+function generateQCM() {
+  document.getElementById('qcmScore').textContent = '';
+  const shuffled = [...qcmBank].sort(() => Math.random() - 0.5);
+  currentQCM = shuffled.slice(0, 10);
+  const container = document.getElementById('qcmContainer');
+  container.innerHTML = '';
+  currentQCM.forEach((item, qi) => {
+    const div = document.createElement('div');
+    div.className = 'qcm-question';
+    div.dataset.ans = item.ans;
+    div.dataset.qi = qi;
+    let html = '<div class="q-text">' + (qi+1) + '. ' + item.q + '</div>';
+    item.opts.forEach((opt, oi) => {
+      html += '<div class="qcm-option" data-oi="' + oi + '" onclick="selectOpt(this)" tabindex="0" role="button">' + opt + '</div>';
+    });
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+
+function selectOpt(el) {
+  const parent = el.closest('.qcm-question');
+  parent.querySelectorAll('.qcm-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function checkQCM() {
+  if (currentQCM.length === 0) return;
+  let score = 0;
+  document.querySelectorAll('.qcm-question').forEach(q => {
+    const ans = parseInt(q.dataset.ans);
+    q.querySelectorAll('.qcm-option').forEach(o => {
+      const oi = parseInt(o.dataset.oi);
+      if (oi === ans) o.classList.add('correct-answer');
+      if (o.classList.contains('selected') && oi !== ans) o.classList.add('wrong-answer');
+      if (o.classList.contains('selected') && oi === ans) score++;
+    });
+  });
+  document.getElementById('qcmScore').textContent = 'Score : ' + score + ' / 10';
+}
+
+/* ====== INIT ====== */
+let startTab = 0;
+try { const saved = localStorage.getItem('fref-tab'); if (saved !== null) startTab = parseInt(saved); } catch(e) {}
+if (startTab > 0 && startTab <= 7) showTab(startTab); else initSection(0);
+</script>

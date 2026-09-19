@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fonctions : generalites — Seconde</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ed;
+  --surface: #ffffff;
+  --heading: #8b4513;
+  --accent: #a0522d;
+  --text: #2c2c2c;
+  --text-light: #555555;
+  --border: #d4c5b0;
+  --success: #2e7d32;
+  --error: #c62828;
+  --canvas-bg: #fefefe;
+  --canvas-grid: #e0d8cc;
+  --canvas-axis: #333333;
+  --canvas-curve: #a0522d;
+  --canvas-curve2: #2e7d32;
+  --canvas-point: #c62828;
+  --tab-bg: #e8e0d5;
+  --tab-active: #a0522d;
+  --tab-text: #5a4a3a;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --qcm-correct: #e8f5e9;
+  --qcm-wrong: #ffebee;
+  --highlight: #fff3e0;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg: #1a1614;
+    --surface: #2a2420;
+    --heading: #d4a574;
+    --accent: #c8845a;
+    --text: #e0d8cc;
+    --text-light: #b0a898;
+    --border: #4a3f35;
+    --success: #66bb6a;
+    --error: #ef5350;
+    --canvas-bg: #2a2420;
+    --canvas-grid: #3a332c;
+    --canvas-axis: #c0b8a8;
+    --canvas-curve: #c8845a;
+    --canvas-curve2: #66bb6a;
+    --canvas-point: #ef5350;
+    --tab-bg: #332c25;
+    --tab-active: #c8845a;
+    --tab-text: #b0a898;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    --qcm-correct: #1b3a1b;
+    --qcm-wrong: #3a1b1b;
+    --highlight: #3a2e1e;
+  }
+}
+:root[data-theme="dark"]{
+  --bg: #1a1614;
+  --surface: #2a2420;
+  --heading: #d4a574;
+  --accent: #c8845a;
+  --text: #e0d8cc;
+  --text-light: #b0a898;
+  --border: #4a3f35;
+  --success: #66bb6a;
+  --error: #ef5350;
+  --canvas-bg: #2a2420;
+  --canvas-grid: #3a332c;
+  --canvas-axis: #c0b8a8;
+  --canvas-curve: #c8845a;
+  --canvas-curve2: #66bb6a;
+  --canvas-point: #ef5350;
+  --tab-bg: #332c25;
+  --tab-active: #c8845a;
+  --tab-text: #b0a898;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --qcm-correct: #1b3a1b;
+  --qcm-wrong: #3a1b1b;
+  --highlight: #3a2e1e;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:16px;max-width:900px;margin:0 auto}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;color:var(--heading);font-weight:700}
+h1{font-size:1.9rem;text-align:center;margin:24px 0 8px;line-height:1.3}
+.subtitle{text-align:center;color:var(--text-light);margin-bottom:20px;font-size:0.95rem}
+h2{font-size:1.45rem;margin:20px 0 10px;border-bottom:2px solid var(--accent);padding-bottom:4px}
+h3{font-size:1.15rem;margin:14px 0 6px}
+
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab-btn{padding:8px 14px;border:none;background:var(--tab-bg);color:var(--tab-text);cursor:pointer;border-radius:6px 6px 0 0;font-family:'Nunito Sans',sans-serif;font-size:0.85rem;font-weight:600;transition:background .2s,color .2s}
+.tab-btn:hover{background:var(--accent);color:#fff}
+.tab-btn.active{background:var(--tab-active);color:#fff}
+.section{display:none}
+.section.active{display:block}
+
+.card{background:var(--surface);border-radius:10px;padding:18px;margin:12px 0;box-shadow:var(--card-shadow);border-left:4px solid var(--accent)}
+.definition{border-left-color:var(--heading)}
+.example{border-left-color:var(--success);background:var(--highlight)}
+.warning{border-left-color:var(--error)}
+.card-title{font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--heading);margin-bottom:6px;font-size:1.05rem}
+
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;font-size:0.85em}
+.frac .num{border-bottom:1.5px solid var(--text);padding:0 4px 2px;line-height:1.2}
+.frac .den{padding:2px 4px 0;line-height:1.2}
+
+canvas{display:block;margin:10px auto;border-radius:8px;border:1px solid var(--border);max-width:100%;cursor:crosshair}
+.canvas-info{text-align:center;color:var(--text-light);font-size:0.88rem;margin:4px 0 8px}
+
+.slider-row{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}
+.slider-row label{font-weight:600;min-width:40px}
+.slider-row input[type="range"]{flex:1;min-width:120px;accent-color:var(--accent)}
+.slider-val{font-weight:700;color:var(--accent);min-width:40px}
+
+.exercise{background:var(--surface);border-radius:10px;padding:16px;margin:12px 0;box-shadow:var(--card-shadow)}
+.exercise h3{margin-top:0}
+.toggle-btn{display:inline-block;padding:6px 16px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;margin-top:8px}
+.toggle-btn:hover{opacity:0.85}
+.correction{display:none;margin-top:10px;padding:12px;background:var(--highlight);border-radius:8px;border-left:3px solid var(--success)}
+
+.qcm-q{background:var(--surface);border-radius:10px;padding:16px;margin:10px 0;box-shadow:var(--card-shadow)}
+.qcm-q h3{margin-top:0}
+.qcm-opts label{display:block;padding:6px 10px;margin:4px 0;border-radius:6px;cursor:pointer;transition:background .2s}
+.qcm-opts label:hover{background:var(--tab-bg)}
+.qcm-opts input{margin-right:8px;accent-color:var(--accent)}
+.qcm-feedback{margin-top:8px;padding:8px 12px;border-radius:6px;font-weight:600;display:none}
+.qcm-score{text-align:center;font-size:1.3rem;font-weight:700;color:var(--heading);margin:16px 0;padding:16px;background:var(--surface);border-radius:10px}
+
+.theme-toggle{position:fixed;top:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;z-index:100;box-shadow:var(--card-shadow)}
+
+@media(max-width:600px){
+  h1{font-size:1.5rem}
+  .tab-btn{padding:6px 8px;font-size:0.75rem}
+  .card{padding:12px}
+  body{padding:10px}
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" title="Changer le theme" aria-label="Changer le theme">☀</button>
+<h1>Fonctions : generalites</h1>
+<p class="subtitle">Classe de Seconde — Cours interactif</p>
+
+<div class="tabs" id="tabs"></div>
+<div id="sections-container"></div>
+
+<script>
+var TAB_NAMES=["Image et antecedent","Courbe representative","Variations","Parite et symetries","Resolution graphique","Exercices","QCM"];
+var sectionInited=[];
+var canvasCache={};
+
+function getCSS(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+
+function toggleTheme(){
+  var r=document.documentElement;
+  var t=r.getAttribute('data-theme');
+  if(t==='dark'){r.setAttribute('data-theme','light')}
+  else if(t==='light'){r.removeAttribute('data-theme');r.setAttribute('data-theme','dark')}
+  else{r.setAttribute('data-theme','dark')}
+  document.querySelector('.theme-toggle').textContent=r.getAttribute('data-theme')==='dark'?'☀':'☾';
+  setTimeout(function(){for(var k in canvasCache){canvasCache[k]()}},50);
+}
+
+function buildTabs(){
+  var c=document.getElementById('tabs');
+  var sc=document.getElementById('sections-container');
+  TAB_NAMES.forEach(function(n,i){
+    var b=document.createElement('button');
+    b.className='tab-btn';b.textContent=n;
+    b.onclick=function(){showTab(i)};
+    c.appendChild(b);
+    var d=document.createElement('div');
+    d.className='section';d.id='sec'+i;
+    sc.appendChild(d);
+  });
+}
+
+function showTab(i){
+  document.querySelectorAll('.tab-btn').forEach(function(b,j){b.classList.toggle('active',j===i)});
+  document.querySelectorAll('.section').forEach(function(s,j){s.classList.toggle('active',j===i)});
+  if(!sectionInited[i]){initSection(i);sectionInited[i]=true}
+}
+
+/* ===== CANVAS HELPERS ===== */
+function setupCanvas(id,w,h){
+  var cv=document.getElementById(id);
+  var dpr=window.devicePixelRatio||1;
+  cv.width=w*dpr;cv.height=h*dpr;
+  cv.style.width=w+'px';cv.style.height=h+'px';
+  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  return{cv:cv,ctx:ctx,w:w,h:h};
+}
+
+function drawGrid(ctx,w,h,ox,oy,sx,sy){
+  ctx.fillStyle=getCSS('--canvas-bg');ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle=getCSS('--canvas-grid');ctx.lineWidth=0.5;
+  for(var x=ox%sx;x<w;x+=sx){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}
+  for(var y=oy%sy;y<h;y+=sy){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+  ctx.strokeStyle=getCSS('--canvas-axis');ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(w,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,h);ctx.stroke();
+  ctx.fillStyle=getCSS('--canvas-axis');ctx.font='11px Nunito Sans,sans-serif';
+  for(var i=Math.ceil(-ox/sx);i<=Math.floor((w-ox)/sx);i++){
+    if(i===0)continue;
+    var px=ox+i*sx;
+    ctx.beginPath();ctx.moveTo(px,oy-3);ctx.lineTo(px,oy+3);ctx.stroke();
+    ctx.fillText(i,px-4,oy+15);
+  }
+  for(var j=Math.ceil(-( h-oy)/sy);j<=Math.floor(oy/sy);j++){
+    if(j===0)continue;
+    var py=oy-j*sy;
+    ctx.beginPath();ctx.moveTo(ox-3,py);ctx.lineTo(ox+3,py);ctx.stroke();
+    ctx.fillText(j,ox+6,py+4);
+  }
+  ctx.fillText('O',ox-12,oy+14);
+}
+
+function plotFunc(ctx,f,ox,oy,sx,sy,w,h,color){
+  ctx.strokeStyle=color||getCSS('--canvas-curve');ctx.lineWidth=2.5;ctx.beginPath();
+  var started=false;
+  for(var px=0;px<w;px++){
+    var x=(px-ox)/sx;var y=f(x);
+    if(!isFinite(y)){started=false;continue}
+    var py=oy-y*sy;
+    if(!started){ctx.moveTo(px,py);started=true}else{ctx.lineTo(px,py)}
+  }
+  ctx.stroke();
+}
+
+function drawDot(ctx,px,py,r,color){
+  ctx.fillStyle=color||getCSS('--canvas-point');
+  ctx.beginPath();ctx.arc(px,py,r,0,2*Math.PI);ctx.fill();
+}
+
+function drawDashed(ctx,x1,y1,x2,y2,color){
+  ctx.strokeStyle=color||getCSS('--canvas-point');ctx.lineWidth=1;
+  ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);
+}
+
+/* ===== SECTION BUILDERS ===== */
+function initSection(i){
+  var el=document.getElementById('sec'+i);
+  switch(i){
+    case 0:buildImageAntecedent(el);break;
+    case 1:buildCourbe(el);break;
+    case 2:buildVariations(el);break;
+    case 3:buildParite(el);break;
+    case 4:buildResolution(el);break;
+    case 5:buildExercices(el);break;
+    case 6:buildQCM(el);break;
+  }
+}
+
+/* ---------- TAB 0 ---------- */
+function buildImageAntecedent(el){
+  el.innerHTML=
+  '<h2>Image et antecedent</h2>'+
+  '<div class="card definition"><div class="card-title">Definition — Fonction</div>'+
+  'Une <b>fonction</b> <i>f</i> definie sur un ensemble <i>D<sub>f</sub></i> est un procede qui, a tout nombre reel <i>x</i> de <i>D<sub>f</sub></i>, associe <b>un unique</b> nombre reel, note <i>f</i>(<i>x</i>).<br>'+
+  'On note : <i>f</i> : <i>x</i> &#x27FC; <i>f</i>(<i>x</i>)<br>'+
+  'L\'ensemble <i>D<sub>f</sub></i> s\'appelle l\'<b>ensemble de definition</b> de <i>f</i>.</div>'+
+
+  '<div class="card definition"><div class="card-title">Image</div>'+
+  'Si <i>x</i> = <i>a</i> appartient a <i>D<sub>f</sub></i>, alors le nombre <i>f</i>(<i>a</i>) est l\'<b>image</b> de <i>a</i> par <i>f</i>.<br>'+
+  'On dit aussi : <i>y</i> = <i>f</i>(<i>x</i>).</div>'+
+
+  '<div class="card definition"><div class="card-title">Antecedent</div>'+
+  'Un nombre <i>a</i> est un <b>antecedent</b> de <i>b</i> par <i>f</i> si <i>f</i>(<i>a</i>) = <i>b</i>.<br>'+
+  'Un nombre <i>b</i> peut avoir <b>0, 1 ou plusieurs</b> antecedents.</div>'+
+
+  '<div class="card example"><div class="card-title">Exemple</div>'+
+  'Soit <i>f</i>(<i>x</i>) = <i>x</i><sup>2</sup> − 1. Alors :<br>'+
+  '&bull; L\'image de 3 est <i>f</i>(3) = 9 − 1 = 8.<br>'+
+  '&bull; Les antecedents de 3 : <i>x</i><sup>2</sup> − 1 = 3 ⟹ <i>x</i><sup>2</sup> = 4 ⟹ <i>x</i> = 2 ou <i>x</i> = −2.</div>'+
+
+  '<h3>Lecture graphique</h3>'+
+  '<p>Deplacez le curseur pour lire image et antecedent sur la courbe de <i>f</i>(<i>x</i>) = <span class="frac"><span class="num">1</span><span class="den">4</span></span><i>x</i><sup>2</sup> − 1.</p>'+
+  '<div class="slider-row"><label>x =</label><input type="range" id="sl0x" min="-4" max="4" step="0.1" value="2"><span class="slider-val" id="sv0x">2</span></div>'+
+  '<canvas id="cv0" width="460" height="340"></canvas>'+
+  '<div class="canvas-info" id="cv0info"></div>';
+
+  var draw0=function(){
+    var a=setupCanvas('cv0',460,340),ctx=a.ctx,w=a.w,h=a.h;
+    var ox=w/2,oy=h/2+40,sx=40,sy=40;
+    drawGrid(ctx,w,h,ox,oy,sx,sy);
+    var f=function(x){return 0.25*x*x-1};
+    plotFunc(ctx,f,ox,oy,sx,sy,w,h);
+    var xv=parseFloat(document.getElementById('sl0x').value);
+    var yv=f(xv);
+    var px=ox+xv*sx,py=oy-yv*sy;
+    drawDashed(ctx,px,oy,px,py);drawDashed(ctx,ox,py,px,py);
+    drawDot(ctx,px,py,5);
+    document.getElementById('sv0x').textContent=xv.toFixed(1);
+    document.getElementById('cv0info').textContent='f('+xv.toFixed(1)+') = '+yv.toFixed(2)+'  →  L\'image de '+xv.toFixed(1)+' est '+yv.toFixed(2);
+  };
+  document.getElementById('sl0x').oninput=draw0;
+  canvasCache['cv0']=draw0;draw0();
+}
+
+/* ---------- TAB 1 ---------- */
+function buildCourbe(el){
+  el.innerHTML=
+  '<h2>Courbe representative</h2>'+
+  '<div class="card definition"><div class="card-title">Definition</div>'+
+  'La <b>courbe representative</b> de <i>f</i>, notee <i>C<sub>f</sub></i>, est l\'ensemble des points <i>M</i>(<i>x</i> ; <i>f</i>(<i>x</i>)) pour <i>x</i> &#x2208; <i>D<sub>f</sub></i>.<br>'+
+  '<i>C<sub>f</sub></i> = { (<i>x</i> ; <i>f</i>(<i>x</i>)) | <i>x</i> &#x2208; <i>D<sub>f</sub></i> }</div>'+
+
+  '<div class="card definition"><div class="card-title">Appartenance a la courbe</div>'+
+  'Un point <i>A</i>(<i>a</i> ; <i>b</i>) appartient a <i>C<sub>f</sub></i> si et seulement si <i>f</i>(<i>a</i>) = <i>b</i>.</div>'+
+
+  '<div class="card example"><div class="card-title">Exemple</div>'+
+  'Soit <i>f</i>(<i>x</i>) = 2<i>x</i> − 3. Le point <i>A</i>(2 ; 1) appartient-il a <i>C<sub>f</sub></i> ?<br>'+
+  '<i>f</i>(2) = 2 &#xD7; 2 − 3 = 1. Comme <i>f</i>(2) = 1, oui, <i>A</i> &#x2208; <i>C<sub>f</sub></i>.</div>'+
+
+  '<h3>Lecture de coordonnees</h3>'+
+  '<p>Cliquez sur le graphique pour lire les coordonnees d\'un point. La courbe est <i>f</i>(<i>x</i>) = sin(<i>x</i>) + 0.3<i>x</i>.</p>'+
+  '<canvas id="cv1" width="460" height="340"></canvas>'+
+  '<div class="canvas-info" id="cv1info">Cliquez sur le graphique</div>';
+
+  var clickPt=null;
+  var draw1=function(){
+    var a=setupCanvas('cv1',460,340),ctx=a.ctx,w=a.w,h=a.h;
+    var ox=w/2,oy=h/2,sx=35,sy=50;
+    drawGrid(ctx,w,h,ox,oy,sx,sy);
+    var f=function(x){return Math.sin(x)+0.3*x};
+    plotFunc(ctx,f,ox,oy,sx,sy,w,h);
+    if(clickPt){
+      var mx=clickPt[0],my=clickPt[1];
+      var xv=(mx-ox)/sx,yv=-(my-oy)/sy;
+      drawDashed(ctx,mx,oy,mx,my);drawDashed(ctx,ox,my,mx,my);
+      drawDot(ctx,mx,my,5);
+      var onCurve=Math.abs(yv-f(xv))<0.15;
+      document.getElementById('cv1info').textContent=
+        'Point ('+xv.toFixed(2)+' ; '+yv.toFixed(2)+') — '+(onCurve?'Proche de la courbe':'Hors de la courbe');
+    }
+  };
+  document.getElementById('cv1').addEventListener('click',function(e){
+    var r=this.getBoundingClientRect();
+    clickPt=[e.clientX-r.left,e.clientY-r.top];draw1();
+  });
+  canvasCache['cv1']=draw1;draw1();
+}
+
+/* ---------- TAB 2 ---------- */
+function buildVariations(el){
+  el.innerHTML=
+  '<h2>Variations d\'une fonction</h2>'+
+  '<div class="card definition"><div class="card-title">Fonction croissante</div>'+
+  '<i>f</i> est <b>croissante</b> sur un intervalle <i>I</i> si, pour tous <i>a</i>, <i>b</i> &#x2208; <i>I</i> :<br>'+
+  '<i>a</i> &lt; <i>b</i> ⟹ <i>f</i>(<i>a</i>) &le; <i>f</i>(<i>b</i>)<br>'+
+  'La courbe « monte » de gauche a droite.</div>'+
+
+  '<div class="card definition"><div class="card-title">Fonction decroissante</div>'+
+  '<i>f</i> est <b>decroissante</b> sur un intervalle <i>I</i> si, pour tous <i>a</i>, <i>b</i> &#x2208; <i>I</i> :<br>'+
+  '<i>a</i> &lt; <i>b</i> ⟹ <i>f</i>(<i>a</i>) &ge; <i>f</i>(<i>b</i>)<br>'+
+  'La courbe « descend » de gauche a droite.</div>'+
+
+  '<div class="card definition"><div class="card-title">Extremums</div>'+
+  '&bull; <i>f</i> admet un <b>maximum</b> en <i>a</i> si <i>f</i>(<i>a</i>) &ge; <i>f</i>(<i>x</i>) pour tout <i>x</i> &#x2208; <i>D<sub>f</sub></i>.<br>'+
+  '&bull; <i>f</i> admet un <b>minimum</b> en <i>a</i> si <i>f</i>(<i>a</i>) &le; <i>f</i>(<i>x</i>) pour tout <i>x</i> &#x2208; <i>D<sub>f</sub></i>.</div>'+
+
+  '<div class="card example"><div class="card-title">Tableau de variations</div>'+
+  'Le tableau de variations resume les intervalles de croissance et de decroissance.<br>'+
+  'On indique les fleches &#x2197; (croissante) et &#x2198; (decroissante) ainsi que les valeurs remarquables.</div>'+
+
+  '<h3>Visualisation interactive</h3>'+
+  '<p>Observez les variations de <i>f</i>(<i>x</i>) = <i>x</i><sup>3</sup> − 3<i>x</i> et ses extremums locaux.</p>'+
+  '<canvas id="cv2" width="460" height="340"></canvas>'+
+  '<div class="canvas-info">Decroissante sur ]−&#x221E;;−1], croissante sur [−1;1] est faux ici — croissante sur ]−&#x221E;;−1], decroissante sur [−1;1], croissante sur [1;+&#x221E;[.<br>Maximum local en x=−1 : f(−1)=2, minimum local en x=1 : f(1)=−2.</div>';
+
+  var draw2=function(){
+    var a=setupCanvas('cv2',460,340),ctx=a.ctx,w=a.w,h=a.h;
+    var ox=w/2,oy=h/2,sx=50,sy=40;
+    drawGrid(ctx,w,h,ox,oy,sx,sy);
+    var f=function(x){return x*x*x-3*x};
+    plotFunc(ctx,f,ox,oy,sx,sy,w,h);
+    // Mark extrema
+    var px1=ox+(-1)*sx,py1=oy-f(-1)*sy;
+    var px2=ox+1*sx,py2=oy-f(1)*sy;
+    drawDot(ctx,px1,py1,6,getCSS('--success'));
+    drawDot(ctx,px2,py2,6,getCSS('--error'));
+    ctx.fillStyle=getCSS('--success');ctx.font='bold 12px Nunito Sans';
+    ctx.fillText('Max local (−1 ; 2)',px1-60,py1-12);
+    ctx.fillStyle=getCSS('--error');
+    ctx.fillText('Min local (1 ; −2)',px2+8,py2+16);
+    // Arrows for variation
+    ctx.strokeStyle=getCSS('--success');ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(ox-4*sx,oy-f(-4)*sy);ctx.lineTo(px1,py1);ctx.stroke();
+    ctx.strokeStyle=getCSS('--error');
+    ctx.beginPath();ctx.moveTo(px1,py1);ctx.lineTo(px2,py2);ctx.stroke();
+    ctx.strokeStyle=getCSS('--success');
+    ctx.beginPath();ctx.moveTo(px2,py2);ctx.lineTo(ox+4*sx,oy-f(4)*sy);ctx.stroke();
+  };
+  canvasCache['cv2']=draw2;draw2();
+}
+
+/* ---------- TAB 3 ---------- */
+function buildParite(el){
+  el.innerHTML=
+  '<h2>Parite et symetries</h2>'+
+  '<div class="card definition"><div class="card-title">Fonction paire</div>'+
+  '<i>f</i> est <b>paire</b> si pour tout <i>x</i> &#x2208; <i>D<sub>f</sub></i> : <i>f</i>(−<i>x</i>) = <i>f</i>(<i>x</i>).<br>'+
+  'Sa courbe est <b>symetrique par rapport a l\'axe des ordonnees</b>.</div>'+
+
+  '<div class="card definition"><div class="card-title">Fonction impaire</div>'+
+  '<i>f</i> est <b>impaire</b> si pour tout <i>x</i> &#x2208; <i>D<sub>f</sub></i> : <i>f</i>(−<i>x</i>) = −<i>f</i>(<i>x</i>).<br>'+
+  'Sa courbe est <b>symetrique par rapport a l\'origine O</b>.</div>'+
+
+  '<div class="card example"><div class="card-title">Exemples classiques</div>'+
+  '&bull; <i>f</i>(<i>x</i>) = <i>x</i><sup>2</sup> est paire : (−<i>x</i>)<sup>2</sup> = <i>x</i><sup>2</sup>.<br>'+
+  '&bull; <i>f</i>(<i>x</i>) = <i>x</i><sup>3</sup> est impaire : (−<i>x</i>)<sup>3</sup> = −<i>x</i><sup>3</sup>.<br>'+
+  '&bull; <i>f</i>(<i>x</i>) = <i>x</i><sup>2</sup> + <i>x</i> n\'est ni paire, ni impaire.</div>'+
+
+  '<div class="card warning"><div class="card-title">Condition necessaire</div>'+
+  'Pour qu\'une fonction soit paire ou impaire, son ensemble de definition doit etre <b>symetrique par rapport a 0</b> : si <i>x</i> &#x2208; <i>D<sub>f</sub></i>, alors −<i>x</i> &#x2208; <i>D<sub>f</sub></i>.</div>'+
+
+  '<h3>Visualisation</h3>'+
+  '<p>Choisissez une fonction pour observer la symetrie.</p>'+
+  '<div class="slider-row"><label>Fonction :</label>'+
+  '<select id="sel3" style="padding:4px 8px;border-radius:4px;border:1px solid var(--border);font-size:0.9rem">'+
+  '<option value="pair">x² (paire)</option>'+
+  '<option value="impair">x³ (impaire)</option>'+
+  '<option value="ni">x²+x (ni paire ni impaire)</option>'+
+  '</select></div>'+
+  '<canvas id="cv3" width="460" height="340"></canvas>'+
+  '<div class="canvas-info" id="cv3info"></div>';
+
+  var draw3=function(){
+    var a=setupCanvas('cv3',460,340),ctx=a.ctx,w=a.w,h=a.h;
+    var ox=w/2,oy=h/2,sx=50,sy=50;
+    drawGrid(ctx,w,h,ox,oy,sx,sy);
+    var sel=document.getElementById('sel3').value;
+    var f,label;
+    if(sel==='pair'){f=function(x){return x*x/2};label='f(x) = x²/2 — Paire : symetrie / axe Oy'}
+    else if(sel==='impair'){f=function(x){return x*x*x/4};label='f(x) = x³/4 — Impaire : symetrie / origine O'}
+    else{f=function(x){return x*x/2+x};label='f(x) = x²/2 + x — Ni paire ni impaire'}
+    plotFunc(ctx,f,ox,oy,sx,sy,w,h);
+    // Show symmetric points
+    var xp=1.5;var yp=f(xp);var ym=f(-xp);
+    var px1=ox+xp*sx,py1=oy-yp*sy;
+    var px2=ox-xp*sx,py2=oy-ym*sy;
+    drawDot(ctx,px1,py1,5,getCSS('--canvas-curve2'));
+    drawDot(ctx,px2,py2,5,getCSS('--canvas-point'));
+    ctx.font='11px Nunito Sans';
+    ctx.fillStyle=getCSS('--canvas-curve2');
+    ctx.fillText('('+xp+' ; '+yp.toFixed(2)+')',px1+6,py1-6);
+    ctx.fillStyle=getCSS('--canvas-point');
+    ctx.fillText('('+(-xp)+' ; '+ym.toFixed(2)+')',px2+6,py2-6);
+    if(sel==='pair'){
+      drawDashed(ctx,px1,py1,px2,py2,getCSS('--text-light'));
+    }else if(sel==='impair'){
+      drawDashed(ctx,px1,py1,px2,py2,getCSS('--text-light'));
+      drawDot(ctx,ox,oy,4,getCSS('--text-light'));
+    }
+    document.getElementById('cv3info').textContent=label;
+  };
+  document.getElementById('sel3').onchange=draw3;
+  canvasCache['cv3']=draw3;draw3();
+}
+
+/* ---------- TAB 4 ---------- */
+function buildResolution(el){
+  el.innerHTML=
+  '<h2>Resolution graphique</h2>'+
+  '<div class="card definition"><div class="card-title">f(x) = k</div>'+
+  'Les solutions de <i>f</i>(<i>x</i>) = <i>k</i> sont les abscisses des points d\'intersection de <i>C<sub>f</sub></i> avec la droite <i>y</i> = <i>k</i>.</div>'+
+
+  '<div class="card definition"><div class="card-title">f(x) > k</div>'+
+  'L\'ensemble des solutions de <i>f</i>(<i>x</i>) > <i>k</i> correspond aux intervalles ou la courbe est <b>au-dessus</b> de la droite <i>y</i> = <i>k</i>.</div>'+
+
+  '<div class="card definition"><div class="card-title">f(x) = g(x)</div>'+
+  'Les solutions de <i>f</i>(<i>x</i>) = <i>g</i>(<i>x</i>) sont les abscisses des points d\'intersection de <i>C<sub>f</sub></i> et <i>C<sub>g</sub></i>.</div>'+
+
+  '<h3>Outil interactif</h3>'+
+  '<p>Deplacez le curseur pour resoudre graphiquement <i>f</i>(<i>x</i>) = <i>k</i> avec <i>f</i>(<i>x</i>) = −0.5<i>x</i><sup>2</sup> + 2.</p>'+
+  '<div class="slider-row"><label>k =</label><input type="range" id="sl4k" min="-3" max="3" step="0.1" value="1"><span class="slider-val" id="sv4k">1</span></div>'+
+  '<canvas id="cv4" width="460" height="340"></canvas>'+
+  '<div class="canvas-info" id="cv4info"></div>';
+
+  var draw4=function(){
+    var a=setupCanvas('cv4',460,340),ctx=a.ctx,w=a.w,h=a.h;
+    var ox=w/2,oy=h/2+60,sx=45,sy=45;
+    drawGrid(ctx,w,h,ox,oy,sx,sy);
+    var f=function(x){return -0.5*x*x+2};
+    plotFunc(ctx,f,ox,oy,sx,sy,w,h);
+    var k=parseFloat(document.getElementById('sl4k').value);
+    document.getElementById('sv4k').textContent=k.toFixed(1);
+    // Draw y=k line
+    var ky=oy-k*sy;
+    ctx.strokeStyle=getCSS('--canvas-curve2');ctx.lineWidth=1.5;
+    ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(0,ky);ctx.lineTo(w,ky);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=getCSS('--canvas-curve2');ctx.font='bold 12px Nunito Sans';
+    ctx.fillText('y = '+k.toFixed(1),w-65,ky-6);
+    // Find intersections: -0.5x²+2 = k => x² = 2(2-k) => x = ±sqrt(2(2-k))
+    var disc=2*(2-k);
+    var sols=[];
+    if(disc>0.001){
+      var s=Math.sqrt(disc);sols.push(-s);sols.push(s);
+    }else if(Math.abs(disc)<0.001){sols.push(0)}
+    sols.forEach(function(xv){
+      var px=ox+xv*sx;
+      drawDot(ctx,px,ky,6,getCSS('--canvas-point'));
+      drawDashed(ctx,px,ky,px,oy);
+      ctx.fillStyle=getCSS('--canvas-point');ctx.font='11px Nunito Sans';
+      ctx.fillText('x≈'+xv.toFixed(2),px-18,oy+14);
+    });
+    if(sols.length===0){
+      document.getElementById('cv4info').textContent='f(x) = '+k.toFixed(1)+' : aucune solution (la droite ne coupe pas la courbe)';
+    }else if(sols.length===1){
+      document.getElementById('cv4info').textContent='f(x) = '+k.toFixed(1)+' : une solution, x = '+sols[0].toFixed(2);
+    }else{
+      document.getElementById('cv4info').textContent='f(x) = '+k.toFixed(1)+' : deux solutions, x ≈ '+sols[0].toFixed(2)+' et x ≈ '+sols[1].toFixed(2);
+    }
+  };
+  document.getElementById('sl4k').oninput=draw4;
+  canvasCache['cv4']=draw4;draw4();
+}
+
+/* ---------- TAB 5 ---------- */
+function buildExercices(el){
+  var exos=[
+    {title:'Exercice 1 — Images',
+     text:'Soit <i>f</i>(<i>x</i>) = 3<i>x</i> − 5. Calculer <i>f</i>(0), <i>f</i>(2) et <i>f</i>(−1).',
+     corr:'<i>f</i>(0) = 3(0) − 5 = −5<br><i>f</i>(2) = 3(2) − 5 = 1<br><i>f</i>(−1) = 3(−1) − 5 = −8'},
+    {title:'Exercice 2 — Antecedents',
+     text:'Soit <i>f</i>(<i>x</i>) = <i>x</i><sup>2</sup> − 4. Determiner les antecedents de 0 et de 5.',
+     corr:'<i>f</i>(<i>x</i>) = 0 ⟹ <i>x</i><sup>2</sup> = 4 ⟹ <i>x</i> = 2 ou <i>x</i> = −2.<br><i>f</i>(<i>x</i>) = 5 ⟹ <i>x</i><sup>2</sup> = 9 ⟹ <i>x</i> = 3 ou <i>x</i> = −3.'},
+    {title:'Exercice 3 — Appartenance a la courbe',
+     text:'Soit <i>f</i>(<i>x</i>) = 2<i>x</i><sup>2</sup> − <i>x</i> + 1. Les points <i>A</i>(1 ; 2) et <i>B</i>(−1 ; 4) appartiennent-ils a <i>C<sub>f</sub></i> ?',
+     corr:'<i>f</i>(1) = 2 − 1 + 1 = 2. Comme <i>f</i>(1) = 2, le point <i>A</i>(1 ; 2) &#x2208; <i>C<sub>f</sub></i>.<br><i>f</i>(−1) = 2(1) − (−1) + 1 = 4. Comme <i>f</i>(−1) = 4, le point <i>B</i>(−1 ; 4) &#x2208; <i>C<sub>f</sub></i>.'},
+    {title:'Exercice 4 — Parite',
+     text:'Montrer que <i>f</i>(<i>x</i>) = <i>x</i><sup>4</sup> − 2<i>x</i><sup>2</sup> est paire et que <i>g</i>(<i>x</i>) = <i>x</i><sup>3</sup> − <i>x</i> est impaire.',
+     corr:'<i>f</i>(−<i>x</i>) = (−<i>x</i>)<sup>4</sup> − 2(−<i>x</i>)<sup>2</sup> = <i>x</i><sup>4</sup> − 2<i>x</i><sup>2</sup> = <i>f</i>(<i>x</i>) → <i>f</i> est paire.<br><i>g</i>(−<i>x</i>) = (−<i>x</i>)<sup>3</sup> − (−<i>x</i>) = −<i>x</i><sup>3</sup> + <i>x</i> = −(<i>x</i><sup>3</sup> − <i>x</i>) = −<i>g</i>(<i>x</i>) → <i>g</i> est impaire.'},
+    {title:'Exercice 5 — Tableau de variations',
+     text:'Soit <i>f</i>(<i>x</i>) = −<i>x</i><sup>2</sup> + 4<i>x</i> − 1, definie sur [0 ; 5]. Dresser le tableau de variations de <i>f</i>.',
+     corr:'On reconnait un trinome du second degre avec <i>a</i> = −1 &lt; 0, donc la parabole est tournee vers le bas.<br>Sommet : <i>x</i><sub>s</sub> = −<span class="frac"><span class="num">4</span><span class="den">2(−1)</span></span> = 2.<br><i>f</i>(2) = −4 + 8 − 1 = 3.<br><i>f</i>(0) = −1 et <i>f</i>(5) = −25 + 20 − 1 = −6.<br>Tableau : <i>f</i> est croissante sur [0 ; 2] et decroissante sur [2 ; 5]. Maximum : <i>f</i>(2) = 3.'}
+  ];
+  var h='<h2>Exercices</h2>';
+  exos.forEach(function(ex,i){
+    h+='<div class="exercise"><h3>'+ex.title+'</h3><p>'+ex.text+'</p>'+
+      '<button class="toggle-btn" onclick="toggleCorr('+i+')">Voir la correction</button>'+
+      '<div class="correction" id="corr'+i+'">'+ex.corr+'</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+function toggleCorr(i){
+  var c=document.getElementById('corr'+i);
+  c.style.display=c.style.display==='block'?'none':'block';
+}
+
+/* ---------- TAB 6 ---------- */
+function buildQCM(el){
+  var pool=[
+    {q:'L\'image de 3 par f(x) = 2x − 1 est :',o:['5','7','6','4'],c:0},
+    {q:'Si f(a) = b, alors a est :',o:['L\'image de b','Un antecedent de b','L\'ordonnee de b','L\'abscisse de b'],c:1},
+    {q:'Un nombre b peut avoir combien d\'antecedents ?',o:['Exactement 1','Au plus 2','0, 1 ou plusieurs','Toujours 2'],c:2},
+    {q:'La courbe Cf est l\'ensemble des points :',o:['(x ; x)','(f(x) ; x)','(x ; f(x))','(y ; x)'],c:2},
+    {q:'Le point A(1 ; 3) ∈ Cf signifie :',o:['f(3) = 1','f(1) = 3','f(1) = 1','f(3) = 3'],c:1},
+    {q:'f est croissante sur I si pour a < b :',o:['f(a) > f(b)','f(a) ≤ f(b)','f(a) = f(b)','f(a) ≥ f(b)'],c:1},
+    {q:'f(x) = x² est :',o:['Paire','Impaire','Ni paire ni impaire','Les deux'],c:0},
+    {q:'f(x) = x³ est :',o:['Paire','Impaire','Ni paire ni impaire','Constante'],c:1},
+    {q:'Une fonction paire a sa courbe symetrique par rapport :',o:['A l\'origine','A l\'axe Ox','A l\'axe Oy','A la droite y = x'],c:2},
+    {q:'Les solutions de f(x) = k sont les abscisses des points d\'intersection de Cf avec :',o:['L\'axe Ox','La droite y = k','La droite x = k','L\'axe Oy'],c:1},
+    {q:'f admet un maximum en a signifie :',o:['f(a) ≤ f(x) pour tout x','f(a) ≥ f(x) pour tout x','f(a) = 0','f\'(a) = 0'],c:1},
+    {q:'L\'ensemble de definition de f(x) = 1/x est :',o:['ℝ','ℝ \\ {0}','ℝ+','ℝ \\ {1}'],c:1},
+    {q:'Si f(-x) = -f(x), la courbe est symetrique par rapport :',o:['A l\'axe Oy','A l\'axe Ox','A l\'origine O','A y = x'],c:2},
+    {q:'f(x) = x² + x est :',o:['Paire','Impaire','Ni paire ni impaire','Periodique'],c:2},
+    {q:'L\'image de −2 par f(x) = x² − 3 est :',o:['−7','1','7','−1'],c:1},
+    {q:'Pour resoudre f(x) > 0 graphiquement, on cherche ou la courbe est :',o:['Sous l\'axe Ox','Sur l\'axe Ox','Au-dessus de l\'axe Ox','A droite de Oy'],c:2}
+  ];
+
+  // Shuffle and pick 10
+  var shuffled=pool.slice();
+  for(var i=shuffled.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=shuffled[i];shuffled[i]=shuffled[j];shuffled[j]=t}
+  var qs=shuffled.slice(0,10);
+
+  var h='<h2>QCM — Testez vos connaissances</h2><p>10 questions tirees au hasard. Cochez une reponse pour chaque question puis validez.</p>';
+  qs.forEach(function(q,i){
+    h+='<div class="qcm-q" id="qq'+i+'"><h3>Question '+(i+1)+'</h3><p>'+q.q+'</p><div class="qcm-opts">';
+    q.o.forEach(function(o,j){
+      h+='<label><input type="radio" name="qcm'+i+'" value="'+j+'"> '+o+'</label>';
+    });
+    h+='</div><div class="qcm-feedback" id="qf'+i+'"></div></div>';
+  });
+  h+='<button class="toggle-btn" style="font-size:1rem;padding:10px 28px;margin:16px 0" onclick="checkQCM()">Valider le QCM</button>';
+  h+='<div class="qcm-score" id="qcmscore" style="display:none"></div>';
+  el.innerHTML=h;
+
+  window._qcmData=qs;
+}
+
+function checkQCM(){
+  var qs=window._qcmData;if(!qs)return;
+  var score=0;
+  qs.forEach(function(q,i){
+    var sel=document.querySelector('input[name="qcm'+i+'"]:checked');
+    var fb=document.getElementById('qf'+i);
+    fb.style.display='block';
+    if(!sel){
+      fb.textContent='Pas de reponse selectionnee.';
+      fb.style.background=getCSS('--qcm-wrong');fb.style.color=getCSS('--error');
+      return;
+    }
+    if(parseInt(sel.value)===q.c){
+      fb.textContent='Correct !';
+      fb.style.background=getCSS('--qcm-correct');fb.style.color=getCSS('--success');
+      score++;
+    }else{
+      fb.textContent='Incorrect. Bonne reponse : '+q.o[q.c];
+      fb.style.background=getCSS('--qcm-wrong');fb.style.color=getCSS('--error');
+    }
+  });
+  var sc=document.getElementById('qcmscore');
+  sc.style.display='block';
+  sc.textContent='Score : '+score+' / 10';
+  if(score>=8)sc.textContent+=' — Excellent !';
+  else if(score>=5)sc.textContent+=' — Bien, continuez vos efforts !';
+  else sc.textContent+=' — Revoyez le cours et reessayez.';
+}
+
+/* ===== INIT ===== */
+buildTabs();showTab(0);
+</script>
+</body>
+</html>

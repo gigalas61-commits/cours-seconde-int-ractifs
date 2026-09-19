@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ensembles de nombres et intervalles — Seconde</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ed;--surface:#ffffff;--text:#2c2c2c;--text-light:#555;
+  --heading:#8b4513;--accent:#a0522d;--accent-light:#d2a679;
+  --border:#e0d5c7;--shadow:rgba(139,69,19,.08);
+  --success:#2e7d32;--error:#c62828;--info:#1565c0;
+  --canvas-bg:#faf8f5;--canvas-line:#8b4513;--canvas-fill:rgba(160,82,45,.15);
+  --canvas-text:#2c2c2c;--canvas-accent:#a0522d;--canvas-accent2:#1565c0;
+  --tab-bg:#ede7df;--tab-active:#8b4513;--tab-text:#5a4030;
+  --detail-bg:#faf7f2;--quiz-correct:#e8f5e9;--quiz-wrong:#ffebee;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1a1410;--surface:#2a2218;--text:#e0d8cf;--text-light:#b0a898;
+    --heading:#d2a679;--accent:#d2a679;--accent-light:#8b6540;
+    --border:#3d3228;--shadow:rgba(0,0,0,.3);
+    --success:#66bb6a;--error:#ef5350;--info:#42a5f5;
+    --canvas-bg:#2a2218;--canvas-line:#d2a679;--canvas-fill:rgba(210,166,121,.2);
+    --canvas-text:#e0d8cf;--canvas-accent:#d2a679;--canvas-accent2:#42a5f5;
+    --tab-bg:#2a2218;--tab-active:#d2a679;--tab-text:#b0a898;
+    --detail-bg:#332a20;--quiz-correct:#1b5e20;--quiz-wrong:#b71c1c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1410;--surface:#2a2218;--text:#e0d8cf;--text-light:#b0a898;
+  --heading:#d2a679;--accent:#d2a679;--accent-light:#8b6540;
+  --border:#3d3228;--shadow:rgba(0,0,0,.3);
+  --success:#66bb6a;--error:#ef5350;--info:#42a5f5;
+  --canvas-bg:#2a2218;--canvas-line:#d2a679;--canvas-fill:rgba(210,166,121,.2);
+  --canvas-text:#e0d8cf;--canvas-accent:#d2a679;--canvas-accent2:#42a5f5;
+  --tab-bg:#2a2218;--tab-active:#d2a679;--tab-text:#b0a898;
+  --detail-bg:#332a20;--quiz-correct:#1b5e20;--quiz-wrong:#b71c1c;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:16px;max-width:900px;margin:0 auto}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;color:var(--heading);font-weight:700}
+h1{font-size:1.8rem;text-align:center;margin:20px 0 6px;line-height:1.2}
+.subtitle{text-align:center;color:var(--text-light);margin-bottom:20px;font-size:.95rem}
+h2{font-size:1.4rem;margin:24px 0 12px;border-bottom:2px solid var(--accent-light);padding-bottom:4px}
+h3{font-size:1.15rem;margin:16px 0 8px}
+p{margin:8px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab-btn{font-family:'Nunito Sans',sans-serif;background:var(--tab-bg);border:none;padding:8px 14px;cursor:pointer;border-radius:6px 6px 0 0;color:var(--tab-text);font-size:.85rem;font-weight:600;transition:all .2s}
+.tab-btn.active{background:var(--tab-active);color:#fff}
+.tab-btn:hover:not(.active){background:var(--accent-light);color:#fff}
+.sec{display:none}.sec.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;margin:14px 0;box-shadow:0 2px 8px var(--shadow)}
+.def{border-left:4px solid var(--accent);padding-left:14px;margin:12px 0}
+.def-title{font-weight:700;color:var(--accent);font-size:.95rem}
+.formula{background:var(--detail-bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-size:1.1rem}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px}
+.frac .num{border-bottom:1px solid var(--text);padding:0 4px 2px;font-size:.9em}
+.frac .den{padding:2px 4px 0;font-size:.9em}
+table{width:100%;border-collapse:collapse;margin:10px 0}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:center}
+th{background:var(--accent);color:#fff;font-weight:600}
+td{background:var(--surface)}
+canvas{display:block;margin:10px auto;border-radius:8px;max-width:100%}
+details{background:var(--detail-bg);border:1px solid var(--border);border-radius:8px;margin:10px 0;padding:12px 16px}
+details summary{cursor:pointer;font-weight:700;color:var(--accent);list-style:none}
+details summary::before{content:"▶ ";font-size:.8em}
+details[open] summary::before{content:"▼ "}
+.quiz-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin:12px 0}
+.quiz-box h3{margin-top:0}
+.quiz-opt{display:block;margin:6px 0;padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .2s}
+.quiz-opt:hover{border-color:var(--accent)}
+.quiz-opt.correct{background:var(--quiz-correct);border-color:var(--success)}
+.quiz-opt.wrong{background:var(--quiz-wrong);border-color:var(--error)}
+.quiz-expl{margin-top:8px;padding:8px;border-radius:6px;font-size:.9rem;color:var(--text-light)}
+.score-bar{text-align:center;font-size:1.2rem;font-weight:700;color:var(--accent);margin:16px 0}
+.slider-group{margin:10px 0}
+.slider-group label{display:block;font-weight:600;margin-bottom:4px;color:var(--accent)}
+.slider-group input[type=range]{width:100%;accent-color:var(--accent)}
+.slider-val{font-size:.9rem;color:var(--text-light)}
+.theme-toggle{position:fixed;top:10px;right:10px;background:var(--surface);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;z-index:99;box-shadow:0 2px 6px var(--shadow)}
+@media(max-width:600px){
+  h1{font-size:1.4rem}h2{font-size:1.2rem}
+  .tab-btn{padding:6px 8px;font-size:.75rem}
+  .card{padding:12px}body{padding:10px}
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer le thème">🌓</button>
+<h1>Ensembles de nombres et intervalles</h1>
+<p class="subtitle">Seconde — Mathématiques</p>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab(0)">Ensembles de nombres</button>
+  <button class="tab-btn" onclick="showTab(1)">Intervalles</button>
+  <button class="tab-btn" onclick="showTab(2)">Opérations</button>
+  <button class="tab-btn" onclick="showTab(3)">Valeur absolue</button>
+  <button class="tab-btn" onclick="showTab(4)">Exercices</button>
+  <button class="tab-btn" onclick="showTab(5)">QCM</button>
+</div>
+
+<!-- TAB 0 : Ensembles de nombres -->
+<section class="sec active" id="sec0">
+<h2>Les ensembles de nombres</h2>
+<div class="card">
+<div class="def"><span class="def-title">ℕ — Entiers naturels</span><br>
+  ℕ = {0 ; 1 ; 2 ; 3 ; …} — Les nombres utilisés pour compter.</div>
+<div class="def"><span class="def-title">ℤ — Entiers relatifs</span><br>
+  ℤ = {… ; −2 ; −1 ; 0 ; 1 ; 2 ; …} — Les entiers naturels et leurs opposés.</div>
+<div class="def"><span class="def-title">𝔻 — Nombres décimaux</span><br>
+  𝔻 = { <span class="frac"><span class="num">a</span><span class="den">10<sup>n</sup></span></span> | a ∈ ℤ, n ∈ ℕ } — Exemples : 0,5 ; −3,14 ; 7</div>
+<div class="def"><span class="def-title">ℚ — Nombres rationnels</span><br>
+  ℚ = { <span class="frac"><span class="num">p</span><span class="den">q</span></span> | p ∈ ℤ, q ∈ ℤ* } — Tout nombre pouvant s'écrire comme fraction. Exemples : <span class="frac"><span class="num">1</span><span class="den">3</span></span> ; −<span class="frac"><span class="num">7</span><span class="den">4</span></span> ; 2</div>
+<div class="def"><span class="def-title">ℝ — Nombres réels</span><br>
+  L'ensemble de tous les nombres, rationnels et irrationnels. Ils remplissent entièrement la droite graduée.</div>
+</div>
+
+<div class="formula">ℕ ⊂ ℤ ⊂ 𝔻 ⊂ ℚ ⊂ ℝ</div>
+
+<h3>Diagramme de Venn</h3>
+<canvas id="cvVenn" width="700" height="400"></canvas>
+
+<h3>Les nombres irrationnels</h3>
+<div class="card">
+<p>Un nombre irrationnel est un réel qui n'est pas rationnel : il ne peut pas s'écrire sous forme de fraction.</p>
+<p><strong>Exemples :</strong> √2 ≈ 1,41421… ; π ≈ 3,14159… ; √3 ; √5</p>
+<p>Leur écriture décimale est <strong>infinie et non périodique</strong>.</p>
+</div>
+
+<div class="card">
+<h3>Preuve que √2 est irrationnel</h3>
+<p><em>Raisonnement par l'absurde.</em></p>
+<p>Supposons √2 = <span class="frac"><span class="num">p</span><span class="den">q</span></span> avec p, q entiers, q ≠ 0, fraction irréductible.</p>
+<p>Alors 2 = <span class="frac"><span class="num">p²</span><span class="den">q²</span></span>, donc p² = 2q².</p>
+<p>Ainsi p² est pair, donc p est pair. Posons p = 2k.</p>
+<p>Alors 4k² = 2q², soit q² = 2k², donc q est aussi pair.</p>
+<p>Contradiction : p et q seraient tous deux pairs, la fraction ne serait pas irréductible. ∎</p>
+</div>
+</section>
+
+<!-- TAB 1 : Intervalles -->
+<section class="sec" id="sec1">
+<h2>Les intervalles de ℝ</h2>
+<div class="card">
+<p>Un <strong>intervalle</strong> est une partie de ℝ constituée de tous les réels compris entre deux bornes.</p>
+<table>
+<tr><th>Notation</th><th>Signification</th><th>Type</th></tr>
+<tr><td>[a ; b]</td><td>a ≤ x ≤ b</td><td>Fermé borné</td></tr>
+<tr><td>]a ; b[</td><td>a &lt; x &lt; b</td><td>Ouvert borné</td></tr>
+<tr><td>[a ; b[</td><td>a ≤ x &lt; b</td><td>Semi-ouvert borné</td></tr>
+<tr><td>]a ; b]</td><td>a &lt; x ≤ b</td><td>Semi-ouvert borné</td></tr>
+<tr><td>]−∞ ; a]</td><td>x ≤ a</td><td>Fermé non borné</td></tr>
+<tr><td>]−∞ ; a[</td><td>x &lt; a</td><td>Ouvert non borné</td></tr>
+<tr><td>[a ; +∞[</td><td>x ≥ a</td><td>Fermé non borné</td></tr>
+<tr><td>]a ; +∞[</td><td>x &gt; a</td><td>Ouvert non borné</td></tr>
+<tr><td>]−∞ ; +∞[</td><td>x ∈ ℝ</td><td>ℝ tout entier</td></tr>
+</table>
+</div>
+<div class="card">
+<p><strong>Convention :</strong> Les crochets tournés vers l'extérieur (]) signifient que la borne est <strong>exclue</strong>. Ceux tournés vers l'intérieur ([) signifient qu'elle est <strong>incluse</strong>.</p>
+<p>L'infini (−∞ ou +∞) est toujours accompagné d'un crochet ouvert.</p>
+</div>
+
+<h3>Représentation sur la droite graduée</h3>
+<canvas id="cvIntervals" width="700" height="340"></canvas>
+</section>
+
+<!-- TAB 2 : Opérations -->
+<section class="sec" id="sec2">
+<h2>Intersection et réunion d'intervalles</h2>
+<div class="card">
+<div class="def"><span class="def-title">Intersection A ∩ B</span><br>
+  L'ensemble des réels qui appartiennent à A <strong>et</strong> à B simultanément.</div>
+<div class="def"><span class="def-title">Réunion A ∪ B</span><br>
+  L'ensemble des réels qui appartiennent à A <strong>ou</strong> à B (ou aux deux).</div>
+</div>
+
+<h3>Visualisation interactive</h3>
+<div class="card">
+<div class="slider-group">
+  <label>Intervalle A : [a₁ ; a₂]</label>
+  <input type="range" id="slA1" min="-8" max="8" value="-3" step="0.5" oninput="drawOps()">
+  <input type="range" id="slA2" min="-8" max="8" value="4" step="0.5" oninput="drawOps()">
+  <span class="slider-val" id="lblA"></span>
+</div>
+<div class="slider-group">
+  <label>Intervalle B : [b₁ ; b₂]</label>
+  <input type="range" id="slB1" min="-8" max="8" value="1" step="0.5" oninput="drawOps()">
+  <input type="range" id="slB2" min="-8" max="8" value="7" step="0.5" oninput="drawOps()">
+  <span class="slider-val" id="lblB"></span>
+</div>
+<canvas id="cvOps" width="700" height="260"></canvas>
+</div>
+</section>
+
+<!-- TAB 3 : Valeur absolue -->
+<section class="sec" id="sec3">
+<h2>Valeur absolue et distance</h2>
+<div class="card">
+<div class="def"><span class="def-title">Définition</span><br>
+  La <strong>valeur absolue</strong> d'un réel x, notée |x|, est la distance de x à 0 sur la droite graduée.<br>
+  |x| = x si x ≥ 0, et |x| = −x si x &lt; 0.</div>
+</div>
+<div class="card">
+<div class="def"><span class="def-title">Distance entre deux réels</span><br>
+  La distance entre a et b sur la droite graduée est |a − b| = |b − a|.</div>
+</div>
+
+<div class="formula">
+  |x − a| &lt; r &nbsp;⟺&nbsp; a − r &lt; x &lt; a + r &nbsp;⟺&nbsp; x ∈ ]a − r ; a + r[
+</div>
+<div class="formula">
+  |x − a| ≤ r &nbsp;⟺&nbsp; a − r ≤ x ≤ a + r &nbsp;⟺&nbsp; x ∈ [a − r ; a + r]
+</div>
+
+<h3>Visualisation interactive</h3>
+<div class="card">
+<div class="slider-group">
+  <label>Centre a :</label>
+  <input type="range" id="slVA" min="-6" max="6" value="2" step="0.5" oninput="drawAbs()">
+  <span class="slider-val" id="lblVA"></span>
+</div>
+<div class="slider-group">
+  <label>Rayon r :</label>
+  <input type="range" id="slVR" min="0.5" max="6" value="3" step="0.5" oninput="drawAbs()">
+  <span class="slider-val" id="lblVR"></span>
+</div>
+<canvas id="cvAbs" width="700" height="200"></canvas>
+</div>
+</section>
+
+<!-- TAB 4 : Exercices -->
+<section class="sec" id="sec4">
+<h2>Exercices</h2>
+
+<div class="card">
+<h3>Exercice 1 — Appartenance aux ensembles</h3>
+<p>Pour chaque nombre, indiquer le plus petit ensemble auquel il appartient parmi ℕ, ℤ, 𝔻, ℚ, ℝ \ ℚ :</p>
+<p>a) 7 &nbsp;&nbsp; b) −3 &nbsp;&nbsp; c) 0,25 &nbsp;&nbsp; d) <span class="frac"><span class="num">1</span><span class="den">3</span></span> &nbsp;&nbsp; e) √5 &nbsp;&nbsp; f) π</p>
+<details><summary>Voir la correction</summary>
+<p>a) 7 ∈ ℕ &nbsp; b) −3 ∈ ℤ &nbsp; c) 0,25 = <span class="frac"><span class="num">25</span><span class="den">100</span></span> ∈ 𝔻 &nbsp; d) <span class="frac"><span class="num">1</span><span class="den">3</span></span> ∈ ℚ (non décimal) &nbsp; e) √5 ∈ ℝ \ ℚ &nbsp; f) π ∈ ℝ \ ℚ</p>
+</details>
+</div>
+
+<div class="card">
+<h3>Exercice 2 — Écriture d'intervalles</h3>
+<p>Écrire sous forme d'intervalle :</p>
+<p>a) L'ensemble des réels x tels que −2 ≤ x &lt; 5</p>
+<p>b) L'ensemble des réels x tels que x &gt; 3</p>
+<p>c) L'ensemble des réels x tels que x ≤ −1</p>
+<details><summary>Voir la correction</summary>
+<p>a) [−2 ; 5[ &nbsp; b) ]3 ; +∞[ &nbsp; c) ]−∞ ; −1]</p>
+</details>
+</div>
+
+<div class="card">
+<h3>Exercice 3 — Intersection et réunion</h3>
+<p>Soient A = [−3 ; 4] et B = [1 ; 7]. Déterminer :</p>
+<p>a) A ∩ B &nbsp;&nbsp; b) A ∪ B</p>
+<details><summary>Voir la correction</summary>
+<p>a) A ∩ B = [1 ; 4] (les réels qui sont dans les deux intervalles)</p>
+<p>b) A ∪ B = [−3 ; 7] (les réels qui sont dans au moins un des deux)</p>
+</details>
+</div>
+
+<div class="card">
+<h3>Exercice 4 — Valeur absolue</h3>
+<p>Résoudre les inéquations suivantes et donner la solution sous forme d'intervalle :</p>
+<p>a) |x − 3| ≤ 2 &nbsp;&nbsp; b) |x + 1| &lt; 4 &nbsp;&nbsp; c) |2x − 6| ≤ 10</p>
+<details><summary>Voir la correction</summary>
+<p>a) |x − 3| ≤ 2 ⟺ 1 ≤ x ≤ 5 ⟺ x ∈ [1 ; 5]</p>
+<p>b) |x + 1| &lt; 4 ⟺ |x − (−1)| &lt; 4 ⟺ −5 &lt; x &lt; 3 ⟺ x ∈ ]−5 ; 3[</p>
+<p>c) |2x − 6| ≤ 10 ⟺ |2(x − 3)| ≤ 10 ⟺ |x − 3| ≤ 5 ⟺ −2 ≤ x ≤ 8 ⟺ x ∈ [−2 ; 8]</p>
+</details>
+</div>
+
+<div class="card">
+<h3>Exercice 5 — Problème de synthèse</h3>
+<p>On considère les ensembles : A = ]−∞ ; 3], B = [−1 ; +∞[, C = ]0 ; 5[.</p>
+<p>a) Déterminer A ∩ B &nbsp;&nbsp; b) Déterminer A ∩ C &nbsp;&nbsp; c) Déterminer (A ∩ B) ∪ C</p>
+<p>d) Montrer que <span class="frac"><span class="num">7</span><span class="den">3</span></span> appartient à A ∩ C mais pas à ℤ.</p>
+<details><summary>Voir la correction</summary>
+<p>a) A ∩ B = [−1 ; 3] (les x tels que x ≤ 3 et x ≥ −1)</p>
+<p>b) A ∩ C = ]0 ; 3] (les x tels que x ≤ 3 et 0 &lt; x &lt; 5)</p>
+<p>c) (A ∩ B) ∪ C = [−1 ; 3] ∪ ]0 ; 5[ = [−1 ; 5[</p>
+<p>d) <span class="frac"><span class="num">7</span><span class="den">3</span></span> ≈ 2,33… Donc 0 &lt; <span class="frac"><span class="num">7</span><span class="den">3</span></span> &lt; 3, soit <span class="frac"><span class="num">7</span><span class="den">3</span></span> ∈ ]0 ; 3] = A ∩ C. De plus, <span class="frac"><span class="num">7</span><span class="den">3</span></span> n'est pas entier, donc <span class="frac"><span class="num">7</span><span class="den">3</span></span> ∉ ℤ.</p>
+</details>
+</div>
+</section>
+
+<!-- TAB 5 : QCM -->
+<section class="sec" id="sec5">
+<h2>QCM — Testez vos connaissances</h2>
+<div id="quizArea"></div>
+<div class="score-bar" id="scoreBar"></div>
+<button class="tab-btn" style="margin-top:12px" onclick="launchQuiz()">Nouveau QCM</button>
+</section>
+
+<script>
+/* ---- Theme toggle ---- */
+function toggleTheme(){
+  const r=document.documentElement;
+  const cur=r.getAttribute('data-theme');
+  if(cur==='dark') r.setAttribute('data-theme','light');
+  else if(cur==='light') r.removeAttribute('data-theme');
+  else r.setAttribute('data-theme','dark');
+  // Redraw visible canvases
+  Object.keys(inited).forEach(k=>{inited[k]=false;});
+  const idx=[...document.querySelectorAll('.sec')].findIndex(s=>s.classList.contains('active'));
+  if(idx>=0){initSection(idx);inited[idx]=true;}
+}
+
+/* ---- Tab navigation ---- */
+const inited={};
+const sections=document.querySelectorAll('.sec');
+const btns=document.querySelectorAll('.tab-btn:not([style])');
+function showTab(i){
+  sections.forEach((s,j)=>{s.classList.toggle('active',j===i)});
+  btns.forEach((b,j)=>{b.classList.toggle('active',j===i)});
+  if(!inited[i]){initSection(i);inited[i]=true;}
+}
+
+/* ---- CSS var helper ---- */
+function cv(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
+function setupCanvas(id){
+  const c=document.getElementById(id);
+  const dpr=window.devicePixelRatio||1;
+  const w=c.parentElement?Math.min(c.width,c.parentElement.clientWidth-4):c.width;
+  c.style.width=w+'px';c.style.height=(c.height*w/c.width)+'px';
+  c.width=w*dpr;c.height=(parseInt(c.style.height)*dpr);
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
+  return{ctx,w,h:parseInt(c.style.height)};
+}
+
+/* ---- Section init ---- */
+function initSection(i){
+  switch(i){
+    case 0:drawVenn();break;
+    case 1:drawIntervals();break;
+    case 2:drawOps();break;
+    case 3:drawAbs();break;
+    case 5:launchQuiz();break;
+  }
+}
+
+/* ---- TAB 0 : Venn diagram ---- */
+function drawVenn(){
+  const{ctx,w,h}=setupCanvas('cvVenn');
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2,cy=h/2;
+  const sets=[
+    {r:Math.min(w*0.44,h*0.46),label:'ℝ',lx:cx+Math.min(w*0.34,h*0.36),ly:cy-Math.min(w*0.34,h*0.36)},
+    {r:Math.min(w*0.36,h*0.38),label:'ℚ',lx:cx+Math.min(w*0.26,h*0.28),ly:cy-Math.min(w*0.26,h*0.28)},
+    {r:Math.min(w*0.28,h*0.30),label:'𝔻',lx:cx+Math.min(w*0.18,h*0.20),ly:cy-Math.min(w*0.18,h*0.20)},
+    {r:Math.min(w*0.20,h*0.22),label:'ℤ',lx:cx+Math.min(w*0.10,h*0.12),ly:cy-Math.min(w*0.10,h*0.12)},
+    {r:Math.min(w*0.12,h*0.14),label:'ℕ',lx:cx,ly:cy},
+  ];
+  const colors=['rgba(160,82,45,0.08)','rgba(160,82,45,0.10)','rgba(160,82,45,0.12)','rgba(160,82,45,0.15)','rgba(160,82,45,0.20)'];
+  sets.forEach((s,j)=>{
+    ctx.beginPath();ctx.arc(cx,cy,s.r,0,Math.PI*2);
+    ctx.fillStyle=colors[j];ctx.fill();
+    ctx.strokeStyle=cv('--canvas-line');ctx.lineWidth=1.5;ctx.stroke();
+  });
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const fs=Math.max(14,Math.min(20,w/35));
+  ctx.font=`bold ${fs}px 'Cormorant Garamond',serif`;
+  ctx.fillStyle=cv('--canvas-text');
+  // Labels placed in concentric rings
+  const positions=[
+    {x:cx,y:cy,label:'ℕ'},
+    {x:cx,y:cy-sets[4].r-12,label:'ℤ'},
+    {x:cx,y:cy-sets[3].r-12,label:'𝔻'},
+    {x:cx,y:cy-sets[2].r-12,label:'ℚ'},
+    {x:cx,y:cy-sets[1].r-12,label:'ℝ'},
+  ];
+  positions.forEach(p=>{ctx.fillText(p.label,p.x,p.y);});
+  // Examples
+  const exFs=Math.max(10,Math.min(14,w/50));
+  ctx.font=`${exFs}px 'Nunito Sans',sans-serif`;
+  ctx.fillStyle=cv('--canvas-accent');
+  ctx.fillText('0, 1, 2, 3…',cx,cy+16);
+  ctx.fillText('−1, −5',cx-sets[4].r*0.3,cy+sets[4].r*0.7);
+  ctx.fillText('0.5, −2.7',cx+sets[3].r*0.5,cy+sets[3].r*0.5);
+  ctx.fillText('1/3, −7/4',cx+sets[2].r*0.5,cy+sets[2].r*0.6);
+  ctx.fillText('√2, π',cx-sets[1].r*0.6,cy+sets[0].r*0.7);
+}
+
+/* ---- TAB 1 : Intervals on number line ---- */
+function drawIntervals(){
+  const{ctx,w,h}=setupCanvas('cvIntervals');
+  ctx.clearRect(0,0,w,h);
+  const examples=[
+    {text:'[−2 ; 3]',a:-2,b:3,la:true,lb:true},
+    {text:']−1 ; 4[',a:-1,b:4,la:false,lb:false},
+    {text:'[0 ; 5[',a:0,b:5,la:true,lb:false},
+    {text:']−∞ ; 2]',a:-7,b:2,la:false,lb:true,infL:true},
+    {text:'[1 ; +∞[',a:1,b:7,la:true,lb:false,infR:true},
+  ];
+  const margin=60,rMargin=20;
+  const lineW=w-margin-rMargin;
+  const minV=-7,maxV=7,range=maxV-minV;
+  function xOf(v){return margin+((v-minV)/range)*lineW;}
+  const rowH=h/examples.length;
+  const fs=Math.max(11,Math.min(14,w/50));
+
+  examples.forEach((ex,i)=>{
+    const y=rowH*i+rowH/2+8;
+    // Label
+    ctx.font=`bold ${fs}px 'Nunito Sans',sans-serif`;
+    ctx.fillStyle=cv('--canvas-accent');
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(ex.text,6,y-14);
+    // Number line
+    ctx.beginPath();ctx.moveTo(margin,y);ctx.lineTo(w-rMargin,y);
+    ctx.strokeStyle=cv('--canvas-text');ctx.lineWidth=1;ctx.stroke();
+    // Ticks
+    ctx.font=`${Math.max(9,fs-2)}px 'Nunito Sans',sans-serif`;
+    ctx.fillStyle=cv('--canvas-text');ctx.textAlign='center';
+    for(let v=minV;v<=maxV;v++){
+      const x=xOf(v);
+      ctx.beginPath();ctx.moveTo(x,y-3);ctx.lineTo(x,y+3);ctx.stroke();
+      if(v%2===0)ctx.fillText(v,x,y+14);
+    }
+    // Interval line
+    const x1=xOf(ex.a),x2=xOf(ex.b);
+    ctx.beginPath();
+    if(ex.infL){ctx.moveTo(margin,y);}else{ctx.moveTo(x1,y);}
+    if(ex.infR){ctx.lineTo(w-rMargin,y);}else{ctx.lineTo(x2,y);}
+    ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=4;ctx.stroke();ctx.lineWidth=1;
+    // Endpoints
+    if(!ex.infL){
+      ctx.beginPath();ctx.arc(x1,y,5,0,Math.PI*2);
+      if(ex.la){ctx.fillStyle=cv('--canvas-accent');ctx.fill();}
+      else{ctx.fillStyle=cv('--canvas-bg');ctx.fill();ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=2;ctx.stroke();}
+    }else{
+      // Arrow left
+      ctx.beginPath();ctx.moveTo(margin+8,y-5);ctx.lineTo(margin,y);ctx.lineTo(margin+8,y+5);
+      ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=2;ctx.stroke();
+    }
+    if(!ex.infR){
+      ctx.beginPath();ctx.arc(x2,y,5,0,Math.PI*2);
+      if(ex.lb){ctx.fillStyle=cv('--canvas-accent');ctx.fill();}
+      else{ctx.fillStyle=cv('--canvas-bg');ctx.fill();ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=2;ctx.stroke();}
+    }else{
+      ctx.beginPath();ctx.moveTo(w-rMargin-8,y-5);ctx.lineTo(w-rMargin,y);ctx.lineTo(w-rMargin-8,y+5);
+      ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=2;ctx.stroke();
+    }
+  });
+}
+
+/* ---- TAB 2 : Operations interactive ---- */
+function drawOps(){
+  const slA1=document.getElementById('slA1'),slA2=document.getElementById('slA2');
+  const slB1=document.getElementById('slB1'),slB2=document.getElementById('slB2');
+  let a1=parseFloat(slA1.value),a2=parseFloat(slA2.value);
+  let b1=parseFloat(slB1.value),b2=parseFloat(slB2.value);
+  if(a1>a2){const t=a1;a1=a2;a2=t;slA1.value=a1;slA2.value=a2;}
+  if(b1>b2){const t=b1;b1=b2;b2=t;slB1.value=b1;slB2.value=b2;}
+  document.getElementById('lblA').textContent=`A = [${a1} ; ${a2}]`;
+  document.getElementById('lblB').textContent=`B = [${b1} ; ${b2}]`;
+
+  const{ctx,w,h}=setupCanvas('cvOps');
+  ctx.clearRect(0,0,w,h);
+  const margin=40,rMargin=20,lineW=w-margin-rMargin;
+  const minV=-9,maxV=9,range=maxV-minV;
+  function xOf(v){return margin+((v-minV)/range)*lineW;}
+  const fs=Math.max(11,Math.min(14,w/50));
+
+  function drawLine(y,label,left,right,color){
+    ctx.font=`bold ${fs}px 'Nunito Sans',sans-serif`;
+    ctx.fillStyle=cv('--canvas-text');ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(label,4,y);
+    // base line
+    ctx.beginPath();ctx.moveTo(margin,y);ctx.lineTo(w-rMargin,y);
+    ctx.strokeStyle=cv('--canvas-text');ctx.lineWidth=0.5;ctx.stroke();
+    // ticks
+    ctx.font=`${Math.max(9,fs-3)}px 'Nunito Sans',sans-serif`;
+    ctx.textAlign='center';
+    for(let v=minV;v<=maxV;v++){
+      const x=xOf(v);ctx.beginPath();ctx.moveTo(x,y-2);ctx.lineTo(x,y+2);ctx.strokeStyle=cv('--canvas-text');ctx.lineWidth=0.5;ctx.stroke();
+      if(v%2===0)ctx.fillText(v,x,y+12);
+    }
+    if(left!==null&&right!==null&&left<=right){
+      const cl=Math.max(minV,left),cr=Math.min(maxV,right);
+      ctx.beginPath();ctx.moveTo(xOf(cl),y);ctx.lineTo(xOf(cr),y);
+      ctx.strokeStyle=color;ctx.lineWidth=5;ctx.stroke();
+      ctx.beginPath();ctx.arc(xOf(cl),y,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+      ctx.beginPath();ctx.arc(xOf(cr),y,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    }
+  }
+  const rows=[h*0.15,h*0.38,h*0.62,h*0.85];
+  drawLine(rows[0],'A',a1,a2,cv('--canvas-accent'));
+  drawLine(rows[1],'B',b1,b2,cv('--canvas-accent2'));
+  // intersection
+  const iL=Math.max(a1,b1),iR=Math.min(a2,b2);
+  const hasInter=iL<=iR;
+  drawLine(rows[2],'A∩B',hasInter?iL:null,hasInter?iR:null,'#2e7d32');
+  if(!hasInter){ctx.fillStyle=cv('--canvas-text');ctx.textAlign='center';ctx.fillText('∅ (vide)',w/2,rows[2]-12);}
+  // union
+  const uL=Math.min(a1,b1),uR=Math.max(a2,b2);
+  if(hasInter){
+    drawLine(rows[3],'A∪B',uL,uR,'#1565c0');
+  }else{
+    drawLine(rows[3],'A∪B',null,null,'#1565c0');
+    // draw two segments
+    const c='#1565c0';
+    [[[a1,a2]],[[b1,b2]]].flat().forEach(seg=>{
+      const sl=Math.max(minV,seg[0]),sr=Math.min(maxV,seg[1]);
+      ctx.beginPath();ctx.moveTo(xOf(sl),rows[3]);ctx.lineTo(xOf(sr),rows[3]);
+      ctx.strokeStyle=c;ctx.lineWidth=5;ctx.stroke();
+      ctx.beginPath();ctx.arc(xOf(sl),rows[3],4,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+      ctx.beginPath();ctx.arc(xOf(sr),rows[3],4,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+    });
+  }
+}
+
+/* ---- TAB 3 : Absolute value ---- */
+function drawAbs(){
+  const slA=document.getElementById('slVA'),slR=document.getElementById('slVR');
+  const a=parseFloat(slA.value),r=parseFloat(slR.value);
+  document.getElementById('lblVA').textContent='a = '+a;
+  document.getElementById('lblVR').textContent='r = '+r;
+  const{ctx,w,h}=setupCanvas('cvAbs');
+  ctx.clearRect(0,0,w,h);
+  const margin=40,rMargin=20,lineW=w-margin-rMargin;
+  const minV=-10,maxV=10,range=maxV-minV;
+  function xOf(v){return margin+((v-minV)/range)*lineW;}
+  const y=h*0.45,fs=Math.max(11,Math.min(14,w/50));
+  // base line
+  ctx.beginPath();ctx.moveTo(margin,y);ctx.lineTo(w-rMargin,y);
+  ctx.strokeStyle=cv('--canvas-text');ctx.lineWidth=1;ctx.stroke();
+  // ticks
+  ctx.font=`${Math.max(9,fs-2)}px 'Nunito Sans',sans-serif`;ctx.fillStyle=cv('--canvas-text');ctx.textAlign='center';
+  for(let v=minV;v<=maxV;v++){
+    const x=xOf(v);ctx.beginPath();ctx.moveTo(x,y-3);ctx.lineTo(x,y+3);ctx.strokeStyle=cv('--canvas-text');ctx.lineWidth=1;ctx.stroke();
+    if(v%2===0)ctx.fillText(v,x,y+16);
+  }
+  // interval
+  const left=a-r,right=a+r;
+  const cl=Math.max(minV,left),cr=Math.min(maxV,right);
+  if(cl<cr){
+    ctx.beginPath();ctx.moveTo(xOf(cl),y);ctx.lineTo(xOf(cr),y);
+    ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=5;ctx.stroke();
+    // open circles
+    [left,right].forEach(v=>{
+      if(v>=minV&&v<=maxV){
+        ctx.beginPath();ctx.arc(xOf(v),y,5,0,Math.PI*2);
+        ctx.fillStyle=cv('--canvas-bg');ctx.fill();
+        ctx.strokeStyle=cv('--canvas-accent');ctx.lineWidth=2;ctx.stroke();
+      }
+    });
+  }
+  // center mark
+  if(a>=minV&&a<=maxV){
+    ctx.beginPath();ctx.moveTo(xOf(a),y-8);ctx.lineTo(xOf(a),y+8);
+    ctx.strokeStyle=cv('--canvas-accent2');ctx.lineWidth=2;ctx.stroke();
+  }
+  // distance arrows
+  ctx.font=`bold ${fs}px 'Nunito Sans',sans-serif`;
+  ctx.fillStyle=cv('--canvas-accent');ctx.textAlign='center';
+  const ay=y-22;
+  if(a>=minV&&a<=maxV){
+    ctx.fillText('a = '+a,xOf(a),ay-4);
+  }
+  // label
+  ctx.font=`${fs}px 'Nunito Sans',sans-serif`;
+  ctx.fillStyle=cv('--canvas-text');
+  const txt=`|x − ${a<0?'('+a+')':a}| < ${r}  ⟺  x ∈ ]${left} ; ${right}[`;
+  ctx.fillText(txt,w/2,h-14);
+  // distance braces
+  if(left>=minV&&right<=maxV){
+    ctx.beginPath();ctx.moveTo(xOf(left),y-14);ctx.lineTo(xOf(a),y-14);
+    ctx.strokeStyle=cv('--canvas-accent2');ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=cv('--canvas-accent2');ctx.font=`${Math.max(9,fs-2)}px 'Nunito Sans',sans-serif`;
+    ctx.fillText('r = '+r,(xOf(left)+xOf(a))/2,y-18);
+    ctx.beginPath();ctx.moveTo(xOf(a),y-14);ctx.lineTo(xOf(right),y-14);
+    ctx.strokeStyle=cv('--canvas-accent2');ctx.lineWidth=1;ctx.stroke();
+    ctx.fillText('r = '+r,(xOf(a)+xOf(right))/2,y-18);
+  }
+}
+
+/* ---- TAB 5 : Quiz ---- */
+const quizPool=[
+  {q:"Quel est le plus petit ensemble contenant −5 ?",opts:["ℕ","ℤ","𝔻","ℚ"],ans:1,expl:"−5 est un entier négatif, donc −5 ∈ ℤ."},
+  {q:"√3 est un nombre…",opts:["naturel","rationnel","décimal","irrationnel"],ans:3,expl:"√3 ne peut pas s'écrire comme une fraction p/q."},
+  {q:"L'intervalle ]2 ; 7] contient-il 2 ?",opts:["Oui","Non"],ans:1,expl:"Le crochet ouvert ] exclut la borne 2."},
+  {q:"L'intervalle ]2 ; 7] contient-il 7 ?",opts:["Oui","Non"],ans:0,expl:"Le crochet fermé ] inclut la borne 7."},
+  {q:"[−3 ; 1] ∩ [0 ; 5] = ?",opts:["[0 ; 1]","[−3 ; 5]","[−3 ; 1]","∅"],ans:0,expl:"L'intersection est l'ensemble des x tels que 0 ≤ x ≤ 1."},
+  {q:"[−3 ; 1] ∪ [0 ; 5] = ?",opts:["[0 ; 1]","[−3 ; 5]","[−3 ; 1]","∅"],ans:1,expl:"La réunion va de −3 à 5."},
+  {q:"|x − 4| < 2 est équivalent à :",opts:["x ∈ ]2 ; 6[","x ∈ [2 ; 6]","x ∈ ]−2 ; 2[","x ∈ ]4 ; 6["],ans:0,expl:"a − r = 2, a + r = 6, bornes exclues."},
+  {q:"1/3 est un nombre…",opts:["décimal","rationnel non décimal","irrationnel","entier"],ans:1,expl:"1/3 = 0,333… est rationnel mais non décimal."},
+  {q:"0 appartient-il à ℕ ?",opts:["Oui","Non"],ans:0,expl:"En France, 0 est inclus dans ℕ par convention."},
+  {q:"L'écriture de ]−∞ ; 3[ signifie :",opts:["x ≤ 3","x < 3","x > 3","x ≥ 3"],ans:1,expl:"Le crochet ouvert exclut 3 et −∞ est toujours exclu."},
+  {q:"π appartient à quel ensemble ?",opts:["ℚ","𝔻","ℝ \\ ℚ","ℤ"],ans:2,expl:"π est irrationnel."},
+  {q:"Combien d'entiers dans [−2 ; 3] ?",opts:["5","6","4","∞"],ans:1,expl:"−2, −1, 0, 1, 2, 3 → 6 entiers."},
+  {q:"|−7| = ?",opts:["−7","7","0","1/7"],ans:1,expl:"La valeur absolue d'un négatif est son opposé."},
+  {q:"La distance entre −3 et 5 est :",opts:["2","8","−8","15"],ans:1,expl:"|5 − (−3)| = |8| = 8."},
+  {q:"[1 ; 4[ ∩ ]2 ; 6] = ?",opts:["]2 ; 4[","[1 ; 6]","[2 ; 4[","∅"],ans:0,expl:"Les x dans les deux : 2 < x < 4, soit ]2 ; 4[."},
+  {q:"ℕ ⊂ ℤ ⊂ 𝔻 ⊂ ℚ ⊂ ℝ est :",opts:["Vrai","Faux"],ans:0,expl:"C'est la chaîne d'inclusion des ensembles de nombres."},
+  {q:"0,75 est un nombre…",opts:["irrationnel","entier","décimal","rationnel non décimal"],ans:2,expl:"0,75 = 75/100 = 3/4, c'est un décimal."},
+];
+let quizState=[];
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function launchQuiz(){
+  const sel=shuffle(quizPool).slice(0,10);
+  quizState=sel.map(q=>({...q,answered:false}));
+  renderQuiz();
+  document.getElementById('scoreBar').textContent='';
+}
+function renderQuiz(){
+  const area=document.getElementById('quizArea');
+  area.innerHTML='';
+  quizState.forEach((q,qi)=>{
+    const box=document.createElement('div');box.className='quiz-box';
+    box.innerHTML=`<h3>Question ${qi+1}</h3><p>${q.q}</p>`;
+    q.opts.forEach((opt,oi)=>{
+      const btn=document.createElement('button');btn.className='quiz-opt';btn.textContent=opt;
+      btn.onclick=()=>answerQuiz(qi,oi);
+      btn.id=`qo-${qi}-${oi}`;
+      box.appendChild(btn);
+    });
+    const expl=document.createElement('div');expl.className='quiz-expl';expl.id=`qe-${qi}`;expl.style.display='none';
+    box.appendChild(expl);
+    area.appendChild(box);
+  });
+}
+function answerQuiz(qi,oi){
+  const q=quizState[qi];if(q.answered)return;q.answered=true;q.userAns=oi;
+  q.opts.forEach((_,j)=>{
+    const el=document.getElementById(`qo-${qi}-${j}`);
+    if(j===q.ans)el.classList.add('correct');
+    if(j===oi&&j!==q.ans)el.classList.add('wrong');
+  });
+  const expl=document.getElementById(`qe-${qi}`);
+  expl.style.display='block';
+  expl.textContent=(oi===q.ans?'✓ Correct ! ':'✗ Incorrect. ')+q.expl;
+  expl.style.color=oi===q.ans?cv('--success'):cv('--error');
+  // Check if all answered
+  if(quizState.every(q=>q.answered)){
+    const score=quizState.filter(q=>q.userAns===q.ans).length;
+    document.getElementById('scoreBar').textContent=`Score : ${score} / ${quizState.length}`;
+  }
+}
+
+/* ---- Init first tab ---- */
+showTab(0);
+</script>
+</body>
+</html>

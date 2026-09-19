@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Algorithmique et programmation Python &mdash; Seconde</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Fira+Code:wght@400;500&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ed;--surface:#ffffff;--heading:#8b4513;--accent:#a0522d;--text:#2c2418;
+  --muted:#6b5a48;--border:#d4c8b8;--surface2:#ebe6de;--accent-light:#faf5ef;
+  --tip:#b8860b;--tip-bg:#fdf8ef;--success:#2e7d42;--error:#c62828;
+  --shadow:0 2px 8px rgba(139,69,19,0.07);--radius:6px;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1a1410;--surface:#252019;--heading:#d4a574;--accent:#c4835a;--text:#e0d6c8;
+    --muted:#a89880;--border:#3d3428;--surface2:#2e2820;--accent-light:#2a2218;
+    --tip:#d4a030;--tip-bg:#2a2418;--success:#66bb6a;--error:#ef5350;
+    --shadow:0 2px 8px rgba(0,0,0,0.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1410;--surface:#252019;--heading:#d4a574;--accent:#c4835a;--text:#e0d6c8;
+  --muted:#a89880;--border:#3d3428;--surface2:#2e2820;--accent-light:#2a2218;
+  --tip:#d4a030;--tip-bg:#2a2418;--success:#66bb6a;--error:#ef5350;
+  --shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);font-family:'Nunito Sans',sans-serif;
+  font-size:16px;line-height:1.7;min-height:100vh;
+}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;color:var(--heading);font-weight:700;line-height:1.3}
+h1{font-size:2em;margin-bottom:.4em}
+h2{font-size:1.6em;margin:1.4em 0 .6em}
+h3{font-size:1.25em;margin:1.2em 0 .5em}
+a{color:var(--accent)}
+.wrapper{max-width:900px;margin:0 auto;padding:16px}
+header{text-align:center;padding:2em 16px 1em}
+header p{color:var(--muted);font-size:1.05em;margin-top:.3em}
+/* Theme toggle */
+.theme-toggle{position:fixed;top:12px;right:16px;z-index:100;display:flex;gap:4px;
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3px;box-shadow:var(--shadow)}
+.theme-toggle button{border:none;background:none;cursor:pointer;padding:4px 8px;border-radius:16px;font-size:1em;color:var(--muted);transition:.2s}
+.theme-toggle button.active{background:var(--accent);color:#fff}
+/* Tab bar */
+.tab-bar{display:flex;flex-wrap:wrap;gap:4px;border-bottom:2px solid var(--border);padding:0 16px;margin-bottom:1.5em;position:sticky;top:0;background:var(--bg);z-index:50;padding-top:8px}
+.tab-btn{border:none;background:none;padding:10px 14px;cursor:pointer;font-family:'Nunito Sans',sans-serif;
+  font-size:.9em;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;transition:.2s;white-space:nowrap}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.sec{display:none;padding:0 16px 3em}
+.sec.active{display:block}
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.2em 1.4em;margin:1em 0;box-shadow:var(--shadow)}
+.formula-box{background:var(--accent-light);border-left:4px solid var(--accent);
+  padding:1em 1.2em;margin:1em 0;border-radius:0 var(--radius) var(--radius) 0;font-size:.98em}
+.formula-box strong{color:var(--accent)}
+.tip-box{background:var(--tip-bg);border-left:4px solid var(--tip);
+  padding:1em 1.2em;margin:1em 0;border-radius:0 var(--radius) var(--radius) 0}
+.tip-box::before{content:"Astuce :";display:block;font-weight:700;color:var(--tip);margin-bottom:.3em}
+/* Code */
+.code-block{background:#1e1e1e;color:#d4d4d4;padding:16px;border-radius:var(--radius);
+  overflow-x:auto;font-family:'Fira Code',monospace;font-size:.9em;line-height:1.5;margin:.8em 0}
+.kw{color:#569cd6}.fn{color:#dcdcaa}.str{color:#ce9178}.num{color:#b5cea8}
+.cmt{color:#6a9955}.op{color:#d4d4d4}.bool{color:#569cd6}
+code{font-family:'Fira Code',monospace;background:var(--surface2);padding:1px 5px;border-radius:3px;font-size:.9em}
+/* Exercise */
+.exercise{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.2em 1.4em;margin:1.2em 0;box-shadow:var(--shadow)}
+.exercise h4{color:var(--accent);margin-bottom:.5em}
+.exercise-num{display:inline-block;background:var(--accent);color:#fff;width:28px;height:28px;
+  text-align:center;line-height:28px;border-radius:50%;font-size:.85em;font-weight:700;margin-right:.5em}
+details{margin-top:.8em}
+summary{cursor:pointer;color:var(--accent);font-weight:600;padding:.4em 0}
+summary:hover{text-decoration:underline}
+details .code-block{margin-top:.5em}
+/* Interactive */
+.interactive{background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);
+  padding:1.2em;margin:1.2em 0}
+.interactive h4{color:var(--accent);margin-bottom:.8em;font-family:'Nunito Sans',sans-serif;font-size:1em}
+input[type="text"],textarea,.console-input{
+  font-family:'Fira Code',monospace;font-size:.9em;padding:8px 12px;
+  border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);
+  color:var(--text);width:100%;outline:none}
+input:focus,textarea:focus{border-color:var(--accent)}
+button.action-btn{
+  background:var(--accent);color:#fff;border:none;padding:8px 18px;border-radius:var(--radius);
+  cursor:pointer;font-family:'Nunito Sans',sans-serif;font-weight:600;font-size:.9em;margin-top:8px;transition:.2s}
+button.action-btn:hover{opacity:.85}
+.result-area{margin-top:10px;padding:10px;background:var(--surface2);border-radius:var(--radius);
+  font-family:'Fira Code',monospace;font-size:.9em;min-height:2em;white-space:pre-wrap}
+/* Quiz */
+.quiz-q{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.2em;margin:1em 0;box-shadow:var(--shadow)}
+.quiz-q p{font-weight:600;margin-bottom:.6em}
+.quiz-q label{display:block;padding:.35em .6em;cursor:pointer;border-radius:4px;margin:2px 0;transition:.15s}
+.quiz-q label:hover{background:var(--surface2)}
+.quiz-q input[type="radio"]{margin-right:8px}
+.quiz-q .feedback{margin-top:.5em;padding:.5em;border-radius:4px;font-weight:600;display:none}
+.quiz-q .feedback.correct{display:block;background:#e8f5e9;color:var(--success)}
+.quiz-q .feedback.wrong{display:block;background:#ffebee;color:var(--error)}
+:root[data-theme="dark"] .quiz-q .feedback.correct,
+:root:not([data-theme="light"]) .quiz-q .feedback.correct{background:#1b3a1b}
+:root[data-theme="dark"] .quiz-q .feedback.wrong,
+:root:not([data-theme="light"]) .quiz-q .feedback.wrong{background:#3a1b1b}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .quiz-q .feedback.correct{background:#1b3a1b}
+  :root:not([data-theme="light"]) .quiz-q .feedback.wrong{background:#3a1b1b}
+}
+.score-bar{text-align:center;padding:1em;font-size:1.2em;font-weight:700;color:var(--accent);margin-top:1em}
+/* Canvas */
+canvas{border:1px solid var(--border);border-radius:var(--radius);display:block;margin:.8em auto;max-width:100%}
+/* List visualizer */
+.list-viz{display:flex;gap:2px;flex-wrap:wrap;margin:.8em 0}
+.list-viz .cell{display:flex;flex-direction:column;align-items:center}
+.list-viz .idx{font-size:.75em;color:var(--muted);margin-bottom:2px}
+.list-viz .val{border:2px solid var(--accent);padding:8px 14px;border-radius:4px;font-family:'Fira Code',monospace;
+  font-size:.9em;background:var(--accent-light);min-width:40px;text-align:center}
+.list-viz .cell.highlight .val{background:var(--accent);color:#fff}
+/* Responsive */
+@media(max-width:600px){
+  .tab-btn{padding:8px 10px;font-size:.8em}
+  h1{font-size:1.5em}
+  h2{font-size:1.3em}
+  .wrapper{padding:8px}
+}
+/* Table */
+table{width:100%;border-collapse:collapse;margin:1em 0}
+th,td{padding:.6em .8em;text-align:left;border:1px solid var(--border)}
+th{background:var(--surface2);font-weight:700;color:var(--heading)}
+td{background:var(--surface)}
+</style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <button onclick="setTheme('light')" id="th-l" title="Clair">&#9788;</button>
+  <button onclick="setTheme('auto')" id="th-a" title="Auto" class="active">A</button>
+  <button onclick="setTheme('dark')" id="th-d" title="Sombre">&#9790;</button>
+</div>
+
+<header>
+  <h1>Algorithmique et programmation Python</h1>
+  <p>Cours interactif &mdash; Classe de Seconde</p>
+</header>
+
+<div class="wrapper">
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" onclick="showTab(0)">Variables et types</button>
+  <button class="tab-btn" onclick="showTab(1)">Conditionnelles</button>
+  <button class="tab-btn" onclick="showTab(2)">Boucles</button>
+  <button class="tab-btn" onclick="showTab(3)">Fonctions</button>
+  <button class="tab-btn" onclick="showTab(4)">Listes</button>
+  <button class="tab-btn" onclick="showTab(5)">Exercices</button>
+  <button class="tab-btn" onclick="showTab(6)">QCM</button>
+</div>
+
+<!-- ==================== TAB 0 : Variables et types ==================== -->
+<section class="sec active" id="sec0">
+<h2>1. Variables et types de donn&eacute;es</h2>
+
+<div class="card">
+<h3>Qu&rsquo;est-ce qu&rsquo;une variable ?</h3>
+<p>Une <strong>variable</strong> est un nom qui d&eacute;signe un emplacement en m&eacute;moire o&ugrave; l&rsquo;on stocke une valeur. En Python, on <strong>affecte</strong> une valeur &agrave; une variable avec le signe <code>=</code>.</p>
+<div class="code-block"><span class="cmt"># Affectation de variables</span>
+<span class="op">age</span> <span class="op">=</span> <span class="num">16</span>
+<span class="op">nom</span> <span class="op">=</span> <span class="str">"Alice"</span>
+<span class="op">taille</span> <span class="op">=</span> <span class="num">1.68</span>
+<span class="op">est_eleve</span> <span class="op">=</span> <span class="bool">True</span></div>
+</div>
+
+<div class="formula-box">
+<strong>Les 4 types fondamentaux :</strong><br>
+&bull; <code>int</code> &mdash; entier : <code>42</code>, <code>-3</code>, <code>0</code><br>
+&bull; <code>float</code> &mdash; d&eacute;cimal : <code>3.14</code>, <code>-0.5</code><br>
+&bull; <code>str</code> &mdash; cha&icirc;ne de caract&egrave;res : <code>"Bonjour"</code>, <code>'Python'</code><br>
+&bull; <code>bool</code> &mdash; bool&eacute;en : <code>True</code> ou <code>False</code>
+</div>
+
+<div class="card">
+<h3>La fonction <code>type()</code></h3>
+<p>Pour conna&icirc;tre le type d&rsquo;une valeur ou d&rsquo;une variable, on utilise <code>type()</code>.</p>
+<div class="code-block"><span class="fn">print</span>(<span class="fn">type</span>(<span class="num">42</span>))       <span class="cmt"># &lt;class 'int'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="num">3.14</span>))     <span class="cmt"># &lt;class 'float'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="str">"hello"</span>))  <span class="cmt"># &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="bool">True</span>))    <span class="cmt"># &lt;class 'bool'&gt;</span></div>
+</div>
+
+<div class="card">
+<h3>Conversions de types</h3>
+<p>On peut convertir un type en un autre avec les fonctions <code>int()</code>, <code>float()</code>, <code>str()</code>, <code>bool()</code>.</p>
+<div class="code-block"><span class="op">x</span> <span class="op">=</span> <span class="str">"25"</span>          <span class="cmt"># x est un str</span>
+<span class="op">y</span> <span class="op">=</span> <span class="fn">int</span>(<span class="op">x</span>)        <span class="cmt"># y vaut 25 (int)</span>
+<span class="op">z</span> <span class="op">=</span> <span class="fn">float</span>(<span class="op">x</span>)      <span class="cmt"># z vaut 25.0 (float)</span>
+<span class="op">w</span> <span class="op">=</span> <span class="fn">str</span>(<span class="num">42</span>)       <span class="cmt"># w vaut "42" (str)</span></div>
+</div>
+
+<div class="card">
+<h3>Op&eacute;rations sur les variables</h3>
+<table>
+<tr><th>Op&eacute;rateur</th><th>Description</th><th>Exemple</th><th>R&eacute;sultat</th></tr>
+<tr><td><code>+</code></td><td>Addition</td><td><code>7 + 3</code></td><td><code>10</code></td></tr>
+<tr><td><code>-</code></td><td>Soustraction</td><td><code>7 - 3</code></td><td><code>4</code></td></tr>
+<tr><td><code>*</code></td><td>Multiplication</td><td><code>7 * 3</code></td><td><code>21</code></td></tr>
+<tr><td><code>/</code></td><td>Division</td><td><code>7 / 3</code></td><td><code>2.333...</code></td></tr>
+<tr><td><code>//</code></td><td>Division enti&egrave;re</td><td><code>7 // 3</code></td><td><code>2</code></td></tr>
+<tr><td><code>%</code></td><td>Modulo (reste)</td><td><code>7 % 3</code></td><td><code>1</code></td></tr>
+<tr><td><code>**</code></td><td>Puissance</td><td><code>2 ** 3</code></td><td><code>8</code></td></tr>
+</table>
+</div>
+
+<div class="tip-box">
+La concat&eacute;nation de cha&icirc;nes se fait aussi avec <code>+</code> : <code>"Bon" + "jour"</code> donne <code>"Bonjour"</code>. Attention, on ne peut pas additionner un <code>str</code> et un <code>int</code> directement !
+</div>
+
+<div class="interactive">
+<h4>&#9654; Mini-console : testez le type d&rsquo;une expression</h4>
+<p>Tapez une expression Python (ex : <code>42</code>, <code>3.14</code>, <code>"hello"</code>, <code>True</code>, <code>5+3</code>) :</p>
+<input type="text" id="typeInput" class="console-input" placeholder='Exemple : 42 ou "texte" ou 3.14'>
+<button class="action-btn" onclick="checkType()">V&eacute;rifier le type</button>
+<div class="result-area" id="typeResult"></div>
+</div>
+</section>
+
+<!-- ==================== TAB 1 : Conditionnelles ==================== -->
+<section class="sec" id="sec1">
+<h2>2. Instructions conditionnelles</h2>
+
+<div class="card">
+<h3>La structure <code>if / elif / else</code></h3>
+<p>Les instructions conditionnelles permettent d&rsquo;ex&eacute;cuter du code <strong>uniquement si</strong> une condition est vraie.</p>
+<div class="code-block"><span class="op">age</span> <span class="op">=</span> <span class="num">16</span>
+
+<span class="kw">if</span> <span class="op">age</span> <span class="op">&gt;=</span> <span class="num">18</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Majeur"</span>)
+<span class="kw">elif</span> <span class="op">age</span> <span class="op">&gt;=</span> <span class="num">16</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Presque majeur"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Mineur"</span>)</div>
+</div>
+
+<div class="formula-box">
+<strong>Op&eacute;rateurs de comparaison :</strong><br>
+<code>==</code> &eacute;gal &nbsp;|&nbsp; <code>!=</code> diff&eacute;rent &nbsp;|&nbsp; <code>&lt;</code> inf&eacute;rieur &nbsp;|&nbsp; <code>&gt;</code> sup&eacute;rieur &nbsp;|&nbsp; <code>&lt;=</code> inf&eacute;rieur ou &eacute;gal &nbsp;|&nbsp; <code>&gt;=</code> sup&eacute;rieur ou &eacute;gal
+</div>
+
+<div class="formula-box">
+<strong>Op&eacute;rateurs logiques :</strong><br>
+<code>and</code> &mdash; ET logique &nbsp;|&nbsp; <code>or</code> &mdash; OU logique &nbsp;|&nbsp; <code>not</code> &mdash; N&Eacute;GATION
+</div>
+
+<div class="card">
+<h3>Conditions combin&eacute;es</h3>
+<div class="code-block"><span class="op">note</span> <span class="op">=</span> <span class="num">14</span>
+<span class="op">bonus</span> <span class="op">=</span> <span class="bool">True</span>
+
+<span class="kw">if</span> <span class="op">note</span> <span class="op">&gt;=</span> <span class="num">12</span> <span class="kw">and</span> <span class="op">bonus</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Admis avec mention"</span>)
+<span class="kw">elif</span> <span class="op">note</span> <span class="op">&gt;=</span> <span class="num">10</span> <span class="kw">or</span> <span class="op">bonus</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Admis"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Refus&eacute;"</span>)</div>
+</div>
+
+<div class="card">
+<h3>Conditions imbriqu&eacute;es</h3>
+<div class="code-block"><span class="op">x</span> <span class="op">=</span> <span class="num">15</span>
+
+<span class="kw">if</span> <span class="op">x</span> <span class="op">&gt;</span> <span class="num">0</span><span class="op">:</span>
+    <span class="kw">if</span> <span class="op">x</span> <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+        <span class="fn">print</span>(<span class="str">"Positif et pair"</span>)
+    <span class="kw">else</span><span class="op">:</span>
+        <span class="fn">print</span>(<span class="str">"Positif et impair"</span>)
+<span class="kw">else</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"N&eacute;gatif ou nul"</span>)</div>
+</div>
+
+<div class="tip-box">
+En Python, l&rsquo;indentation (4 espaces) est <strong>obligatoire</strong> pour d&eacute;limiter les blocs de code. Pas d&rsquo;accolades comme en JavaScript ou en C !
+</div>
+
+<div class="interactive">
+<h4>&#9654; Organigramme interactif</h4>
+<p>Entrez une valeur pour <code>x</code> et visualisez le chemin emprunt&eacute; dans la condition :</p>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+  <label>x = <input type="text" id="flowInput" style="width:80px" value="15"></label>
+  <button class="action-btn" onclick="drawFlowchart()">Ex&eacute;cuter</button>
+</div>
+<canvas id="flowCanvas" width="500" height="320"></canvas>
+<div class="result-area" id="flowResult"></div>
+</div>
+</section>
+
+<!-- ==================== TAB 2 : Boucles ==================== -->
+<section class="sec" id="sec2">
+<h2>3. Boucles</h2>
+
+<div class="card">
+<h3>La boucle <code>for</code></h3>
+<p>La boucle <code>for</code> r&eacute;p&egrave;te un bloc d&rsquo;instructions un nombre d&eacute;fini de fois.</p>
+<div class="code-block"><span class="cmt"># Afficher les nombres de 0 &agrave; 4</span>
+<span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>)<span class="op">:</span>
+    <span class="fn">print</span>(<span class="op">i</span>)
+<span class="cmt"># Affiche : 0, 1, 2, 3, 4</span></div>
+</div>
+
+<div class="formula-box">
+<strong><code>range()</code> :</strong><br>
+&bull; <code>range(n)</code> &rarr; 0, 1, 2, ..., n-1<br>
+&bull; <code>range(a, b)</code> &rarr; a, a+1, ..., b-1<br>
+&bull; <code>range(a, b, pas)</code> &rarr; a, a+pas, a+2*pas, ... (tant que &lt; b)
+</div>
+
+<div class="card">
+<h3>La boucle <code>while</code></h3>
+<p>La boucle <code>while</code> r&eacute;p&egrave;te tant qu&rsquo;une condition est vraie.</p>
+<div class="code-block"><span class="cmt"># Compter de 1 &agrave; 5</span>
+<span class="op">compteur</span> <span class="op">=</span> <span class="num">1</span>
+<span class="kw">while</span> <span class="op">compteur</span> <span class="op">&lt;=</span> <span class="num">5</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="op">compteur</span>)
+    <span class="op">compteur</span> <span class="op">=</span> <span class="op">compteur</span> <span class="op">+</span> <span class="num">1</span></div>
+</div>
+
+<div class="card">
+<h3>Accumulateur dans une boucle</h3>
+<p>Un pattern tr&egrave;s fr&eacute;quent : accumuler un r&eacute;sultat au fil des it&eacute;rations.</p>
+<div class="code-block"><span class="cmt"># Somme des entiers de 1 &agrave; 100</span>
+<span class="op">somme</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">101</span>)<span class="op">:</span>
+    <span class="op">somme</span> <span class="op">=</span> <span class="op">somme</span> <span class="op">+</span> <span class="op">i</span>
+<span class="fn">print</span>(<span class="op">somme</span>)  <span class="cmt"># 5050</span></div>
+</div>
+
+<div class="tip-box">
+Attention aux boucles infinies avec <code>while</code> ! Assurez-vous que la condition finira par devenir <code>False</code>.
+</div>
+
+<div class="interactive">
+<h4>&#9654; Visualiseur de boucle pas &agrave; pas</h4>
+<p>Observez l&rsquo;ex&eacute;cution de la somme des entiers de 1 &agrave; N :</p>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+  <label>N = <input type="text" id="loopN" style="width:80px" value="10"></label>
+  <button class="action-btn" onclick="startLoopViz()">Lancer</button>
+  <button class="action-btn" onclick="stepLoop()" id="stepBtn" style="display:none">&#9654; &Eacute;tape suivante</button>
+  <button class="action-btn" onclick="autoLoop()" id="autoBtn" style="display:none">&#9654;&#9654; Tout jouer</button>
+</div>
+<canvas id="loopCanvas" width="500" height="200"></canvas>
+<div class="result-area" id="loopResult"></div>
+</div>
+</section>
+
+<!-- ==================== TAB 3 : Fonctions ==================== -->
+<section class="sec" id="sec3">
+<h2>4. Fonctions</h2>
+
+<div class="card">
+<h3>D&eacute;finir une fonction</h3>
+<p>Une <strong>fonction</strong> est un bloc de code r&eacute;utilisable. On la d&eacute;finit avec <code>def</code> et elle renvoie un r&eacute;sultat avec <code>return</code>.</p>
+<div class="code-block"><span class="kw">def</span> <span class="fn">aire_rectangle</span>(<span class="op">largeur</span>, <span class="op">hauteur</span>)<span class="op">:</span>
+    <span class="str">"""Calcule l'aire d'un rectangle."""</span>
+    <span class="kw">return</span> <span class="op">largeur</span> <span class="op">*</span> <span class="op">hauteur</span>
+
+<span class="cmt"># Appel de la fonction</span>
+<span class="op">resultat</span> <span class="op">=</span> <span class="fn">aire_rectangle</span>(<span class="num">5</span>, <span class="num">3</span>)
+<span class="fn">print</span>(<span class="op">resultat</span>)  <span class="cmt"># 15</span></div>
+</div>
+
+<div class="formula-box">
+<strong>Syntaxe d&rsquo;une fonction :</strong><br>
+<code>def nom_fonction(param1, param2, ...):</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code># corps de la fonction</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<code>return valeur_de_retour</code>
+</div>
+
+<div class="card">
+<h3>Fonction sans <code>return</code> (proc&eacute;dure)</h3>
+<p>Une fonction sans <code>return</code> ne renvoie rien (renvoie <code>None</code> implicitement).</p>
+<div class="code-block"><span class="kw">def</span> <span class="fn">saluer</span>(<span class="op">prenom</span>)<span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Bonjour"</span>, <span class="op">prenom</span>, <span class="str">"!"</span>)
+
+<span class="fn">saluer</span>(<span class="str">"Alice"</span>)  <span class="cmt"># Affiche : Bonjour Alice !</span></div>
+</div>
+
+<div class="card">
+<h3>Port&eacute;e des variables</h3>
+<p>Les variables cr&eacute;&eacute;es &agrave; l&rsquo;int&eacute;rieur d&rsquo;une fonction sont <strong>locales</strong> : elles n&rsquo;existent pas en dehors.</p>
+<div class="code-block"><span class="kw">def</span> <span class="fn">doubler</span>(<span class="op">n</span>)<span class="op">:</span>
+    <span class="op">resultat</span> <span class="op">=</span> <span class="op">n</span> <span class="op">*</span> <span class="num">2</span>  <span class="cmt"># resultat est locale</span>
+    <span class="kw">return</span> <span class="op">resultat</span>
+
+<span class="fn">print</span>(<span class="fn">doubler</span>(<span class="num">7</span>))  <span class="cmt"># 14</span>
+<span class="cmt"># print(resultat)   # ERREUR ! resultat n'existe pas ici</span></div>
+</div>
+
+<div class="card">
+<h3>Exemples de fonctions utiles</h3>
+<div class="code-block"><span class="kw">def</span> <span class="fn">est_pair</span>(<span class="op">n</span>)<span class="op">:</span>
+    <span class="kw">return</span> <span class="op">n</span> <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">valeur_absolue</span>(<span class="op">x</span>)<span class="op">:</span>
+    <span class="kw">if</span> <span class="op">x</span> <span class="op">&gt;=</span> <span class="num">0</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="op">x</span>
+    <span class="kw">else</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="op">-</span><span class="op">x</span>
+
+<span class="kw">def</span> <span class="fn">factorielle</span>(<span class="op">n</span>)<span class="op">:</span>
+    <span class="op">res</span> <span class="op">=</span> <span class="num">1</span>
+    <span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="op">n</span> <span class="op">+</span> <span class="num">1</span>)<span class="op">:</span>
+        <span class="op">res</span> <span class="op">=</span> <span class="op">res</span> <span class="op">*</span> <span class="op">i</span>
+    <span class="kw">return</span> <span class="op">res</span></div>
+</div>
+
+<div class="tip-box">
+Nommez vos fonctions avec des verbes descriptifs : <code>calculer_moyenne</code>, <code>est_premier</code>, <code>afficher_resultat</code>. Le nom doit indiquer ce que fait la fonction.
+</div>
+
+<div class="interactive">
+<h4>&#9654; Traceur d&rsquo;appels de fonctions</h4>
+<p>Choisissez une fonction et un argument pour visualiser l&rsquo;ex&eacute;cution :</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+  <select id="funcSelect" style="padding:8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);font-family:'Nunito Sans',sans-serif">
+    <option value="est_pair">est_pair(n)</option>
+    <option value="valeur_absolue">valeur_absolue(x)</option>
+    <option value="factorielle">factorielle(n)</option>
+  </select>
+  <label>Argument : <input type="text" id="funcArg" style="width:80px" value="5"></label>
+  <button class="action-btn" onclick="traceFunction()">Tracer</button>
+</div>
+<div class="result-area" id="funcResult"></div>
+</div>
+</section>
+
+<!-- ==================== TAB 4 : Listes ==================== -->
+<section class="sec" id="sec4">
+<h2>5. Listes</h2>
+
+<div class="card">
+<h3>Cr&eacute;ation et acc&egrave;s</h3>
+<p>Une <strong>liste</strong> est une collection ordonn&eacute;e d&rsquo;&eacute;l&eacute;ments, d&eacute;limit&eacute;e par des crochets.</p>
+<div class="code-block"><span class="op">fruits</span> <span class="op">=</span> [<span class="str">"pomme"</span>, <span class="str">"banane"</span>, <span class="str">"cerise"</span>]
+<span class="fn">print</span>(<span class="op">fruits</span>[<span class="num">0</span>])  <span class="cmt"># "pomme" (premier &eacute;l&eacute;ment)</span>
+<span class="fn">print</span>(<span class="op">fruits</span>[<span class="num">2</span>])  <span class="cmt"># "cerise" (troisi&egrave;me &eacute;l&eacute;ment)</span>
+<span class="fn">print</span>(<span class="op">fruits</span>[<span class="num">-1</span>]) <span class="cmt"># "cerise" (dernier &eacute;l&eacute;ment)</span></div>
+</div>
+
+<div class="formula-box">
+<strong>&Agrave; retenir :</strong> les indices commencent &agrave; <strong>0</strong>. Une liste de <code>n</code> &eacute;l&eacute;ments a des indices de <code>0</code> &agrave; <code>n-1</code>.
+</div>
+
+<div class="card">
+<h3>Op&eacute;rations sur les listes</h3>
+<table>
+<tr><th>Op&eacute;ration</th><th>Description</th><th>Exemple</th></tr>
+<tr><td><code>len(L)</code></td><td>Longueur de la liste</td><td><code>len([1,2,3])</code> &rarr; <code>3</code></td></tr>
+<tr><td><code>L.append(x)</code></td><td>Ajouter x &agrave; la fin</td><td><code>[1,2].append(3)</code> &rarr; <code>[1,2,3]</code></td></tr>
+<tr><td><code>L[i] = x</code></td><td>Modifier l&rsquo;&eacute;l&eacute;ment i</td><td><code>L[0] = 99</code></td></tr>
+<tr><td><code>L.pop()</code></td><td>Supprimer le dernier</td><td><code>[1,2,3].pop()</code> &rarr; <code>[1,2]</code></td></tr>
+<tr><td><code>x in L</code></td><td>V&eacute;rifier la pr&eacute;sence</td><td><code>2 in [1,2,3]</code> &rarr; <code>True</code></td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Parcourir une liste</h3>
+<div class="code-block"><span class="op">notes</span> <span class="op">=</span> [<span class="num">12</span>, <span class="num">15</span>, <span class="num">8</span>, <span class="num">17</span>, <span class="num">14</span>]
+
+<span class="cmt"># Parcours par &eacute;l&eacute;ment</span>
+<span class="kw">for</span> <span class="op">note</span> <span class="kw">in</span> <span class="op">notes</span><span class="op">:</span>
+    <span class="fn">print</span>(<span class="op">note</span>)
+
+<span class="cmt"># Parcours par indice</span>
+<span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="op">notes</span>))<span class="op">:</span>
+    <span class="fn">print</span>(<span class="str">"Note"</span>, <span class="op">i</span>, <span class="str">":"</span>, <span class="op">notes</span>[<span class="op">i</span>])</div>
+</div>
+
+<div class="card">
+<h3>Construire une liste avec une boucle</h3>
+<div class="code-block"><span class="cmt"># Liste des carr&eacute;s de 0 &agrave; 9</span>
+<span class="op">carres</span> <span class="op">=</span> []
+<span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)<span class="op">:</span>
+    <span class="op">carres</span>.<span class="fn">append</span>(<span class="op">i</span> <span class="op">**</span> <span class="num">2</span>)
+<span class="fn">print</span>(<span class="op">carres</span>)
+<span class="cmt"># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span></div>
+</div>
+
+<div class="tip-box">
+Pour calculer la moyenne d&rsquo;une liste de nombres : <code>sum(L) / len(L)</code>. La fonction <code>sum()</code> calcule la somme des &eacute;l&eacute;ments.
+</div>
+
+<div class="interactive">
+<h4>&#9654; Visualiseur de liste</h4>
+<p>&Eacute;crivez une liste Python (ex : <code>[3, 7, 1, 9, 4]</code>) et explorez-la :</p>
+<input type="text" id="listInput" value="[3, 7, 1, 9, 4]" style="margin-bottom:8px">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="action-btn" onclick="vizList()">Afficher</button>
+  <button class="action-btn" onclick="vizListAppend()">append(5)</button>
+  <button class="action-btn" onclick="vizListPop()">pop()</button>
+  <button class="action-btn" onclick="vizListSort()">Trier</button>
+</div>
+<div id="listVizArea" class="list-viz" style="margin-top:12px"></div>
+<div class="result-area" id="listResult"></div>
+</div>
+</section>
+
+<!-- ==================== TAB 5 : Exercices ==================== -->
+<section class="sec" id="sec5">
+<h2>6. Exercices progressifs</h2>
+
+<div class="exercise">
+<h4><span class="exercise-num">1</span> Calcul simple</h4>
+<p>&Eacute;crire un programme qui demande un prix HT et un taux de TVA (en %), puis affiche le prix TTC.</p>
+<p><em>Formule : prix_ttc = prix_ht &times; (1 + taux / 100)</em></p>
+<details>
+<summary>Voir la correction</summary>
+<div class="code-block"><span class="op">prix_ht</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Prix HT : "</span>))
+<span class="op">taux</span> <span class="op">=</span> <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Taux TVA (%) : "</span>))
+<span class="op">prix_ttc</span> <span class="op">=</span> <span class="op">prix_ht</span> <span class="op">*</span> (<span class="num">1</span> <span class="op">+</span> <span class="op">taux</span> <span class="op">/</span> <span class="num">100</span>)
+<span class="fn">print</span>(<span class="str">"Prix TTC :"</span>, <span class="fn">round</span>(<span class="op">prix_ttc</span>, <span class="num">2</span>))</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4><span class="exercise-num">2</span> Conditions</h4>
+<p>&Eacute;crire une fonction <code>mention(note)</code> qui renvoie la mention selon la note :</p>
+<ul>
+<li>note &ge; 16 &rarr; <code>"Tr&egrave;s bien"</code></li>
+<li>note &ge; 14 &rarr; <code>"Bien"</code></li>
+<li>note &ge; 12 &rarr; <code>"Assez bien"</code></li>
+<li>note &ge; 10 &rarr; <code>"Admis"</code></li>
+<li>sinon &rarr; <code>"Refus&eacute;"</code></li>
+</ul>
+<details>
+<summary>Voir la correction</summary>
+<div class="code-block"><span class="kw">def</span> <span class="fn">mention</span>(<span class="op">note</span>)<span class="op">:</span>
+    <span class="kw">if</span> <span class="op">note</span> <span class="op">&gt;=</span> <span class="num">16</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="str">"Tr&egrave;s bien"</span>
+    <span class="kw">elif</span> <span class="op">note</span> <span class="op">&gt;=</span> <span class="num">14</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="str">"Bien"</span>
+    <span class="kw">elif</span> <span class="op">note</span> <span class="op">&gt;=</span> <span class="num">12</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="str">"Assez bien"</span>
+    <span class="kw">elif</span> <span class="op">note</span> <span class="op">&gt;=</span> <span class="num">10</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="str">"Admis"</span>
+    <span class="kw">else</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="str">"Refus&eacute;"</span></div>
+</details>
+</div>
+
+<div class="exercise">
+<h4><span class="exercise-num">3</span> Boucles</h4>
+<p>&Eacute;crire un programme qui affiche la table de multiplication d&rsquo;un nombre <code>n</code> de 1 &agrave; 10.</p>
+<details>
+<summary>Voir la correction</summary>
+<div class="code-block"><span class="op">n</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Nombre : "</span>))
+<span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>)<span class="op">:</span>
+    <span class="fn">print</span>(<span class="op">n</span>, <span class="str">"x"</span>, <span class="op">i</span>, <span class="str">"="</span>, <span class="op">n</span> <span class="op">*</span> <span class="op">i</span>)</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4><span class="exercise-num">4</span> Fonctions</h4>
+<p>&Eacute;crire une fonction <code>est_premier(n)</code> qui renvoie <code>True</code> si <code>n</code> est un nombre premier, <code>False</code> sinon.</p>
+<p><em>Rappel : un nombre premier n&rsquo;est divisible que par 1 et lui-m&ecirc;me (n &ge; 2).</em></p>
+<details>
+<summary>Voir la correction</summary>
+<div class="code-block"><span class="kw">def</span> <span class="fn">est_premier</span>(<span class="op">n</span>)<span class="op">:</span>
+    <span class="kw">if</span> <span class="op">n</span> <span class="op">&lt;</span> <span class="num">2</span><span class="op">:</span>
+        <span class="kw">return</span> <span class="bool">False</span>
+    <span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>, <span class="op">n</span>)<span class="op">:</span>
+        <span class="kw">if</span> <span class="op">n</span> <span class="op">%</span> <span class="op">i</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+            <span class="kw">return</span> <span class="bool">False</span>
+    <span class="kw">return</span> <span class="bool">True</span></div>
+</details>
+</div>
+
+<div class="exercise">
+<h4><span class="exercise-num">5</span> Listes</h4>
+<p>&Eacute;crire une fonction <code>moyenne(L)</code> qui calcule la moyenne d&rsquo;une liste de nombres, puis une fonction <code>au_dessus(L, seuil)</code> qui renvoie la liste des &eacute;l&eacute;ments sup&eacute;rieurs ou &eacute;gaux au seuil.</p>
+<details>
+<summary>Voir la correction</summary>
+<div class="code-block"><span class="kw">def</span> <span class="fn">moyenne</span>(<span class="op">L</span>)<span class="op">:</span>
+    <span class="kw">return</span> <span class="fn">sum</span>(<span class="op">L</span>) <span class="op">/</span> <span class="fn">len</span>(<span class="op">L</span>)
+
+<span class="kw">def</span> <span class="fn">au_dessus</span>(<span class="op">L</span>, <span class="op">seuil</span>)<span class="op">:</span>
+    <span class="op">resultat</span> <span class="op">=</span> []
+    <span class="kw">for</span> <span class="op">x</span> <span class="kw">in</span> <span class="op">L</span><span class="op">:</span>
+        <span class="kw">if</span> <span class="op">x</span> <span class="op">&gt;=</span> <span class="op">seuil</span><span class="op">:</span>
+            <span class="op">resultat</span>.<span class="fn">append</span>(<span class="op">x</span>)
+    <span class="kw">return</span> <span class="op">resultat</span>
+
+<span class="cmt"># Test</span>
+<span class="op">notes</span> <span class="op">=</span> [<span class="num">12</span>, <span class="num">15</span>, <span class="num">8</span>, <span class="num">17</span>, <span class="num">14</span>, <span class="num">6</span>, <span class="num">19</span>]
+<span class="fn">print</span>(<span class="str">"Moyenne :"</span>, <span class="fn">moyenne</span>(<span class="op">notes</span>))
+<span class="fn">print</span>(<span class="str">"Notes &gt;= 12 :"</span>, <span class="fn">au_dessus</span>(<span class="op">notes</span>, <span class="num">12</span>))</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4><span class="exercise-num">6</span> Exercice combin&eacute;</h4>
+<p>&Eacute;crire un programme complet qui :</p>
+<ol>
+<li>Cr&eacute;e une liste de 20 nombres al&eacute;atoires entre 1 et 100</li>
+<li>Calcule et affiche la moyenne</li>
+<li>Trouve et affiche le maximum et le minimum</li>
+<li>Compte combien de nombres sont sup&eacute;rieurs &agrave; 50</li>
+<li>Cr&eacute;e une nouvelle liste contenant uniquement les nombres pairs</li>
+</ol>
+<details>
+<summary>Voir la correction</summary>
+<div class="code-block"><span class="kw">import</span> <span class="op">random</span>
+
+<span class="cmt"># 1. Cr&eacute;er la liste</span>
+<span class="op">nombres</span> <span class="op">=</span> []
+<span class="kw">for</span> <span class="op">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>)<span class="op">:</span>
+    <span class="op">nombres</span>.<span class="fn">append</span>(<span class="op">random</span>.<span class="fn">randint</span>(<span class="num">1</span>, <span class="num">100</span>))
+<span class="fn">print</span>(<span class="str">"Liste :"</span>, <span class="op">nombres</span>)
+
+<span class="cmt"># 2. Moyenne</span>
+<span class="op">moy</span> <span class="op">=</span> <span class="fn">sum</span>(<span class="op">nombres</span>) <span class="op">/</span> <span class="fn">len</span>(<span class="op">nombres</span>)
+<span class="fn">print</span>(<span class="str">"Moyenne :"</span>, <span class="fn">round</span>(<span class="op">moy</span>, <span class="num">2</span>))
+
+<span class="cmt"># 3. Max et min</span>
+<span class="op">maxi</span> <span class="op">=</span> <span class="op">nombres</span>[<span class="num">0</span>]
+<span class="op">mini</span> <span class="op">=</span> <span class="op">nombres</span>[<span class="num">0</span>]
+<span class="kw">for</span> <span class="op">n</span> <span class="kw">in</span> <span class="op">nombres</span><span class="op">:</span>
+    <span class="kw">if</span> <span class="op">n</span> <span class="op">&gt;</span> <span class="op">maxi</span><span class="op">:</span>
+        <span class="op">maxi</span> <span class="op">=</span> <span class="op">n</span>
+    <span class="kw">if</span> <span class="op">n</span> <span class="op">&lt;</span> <span class="op">mini</span><span class="op">:</span>
+        <span class="op">mini</span> <span class="op">=</span> <span class="op">n</span>
+<span class="fn">print</span>(<span class="str">"Max :"</span>, <span class="op">maxi</span>, <span class="str">"Min :"</span>, <span class="op">mini</span>)
+
+<span class="cmt"># 4. Compteur</span>
+<span class="op">compteur</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">for</span> <span class="op">n</span> <span class="kw">in</span> <span class="op">nombres</span><span class="op">:</span>
+    <span class="kw">if</span> <span class="op">n</span> <span class="op">&gt;</span> <span class="num">50</span><span class="op">:</span>
+        <span class="op">compteur</span> <span class="op">=</span> <span class="op">compteur</span> <span class="op">+</span> <span class="num">1</span>
+<span class="fn">print</span>(<span class="str">"Sup&eacute;rieurs &agrave; 50 :"</span>, <span class="op">compteur</span>)
+
+<span class="cmt"># 5. Nombres pairs</span>
+<span class="op">pairs</span> <span class="op">=</span> []
+<span class="kw">for</span> <span class="op">n</span> <span class="kw">in</span> <span class="op">nombres</span><span class="op">:</span>
+    <span class="kw">if</span> <span class="op">n</span> <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span><span class="op">:</span>
+        <span class="op">pairs</span>.<span class="fn">append</span>(<span class="op">n</span>)
+<span class="fn">print</span>(<span class="str">"Pairs :"</span>, <span class="op">pairs</span>)</div>
+</details>
+</div>
+</section>
+
+<!-- ==================== TAB 6 : QCM ==================== -->
+<section class="sec" id="sec6">
+<h2>7. QCM &mdash; Testez vos connaissances</h2>
+<p>R&eacute;pondez aux questions puis cliquez sur <strong>V&eacute;rifier</strong> pour voir votre score.</p>
+<div id="quizContainer"></div>
+<button class="action-btn" onclick="checkQuiz()" style="margin-top:1em;font-size:1em;padding:10px 24px">V&eacute;rifier mes r&eacute;ponses</button>
+<button class="action-btn" onclick="resetQuiz()" style="margin-top:1em;background:var(--muted)">R&eacute;initialiser</button>
+<div class="score-bar" id="scoreBar"></div>
+</section>
+
+</div><!-- /wrapper -->
+
+<footer style="text-align:center;padding:2em 16px;color:var(--muted);font-size:.85em;border-top:1px solid var(--border);margin-top:2em">
+  Cours interactif &mdash; Algorithmique et programmation Python &mdash; Seconde &mdash; 2024-2025
+</footer>
+
+<script>
+/* ============= Theme ============= */
+function getCSS(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function setTheme(t){
+  var r=document.documentElement;
+  r.removeAttribute('data-theme');
+  if(t==='light')r.setAttribute('data-theme','light');
+  else if(t==='dark')r.setAttribute('data-theme','dark');
+  document.getElementById('th-l').className=t==='light'?'active':'';
+  document.getElementById('th-a').className=t==='auto'?'active':'';
+  document.getElementById('th-d').className=t==='dark'?'active':'';
+  try{localStorage.setItem('theme',t);}catch(e){}
+}
+(function(){try{var t=localStorage.getItem('theme');if(t)setTheme(t);}catch(e){}})();
+
+/* ============= Tabs ============= */
+function showTab(i){
+  var secs=document.querySelectorAll('.sec');
+  var btns=document.querySelectorAll('.tab-btn');
+  for(var j=0;j<secs.length;j++){secs[j].classList.remove('active');btns[j].classList.remove('active');}
+  secs[i].classList.add('active');btns[i].classList.add('active');
+  initSection(i);
+  window.scrollTo(0,0);
+}
+var initialized={};
+function initSection(i){
+  if(initialized[i])return;
+  initialized[i]=true;
+  if(i===1)drawFlowchart();
+}
+
+/* ============= Tab 0 : Type checker ============= */
+function checkType(){
+  var inp=document.getElementById('typeInput').value.trim();
+  var res=document.getElementById('typeResult');
+  if(!inp){res.textContent='Entrez une expression.';return;}
+  var val,tp;
+  try{
+    val=Function('"use strict";return ('+inp+')')();
+  }catch(e){res.textContent='Erreur de syntaxe : '+e.message;return;}
+  if(typeof val==='number'){
+    tp=Number.isInteger(val)?'int':'float';
+  }else if(typeof val==='string'){tp='str';}
+  else if(typeof val==='boolean'){tp='bool';}
+  else{tp=typeof val;}
+  res.innerHTML='<strong>Valeur :</strong> '+String(val)+'\n<strong>Type Python :</strong> '+tp+' (en JS : '+typeof val+')';
+}
+
+/* ============= Tab 1 : Flowchart ============= */
+function drawFlowchart(){
+  var c=document.getElementById('flowCanvas');
+  var ctx=c.getContext('2d');
+  var dpr=window.devicePixelRatio||1;
+  c.width=500*dpr;c.height=320*dpr;
+  c.style.width='500px';c.style.height='320px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  var dark=getCSS('--bg').trim().charAt(1)<'5';
+  var bg=dark?'#252019':'#ffffff';
+  var fg=dark?'#e0d6c8':'#2c2418';
+  var accent=dark?'#c4835a':'#a0522d';
+  var green=dark?'#66bb6a':'#2e7d42';
+  var blue=dark?'#64b5f6':'#1565c0';
+  var border=dark?'#3d3428':'#d4c8b8';
+
+  ctx.fillStyle=bg;ctx.fillRect(0,0,500,320);
+  ctx.font='14px Nunito Sans, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+
+  var x=parseFloat(document.getElementById('flowInput').value);
+  var resEl=document.getElementById('flowResult');
+  if(isNaN(x)){resEl.textContent='Veuillez entrer un nombre valide.';return;}
+
+  var path1=(x>0),path2=path1&&(x%2===0);
+  var result=path1?(path2?'Positif et pair':'Positif et impair'):'Négatif ou nul';
+  resEl.innerHTML='<strong>x = '+x+'</strong> → Résultat : <strong>'+result+'</strong>';
+
+  function drawBox(x,y,w,h,text,hi){
+    ctx.fillStyle=hi?accent:bg;
+    ctx.strokeStyle=hi?accent:border;ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x-w/2,y-h/2,w,h,6);ctx.fill();ctx.stroke();
+    ctx.fillStyle=hi?'#fff':fg;ctx.fillText(text,x,y);
+  }
+  function drawDiamond(cx,cy,w,h,text,hi){
+    ctx.fillStyle=hi?accent:bg;
+    ctx.strokeStyle=hi?accent:border;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx,cy-h/2);ctx.lineTo(cx+w/2,cy);ctx.lineTo(cx,cy+h/2);ctx.lineTo(cx-w/2,cy);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle=hi?'#fff':fg;ctx.fillText(text,cx,cy);
+  }
+  function arrow(x1,y1,x2,y2,label,clr){
+    ctx.strokeStyle=clr||fg;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    var a=Math.atan2(y2-y1,x2-x1);
+    ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-8*Math.cos(a-0.4),y2-8*Math.sin(a-0.4));ctx.lineTo(x2-8*Math.cos(a+0.4),y2-8*Math.sin(a+0.4));ctx.closePath();ctx.fillStyle=clr||fg;ctx.fill();
+    if(label){ctx.font='12px Nunito Sans, sans-serif';ctx.fillStyle=clr||fg;ctx.fillText(label,(x1+x2)/2-14,(y1+y2)/2-6);}
+    ctx.font='14px Nunito Sans, sans-serif';
+  }
+
+  drawBox(250,30,120,36,'x = '+x,true);
+  arrow(250,48,250,70);
+
+  drawDiamond(250,100,140,50,'x > 0 ?',path1);
+  arrow(250,125,250,170,path1?'Oui':'',path1?green:fg);
+  arrow(320,100,420,100,!path1?'Non':'',!path1?accent:fg);
+
+  if(path1){
+    drawDiamond(250,200,160,50,'x % 2 == 0 ?',path2);
+    arrow(250,225,250,270,path2?'Oui':'',path2?green:fg);
+    arrow(330,200,420,200,!path2?'Non':'',!path2?accent:fg);
+    drawBox(250,290,160,32,'Positif et pair',path2);
+    drawBox(420,200,150,32,'Positif et impair',!path2);
+  }else{
+    ctx.fillStyle=border;ctx.fillRect(230,160,40,2);
+  }
+  drawBox(420,100,150,32,'Négatif ou nul',!path1);
+}
+
+/* ============= Tab 2 : Loop visualizer ============= */
+var loopState={};
+function startLoopViz(){
+  var n=parseInt(document.getElementById('loopN').value);
+  if(isNaN(n)||n<1||n>100){document.getElementById('loopResult').textContent='Entrez N entre 1 et 100.';return;}
+  loopState={n:n,i:0,sum:0,done:false};
+  document.getElementById('stepBtn').style.display='inline-block';
+  document.getElementById('autoBtn').style.display='inline-block';
+  drawLoop();
+}
+function stepLoop(){
+  if(loopState.done)return;
+  loopState.i++;
+  loopState.sum+=loopState.i;
+  if(loopState.i>=loopState.n)loopState.done=true;
+  drawLoop();
+}
+function autoLoop(){
+  if(loopState.done)return;
+  var iv=setInterval(function(){
+    if(loopState.done){clearInterval(iv);return;}
+    stepLoop();
+  },Math.max(50,500/loopState.n));
+}
+function drawLoop(){
+  var c=document.getElementById('loopCanvas');
+  var ctx=c.getContext('2d');
+  var dpr=window.devicePixelRatio||1;
+  c.width=500*dpr;c.height=200*dpr;
+  c.style.width='500px';c.style.height='200px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  var dark=getCSS('--bg').trim().charAt(1)<'5';
+  var bg=dark?'#252019':'#ffffff';
+  var fg=dark?'#e0d6c8':'#2c2418';
+  var accent=dark?'#c4835a':'#a0522d';
+  var green=dark?'#66bb6a':'#2e7d42';
+  ctx.fillStyle=bg;ctx.fillRect(0,0,500,200);
+  ctx.font='bold 16px Nunito Sans, sans-serif';ctx.textAlign='left';ctx.textBaseline='top';
+  ctx.fillStyle=fg;ctx.fillText('Somme des entiers de 1 à '+loopState.n,16,12);
+  ctx.font='14px Fira Code, monospace';
+  ctx.fillStyle=accent;ctx.fillText('i = '+loopState.i,16,45);
+  ctx.fillStyle=green;ctx.fillText('somme = '+loopState.sum,16,70);
+  ctx.fillStyle=fg;ctx.fillText('itération '+loopState.i+' / '+loopState.n,16,95);
+  // Progress bar
+  var pw=460,px=20,py=130;
+  ctx.fillStyle=dark?'#3d3428':'#ebe6de';ctx.fillRect(px,py,pw,24);
+  var prog=loopState.n>0?loopState.i/loopState.n:0;
+  ctx.fillStyle=accent;ctx.fillRect(px,py,pw*prog,24);
+  ctx.fillStyle='#fff';ctx.font='12px Nunito Sans, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(Math.round(prog*100)+'%',px+pw/2,py+12);
+  ctx.textAlign='left';ctx.textBaseline='top';
+  if(loopState.done){
+    ctx.font='bold 14px Nunito Sans, sans-serif';ctx.fillStyle=green;
+    ctx.fillText('Terminé ! Somme = '+loopState.sum,16,168);
+  }
+  document.getElementById('loopResult').textContent='i = '+loopState.i+' | somme = '+loopState.sum+(loopState.done?' (terminé)':'');
+}
+
+/* ============= Tab 3 : Function tracer ============= */
+function traceFunction(){
+  var fn=document.getElementById('funcSelect').value;
+  var arg=parseInt(document.getElementById('funcArg').value);
+  var res=document.getElementById('funcResult');
+  if(isNaN(arg)){res.textContent='Entrez un nombre entier.';return;}
+  var out='';
+  if(fn==='est_pair'){
+    out+='▶ Appel : est_pair('+arg+')\n';
+    out+='  n = '+arg+'\n';
+    out+='  Calcul : '+arg+' % 2 = '+(arg%2)+'\n';
+    out+='  '+arg+' % 2 == 0 ? '+(arg%2===0?'Oui':'Non')+'\n';
+    out+='  return '+(arg%2===0?'True':'False')+'\n';
+    out+='\n→ Résultat : '+(arg%2===0?'True':'False');
+  }else if(fn==='valeur_absolue'){
+    out+='▶ Appel : valeur_absolue('+arg+')\n';
+    out+='  x = '+arg+'\n';
+    out+='  x >= 0 ? '+(arg>=0?'Oui → return '+arg:'Non → return '+(-arg))+'\n';
+    out+='\n→ Résultat : '+Math.abs(arg);
+  }else if(fn==='factorielle'){
+    if(arg<0){res.textContent='La factorielle n\'est pas définie pour les négatifs.';return;}
+    if(arg>20){res.textContent='Valeur trop grande (max 20).';return;}
+    out+='▶ Appel : factorielle('+arg+')\n';
+    out+='  res = 1\n';
+    var f=1;
+    for(var i=1;i<=arg;i++){
+      f*=i;
+      out+='  i = '+i+' → res = res * '+i+' = '+f+'\n';
+    }
+    out+='  return '+f+'\n';
+    out+='\n→ Résultat : '+arg+'! = '+f;
+  }
+  res.textContent=out;
+}
+
+/* ============= Tab 4 : List visualizer ============= */
+var currentList=[];
+function parseList(s){
+  try{
+    var v=JSON.parse(s.replace(/'/g,'"'));
+    if(Array.isArray(v))return v;
+  }catch(e){}
+  return null;
+}
+function vizList(){
+  var inp=document.getElementById('listInput').value;
+  var L=parseList(inp);
+  if(!L){document.getElementById('listResult').textContent='Format invalide. Ex : [3, 7, 1]';return;}
+  currentList=L.slice();
+  renderList(-1);
+  document.getElementById('listResult').textContent='len = '+currentList.length;
+}
+function vizListAppend(){
+  if(currentList.length===0)vizList();
+  currentList.push(5);
+  renderList(currentList.length-1);
+  document.getElementById('listResult').textContent='append(5) → len = '+currentList.length;
+  document.getElementById('listInput').value=JSON.stringify(currentList);
+}
+function vizListPop(){
+  if(currentList.length===0){vizList();if(currentList.length===0)return;}
+  var v=currentList.pop();
+  renderList(-1);
+  document.getElementById('listResult').textContent='pop() → retiré : '+v+' | len = '+currentList.length;
+  document.getElementById('listInput').value=JSON.stringify(currentList);
+}
+function vizListSort(){
+  if(currentList.length===0)vizList();
+  currentList.sort(function(a,b){return a-b;});
+  renderList(-1);
+  document.getElementById('listResult').textContent='Liste triée | len = '+currentList.length;
+  document.getElementById('listInput').value=JSON.stringify(currentList);
+}
+function renderList(hiIdx){
+  var area=document.getElementById('listVizArea');
+  area.innerHTML='';
+  for(var i=0;i<currentList.length;i++){
+    var cell=document.createElement('div');
+    cell.className='cell'+(i===hiIdx?' highlight':'');
+    cell.innerHTML='<span class="idx">'+i+'</span><span class="val">'+currentList[i]+'</span>';
+    area.appendChild(cell);
+  }
+}
+
+/* ============= Tab 6 : QCM ============= */
+var quizPool=[
+  {q:"Quel est le type de la valeur <code>3.14</code> en Python ?",o:["int","float","str","bool"],a:1},
+  {q:"Que renvoie <code>type(\"hello\")</code> ?",o:["&lt;class 'int'&gt;","&lt;class 'bool'&gt;","&lt;class 'str'&gt;","&lt;class 'list'&gt;"],a:2},
+  {q:"Quel est le résultat de <code>7 // 2</code> ?",o:["3.5","3","4","1"],a:1},
+  {q:"Quel est le résultat de <code>7 % 3</code> ?",o:["2","1","3","2.33"],a:1},
+  {q:"Quel mot-clé permet de définir une fonction en Python ?",o:["function","func","def","define"],a:2},
+  {q:"Comment accède-t-on au premier élément d'une liste <code>L</code> ?",o:["L[1]","L[0]","L[-1]","L.first()"],a:1},
+  {q:"Que fait <code>L.append(5)</code> ?",o:["Supprime le 5","Ajoute 5 au début","Ajoute 5 à la fin","Remplace L par 5"],a:2},
+  {q:"Quelle est la valeur de <code>len([10, 20, 30])</code> ?",o:["2","3","4","30"],a:1},
+  {q:"Combien de fois s'exécute <code>for i in range(5)</code> ?",o:["4 fois","5 fois","6 fois","indéfiniment"],a:1},
+  {q:"Quel est le résultat de <code>2 ** 4</code> ?",o:["8","6","16","24"],a:2},
+  {q:"Que signifie <code>!=</code> en Python ?",o:["Égal","Égal strictement","Différent","Inférieur"],a:2},
+  {q:"Quelle est la valeur de <code>bool(0)</code> ?",o:["True","False","0","None"],a:1},
+  {q:"Quel est le résultat de <code>\"bon\" + \"jour\"</code> ?",o:["bon jour","bonjour","Erreur","True"],a:1},
+  {q:"Quel opérateur logique signifie « ET » en Python ?",o:["&&","and","et","AND"],a:1},
+  {q:"Que renvoie une fonction sans instruction <code>return</code> ?",o:["0","\"\"","None","Erreur"],a:2},
+  {q:"Quel est le résultat de <code>range(2, 8)</code> ?",o:["2,3,4,5,6,7,8","2,3,4,5,6,7","2,4,6,8","3,4,5,6,7"],a:1},
+  {q:"Comment convertir la chaîne <code>\"42\"</code> en entier ?",o:["int(\"42\")","str(42)","float(\"42\")","number(\"42\")"],a:0},
+  {q:"Quel est le dernier indice d'une liste de 5 éléments ?",o:["5","4","3","-1 (les deux : 4 et -1)"],a:3}
+];
+function buildQuiz(){
+  var c=document.getElementById('quizContainer');c.innerHTML='';
+  for(var i=0;i<quizPool.length;i++){
+    var q=quizPool[i];
+    var d=document.createElement('div');d.className='quiz-q';d.id='qq'+i;
+    var h='<p>'+(i+1)+'. '+q.q+'</p>';
+    for(var j=0;j<q.o.length;j++){
+      h+='<label><input type="radio" name="q'+i+'" value="'+j+'"> '+q.o[j]+'</label>';
+    }
+    h+='<div class="feedback" id="fb'+i+'"></div>';
+    d.innerHTML=h;c.appendChild(d);
+  }
+}
+function checkQuiz(){
+  var score=0;
+  for(var i=0;i<quizPool.length;i++){
+    var sel=document.querySelector('input[name="q'+i+'"]:checked');
+    var fb=document.getElementById('fb'+i);
+    if(!sel){fb.className='feedback wrong';fb.style.display='block';fb.textContent='Pas de réponse sélectionnée.';continue;}
+    if(parseInt(sel.value)===quizPool[i].a){
+      score++;fb.className='feedback correct';fb.style.display='block';fb.innerHTML='✓ Correct !';
+    }else{
+      fb.className='feedback wrong';fb.style.display='block';
+      fb.innerHTML='✗ Incorrect. Réponse : '+quizPool[i].o[quizPool[i].a];
+    }
+  }
+  document.getElementById('scoreBar').textContent='Score : '+score+' / '+quizPool.length+' ('+Math.round(score/quizPool.length*100)+' %)';
+}
+function resetQuiz(){
+  buildQuiz();
+  document.getElementById('scoreBar').textContent='';
+}
+buildQuiz();
+
+/* ============= Init ============= */
+vizList();
+</script>
+</body>
+</html>

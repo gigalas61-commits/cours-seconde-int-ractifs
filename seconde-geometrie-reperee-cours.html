@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G&eacute;om&eacute;trie rep&eacute;r&eacute;e &mdash; Seconde</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ed;
+  --surface: #ffffff;
+  --heading: #8b4513;
+  --accent: #a0522d;
+  --text: #2c2418;
+  --muted: #6b5a48;
+  --border: #d4c8b8;
+  --surface2: #ebe6de;
+  --accent-light: #faf5ef;
+  --tip: #b8860b;
+  --tip-bg: #fdf8ef;
+  --success: #2e7d42;
+  --error: #c62828;
+  --shadow: 0 2px 8px rgba(139,69,19,0.07);
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1612;
+    --surface: #2a2420;
+    --heading: #d4a574;
+    --accent: #c4835a;
+    --text: #e8ddd0;
+    --muted: #a89880;
+    --border: #3e362e;
+    --surface2: #322c26;
+    --accent-light: #2e2620;
+    --tip: #d4a030;
+    --tip-bg: #2e2818;
+    --success: #66bb6a;
+    --error: #ef5350;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3);
+    --radius: 6px;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1612;
+  --surface: #2a2420;
+  --heading: #d4a574;
+  --accent: #c4835a;
+  --text: #e8ddd0;
+  --muted: #a89880;
+  --border: #3e362e;
+  --surface2: #322c26;
+  --accent-light: #2e2620;
+  --tip: #d4a030;
+  --tip-bg: #2e2818;
+  --success: #66bb6a;
+  --error: #ef5350;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --radius: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--heading);
+  line-height: 1.3;
+}
+.wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+header {
+  text-align: center;
+  padding: 2rem 0 1rem;
+}
+header h1 { font-size: 2.2rem; font-weight: 700; }
+header p { color: var(--muted); margin-top: 0.3rem; font-size: 1.05rem; }
+.theme-toggle {
+  position: fixed; top: 12px; right: 16px; z-index: 100;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 6px 14px; cursor: pointer;
+  font-size: 0.85rem; color: var(--muted);
+  box-shadow: var(--shadow);
+}
+.theme-toggle:hover { color: var(--accent); }
+.tab-bar {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  background: var(--surface2); border-radius: var(--radius);
+  padding: 4px; margin: 1.5rem 0;
+}
+.tab-btn {
+  flex: 1 1 auto; min-width: 100px;
+  padding: 10px 8px; border: none; background: transparent;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.82rem;
+  font-weight: 600; color: var(--muted); cursor: pointer;
+  border-radius: var(--radius); transition: all 0.2s;
+  text-align: center;
+}
+.tab-btn:hover { color: var(--accent); background: var(--accent-light); }
+.tab-btn.active {
+  background: var(--surface); color: var(--heading);
+  box-shadow: var(--shadow);
+}
+.sec { display: none; }
+.sec.active { display: block; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.2rem 0;
+  box-shadow: var(--shadow);
+}
+.formula-box {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  text-align: center;
+}
+.formula-box .label {
+  display: block; font-weight: 700; color: var(--heading);
+  font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+  margin-bottom: 0.4rem;
+}
+.tip-box {
+  background: var(--tip-bg);
+  border-left: 4px solid var(--tip);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+.tip-box strong { color: var(--tip); }
+.frac {
+  display: inline-flex; flex-direction: column; align-items: center;
+  vertical-align: middle; margin: 0 4px;
+  font-size: 0.95em; line-height: 1.2;
+}
+.frac .num { border-bottom: 1.5px solid var(--text); padding: 0 4px 2px; }
+.frac .den { padding: 2px 4px 0; }
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle;margin:0 2px}
+.sqrt::before{content:'\221A';font-size:1.3em;line-height:1;padding-right:1px}
+.sqrt .radicand{border-top:1.5px solid currentColor;padding:1px 4px 0 2px;display:inline-flex;align-items:center}
+canvas {
+  display: block; margin: 1rem auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 100%; cursor: crosshair;
+  background: var(--surface);
+  touch-action: none;
+}
+.canvas-info {
+  text-align: center; color: var(--muted);
+  font-size: 0.88rem; margin-top: 0.3rem;
+}
+.exercise {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow);
+}
+.exercise h4 { margin-bottom: 0.6rem; }
+.exercise ol, .exercise ul { padding-left: 1.3rem; }
+.exercise li { margin: 0.3rem 0; }
+details {
+  margin-top: 0.8rem;
+}
+details summary {
+  cursor: pointer; font-weight: 600;
+  color: var(--accent); padding: 6px 0;
+}
+details summary:hover { text-decoration: underline; }
+details .correction {
+  background: var(--accent-light);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin-top: 0.5rem;
+  line-height: 1.8;
+}
+.quiz-container { max-width: 700px; margin: 0 auto; }
+.quiz-q {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow);
+}
+.quiz-q p { font-weight: 600; margin-bottom: 0.6rem; }
+.quiz-q label {
+  display: block; padding: 8px 12px; margin: 4px 0;
+  border-radius: var(--radius); cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s;
+}
+.quiz-q label:hover { background: var(--accent-light); }
+.quiz-q input[type="radio"] { margin-right: 8px; }
+.quiz-q .feedback {
+  margin-top: 0.5rem; padding: 8px 12px;
+  border-radius: var(--radius); font-weight: 600;
+  font-size: 0.92rem; display: none;
+}
+.quiz-q .feedback.correct {
+  display: block; background: #e8f5e9; color: var(--success);
+}
+.quiz-q .feedback.wrong {
+  display: block; background: #ffebee; color: var(--error);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .quiz-q .feedback.correct { background: #1b3a1e; }
+  :root:not([data-theme="light"]) .quiz-q .feedback.wrong { background: #3a1a1a; }
+}
+:root[data-theme="dark"] .quiz-q .feedback.correct { background: #1b3a1e; }
+:root[data-theme="dark"] .quiz-q .feedback.wrong { background: #3a1a1a; }
+.quiz-btn {
+  display: inline-block; padding: 10px 28px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer; margin-top: 1rem;
+}
+.quiz-btn:hover { opacity: 0.9; }
+.quiz-score {
+  text-align: center; font-size: 1.2rem;
+  font-weight: 700; color: var(--heading);
+  margin: 1rem 0; display: none;
+}
+.slider-row {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; margin: 0.5rem 0;
+}
+.slider-row label { font-weight: 600; min-width: 80px; }
+.slider-row input[type="range"] { flex: 1; min-width: 120px; }
+.slider-row .val { font-weight: 700; color: var(--accent); min-width: 50px; }
+@media (max-width: 600px) {
+  header h1 { font-size: 1.6rem; }
+  .tab-btn { font-size: 0.72rem; padding: 8px 4px; min-width: 70px; }
+  .card, .exercise { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer le th&egrave;me">&#9681; Th&egrave;me</button>
+<div class="wrapper">
+<header>
+  <h1>G&eacute;om&eacute;trie rep&eacute;r&eacute;e</h1>
+  <p>Cours interactif &mdash; Classe de Seconde</p>
+</header>
+
+<nav class="tab-bar" id="tabBar">
+  <button class="tab-btn active" onclick="showTab(0)">Rep&egrave;re du plan</button>
+  <button class="tab-btn" onclick="showTab(1)">Distance</button>
+  <button class="tab-btn" onclick="showTab(2)">Milieu</button>
+  <button class="tab-btn" onclick="showTab(3)">&Eacute;quation de droite</button>
+  <button class="tab-btn" onclick="showTab(4)">Parall&egrave;les / S&eacute;cantes</button>
+  <button class="tab-btn" onclick="showTab(5)">Exercices</button>
+  <button class="tab-btn" onclick="showTab(6)">QCM</button>
+</nav>
+
+<!-- ===================== TAB 0 : REPÈRE ===================== -->
+<section class="sec active" id="sec0">
+<h2>1. Rep&egrave;re du plan</h2>
+<div class="card">
+<h3>D&eacute;finition</h3>
+<p>Un <strong>rep&egrave;re du plan</strong> est constitu&eacute; d'un point <em>O</em> appel&eacute; <strong>origine</strong> et de deux axes perpendiculaires gradu&eacute;s :</p>
+<ul style="padding-left:1.3rem;margin:0.5rem 0;">
+  <li>L'axe des <strong>abscisses</strong> (horizontal, not&eacute; <em>x</em>)</li>
+  <li>L'axe des <strong>ordonn&eacute;es</strong> (vertical, not&eacute; <em>y</em>)</li>
+</ul>
+<p>Lorsque les deux axes ont la <strong>m&ecirc;me unit&eacute; de longueur</strong> et sont perpendiculaires, on parle de <strong>rep&egrave;re orthonorm&eacute;</strong> (O ; I ; J).</p>
+</div>
+
+<div class="card">
+<h3>Coordonn&eacute;es d'un point</h3>
+<p>Tout point <em>M</em> du plan est rep&eacute;r&eacute; par un couple unique (<em>x<sub>M</sub></em> ; <em>y<sub>M</sub></em>) :</p>
+<ul style="padding-left:1.3rem;margin:0.5rem 0;">
+  <li><em>x<sub>M</sub></em> est l'<strong>abscisse</strong> de M</li>
+  <li><em>y<sub>M</sub></em> est l'<strong>ordonn&eacute;e</strong> de M</li>
+</ul>
+</div>
+
+<div class="formula-box">
+<span class="label">Notation</span>
+M(x<sub>M</sub> ; y<sub>M</sub>) &mdash; par exemple A(3 ; 2) ou B(&minus;1 ; 4)
+</div>
+
+<div class="tip-box">
+<strong>Astuce :</strong> Pour lire les coordonn&eacute;es d'un point, on projette orthogonalement ce point sur chacun des axes.
+</div>
+
+<h3 style="margin-top:1.5rem;">Exploration interactive</h3>
+<p>Cliquez sur le quadrillage pour placer des points et lire leurs coordonn&eacute;es.</p>
+<canvas id="c0" width="560" height="560"></canvas>
+<p class="canvas-info" id="info0">Cliquez pour placer un point. Double-cliquez pour tout effacer.</p>
+</section>
+
+<!-- ===================== TAB 1 : DISTANCE ===================== -->
+<section class="sec" id="sec1">
+<h2>2. Distance entre deux points</h2>
+<div class="card">
+<h3>Th&eacute;or&egrave;me</h3>
+<p>Dans un rep&egrave;re orthonorm&eacute;, la distance entre deux points A(x<sub>A</sub> ; y<sub>A</sub>) et B(x<sub>B</sub> ; y<sub>B</sub>) est :</p>
+</div>
+
+<div class="formula-box">
+<span class="label">Formule de la distance</span>
+AB = <span class="sqrt"><span class="radicand">(x<sub>B</sub> &minus; x<sub>A</sub>)&sup2; + (y<sub>B</sub> &minus; y<sub>A</sub>)&sup2;</span></span>
+</div>
+
+<div class="card">
+<h3>D&eacute;monstration (id&eacute;e)</h3>
+<p>Cette formule d&eacute;coule directement du <strong>th&eacute;or&egrave;me de Pythagore</strong>. En tra&ccedil;ant le triangle rectangle dont l'hypot&eacute;nuse est [AB], les cot&eacute;s de l'angle droit mesurent |x<sub>B</sub> &minus; x<sub>A</sub>| et |y<sub>B</sub> &minus; y<sub>A</sub>|.</p>
+</div>
+
+<div class="card">
+<h3>Exemple</h3>
+<p>Soient A(1 ; 3) et B(4 ; 7).</p>
+<p>AB = <span class="sqrt"><span class="radicand">(4&minus;1)&sup2; + (7&minus;3)&sup2;</span></span> = <span class="sqrt"><span class="radicand">9 + 16</span></span> = <span class="sqrt"><span class="radicand">25</span></span> = <strong>5</strong></p>
+</div>
+
+<div class="tip-box">
+<strong>Remarque :</strong> L'ordre des points n'a pas d'importance : AB = BA. En effet, (&minus;a)&sup2; = a&sup2;.
+</div>
+
+<h3 style="margin-top:1.5rem;">Visualisation interactive</h3>
+<p>D&eacute;placez les points A et B pour voir le calcul de la distance en temps r&eacute;el.</p>
+<canvas id="c1" width="560" height="560"></canvas>
+<p class="canvas-info" id="info1">Glissez les points A (rouge) ou B (bleu).</p>
+</section>
+
+<!-- ===================== TAB 2 : MILIEU ===================== -->
+<section class="sec" id="sec2">
+<h2>3. Milieu d'un segment</h2>
+<div class="card">
+<h3>D&eacute;finition et formule</h3>
+<p>Le <strong>milieu</strong> M d'un segment [AB] est le point qui est &agrave; &eacute;gale distance de A et de B.</p>
+<p>Si A(x<sub>A</sub> ; y<sub>A</sub>) et B(x<sub>B</sub> ; y<sub>B</sub>), alors les coordonn&eacute;es du milieu M sont :</p>
+</div>
+
+<div class="formula-box">
+<span class="label">Coordonn&eacute;es du milieu</span>
+M&thinsp;&#x28;
+<span class="frac"><span class="num">x<sub>A</sub> + x<sub>B</sub></span><span class="den">2</span></span> ;
+<span class="frac"><span class="num">y<sub>A</sub> + y<sub>B</sub></span><span class="den">2</span></span>
+&#x29;
+</div>
+
+<div class="card">
+<h3>Exemple</h3>
+<p>Soient A(2 ; 5) et B(6 ; 1).</p>
+<p>x<sub>M</sub> = <span class="frac"><span class="num">2 + 6</span><span class="den">2</span></span> = 4 &emsp; y<sub>M</sub> = <span class="frac"><span class="num">5 + 1</span><span class="den">2</span></span> = 3</p>
+<p>Donc M(4 ; 3).</p>
+</div>
+
+<div class="tip-box">
+<strong>Retenir :</strong> Le milieu, c'est la <em>moyenne</em> des coordonn&eacute;es !
+</div>
+
+<h3 style="margin-top:1.5rem;">Visualisation interactive</h3>
+<p>D&eacute;placez A ou B pour voir le milieu M se recalculer.</p>
+<canvas id="c2" width="560" height="560"></canvas>
+<p class="canvas-info" id="info2">Glissez les points A (rouge) ou B (bleu). Le milieu M est en vert.</p>
+</section>
+
+<!-- ===================== TAB 3 : EQUATION DE DROITE ===================== -->
+<section class="sec" id="sec3">
+<h2>4. &Eacute;quation de droite</h2>
+<div class="card">
+<h3>Forme r&eacute;duite</h3>
+<p>Toute droite non verticale admet une &eacute;quation de la forme :</p>
+</div>
+
+<div class="formula-box">
+<span class="label">&Eacute;quation r&eacute;duite</span>
+y = mx + p
+</div>
+
+<div class="card">
+<ul style="padding-left:1.3rem;">
+  <li><strong>m</strong> est le <strong>coefficient directeur</strong> (ou pente). Il mesure l'inclinaison de la droite.</li>
+  <li><strong>p</strong> est l'<strong>ordonn&eacute;e &agrave; l'origine</strong>. C'est l'ordonn&eacute;e du point d'intersection avec l'axe des ordonn&eacute;es.</li>
+</ul>
+</div>
+
+<div class="formula-box">
+<span class="label">Coefficient directeur</span>
+m = <span class="frac"><span class="num">y<sub>B</sub> &minus; y<sub>A</sub></span><span class="den">x<sub>B</sub> &minus; x<sub>A</sub></span></span> &emsp; (avec x<sub>A</sub> &ne; x<sub>B</sub>)
+</div>
+
+<div class="card">
+<h3>Cas particuliers</h3>
+<ul style="padding-left:1.3rem;">
+  <li>Si <strong>m = 0</strong>, la droite est <strong>horizontale</strong> : y = p</li>
+  <li>Si la droite est <strong>verticale</strong>, son &eacute;quation est <strong>x = k</strong> (pas de forme y = mx + p)</li>
+  <li>Si <strong>m &gt; 0</strong>, la droite est <strong>croissante</strong></li>
+  <li>Si <strong>m &lt; 0</strong>, la droite est <strong>d&eacute;croissante</strong></li>
+</ul>
+</div>
+
+<div class="tip-box">
+<strong>M&eacute;thode :</strong> Pour trouver l'&eacute;quation d'une droite passant par A et B, on calcule d'abord m, puis on d&eacute;termine p en rempla&ccedil;ant les coordonn&eacute;es d'un point dans y = mx + p.
+</div>
+
+<h3 style="margin-top:1.5rem;">Exploration interactive</h3>
+<p>Utilisez les curseurs pour modifier m et p et observer la droite.</p>
+<div class="card">
+  <div class="slider-row">
+    <label>m (pente) :</label>
+    <input type="range" id="sliderM" min="-5" max="5" step="0.1" value="1">
+    <span class="val" id="valM">1</span>
+  </div>
+  <div class="slider-row">
+    <label>p (ordonn&eacute;e) :</label>
+    <input type="range" id="sliderP" min="-5" max="5" step="0.1" value="0">
+    <span class="val" id="valP">0</span>
+  </div>
+  <p style="margin-top:0.6rem;font-weight:600;color:var(--heading);" id="eqLabel">y = 1x + 0</p>
+</div>
+<canvas id="c3" width="560" height="560"></canvas>
+<p class="canvas-info">Ajustez m et p avec les curseurs ci-dessus.</p>
+</section>
+
+<!-- ===================== TAB 4 : PARALLELES / SECANTES ===================== -->
+<section class="sec" id="sec4">
+<h2>5. Droites parall&egrave;les et s&eacute;cantes</h2>
+<div class="card">
+<h3>Propri&eacute;t&eacute;s</h3>
+<p>Soient d<sub>1</sub> : y = m<sub>1</sub>x + p<sub>1</sub> et d<sub>2</sub> : y = m<sub>2</sub>x + p<sub>2</sub> deux droites non verticales.</p>
+</div>
+
+<div class="formula-box">
+<span class="label">Droites parall&egrave;les</span>
+d<sub>1</sub> &parallel; d<sub>2</sub> &hArr; m<sub>1</sub> = m<sub>2</sub>
+</div>
+
+<div class="card">
+<ul style="padding-left:1.3rem;">
+  <li>Si m<sub>1</sub> = m<sub>2</sub> et p<sub>1</sub> = p<sub>2</sub>, les droites sont <strong>confondues</strong>.</li>
+  <li>Si m<sub>1</sub> = m<sub>2</sub> et p<sub>1</sub> &ne; p<sub>2</sub>, les droites sont <strong>strictement parall&egrave;les</strong> (pas de point commun).</li>
+  <li>Si m<sub>1</sub> &ne; m<sub>2</sub>, les droites sont <strong>s&eacute;cantes</strong> en un unique point.</li>
+</ul>
+</div>
+
+<div class="formula-box">
+<span class="label">Point d'intersection</span>
+Si m<sub>1</sub> &ne; m<sub>2</sub>, on r&eacute;sout m<sub>1</sub>x + p<sub>1</sub> = m<sub>2</sub>x + p<sub>2</sub> &rArr; x = <span class="frac"><span class="num">p<sub>2</sub> &minus; p<sub>1</sub></span><span class="den">m<sub>1</sub> &minus; m<sub>2</sub></span></span>
+</div>
+
+<div class="tip-box">
+<strong>Attention :</strong> Deux droites verticales distinctes (x = a et x = b avec a &ne; b) sont aussi parall&egrave;les !
+</div>
+
+<h3 style="margin-top:1.5rem;">Visualisation interactive</h3>
+<p>Modifiez les coefficients pour observer les positions relatives des droites.</p>
+<div class="card">
+  <div class="slider-row">
+    <label>m<sub>1</sub> :</label>
+    <input type="range" id="sliderM1" min="-4" max="4" step="0.1" value="1">
+    <span class="val" id="valM1">1</span>
+  </div>
+  <div class="slider-row">
+    <label>p<sub>1</sub> :</label>
+    <input type="range" id="sliderP1" min="-4" max="4" step="0.1" value="0">
+    <span class="val" id="valP1">0</span>
+  </div>
+  <div class="slider-row">
+    <label>m<sub>2</sub> :</label>
+    <input type="range" id="sliderM2" min="-4" max="4" step="0.1" value="-1">
+    <span class="val" id="valM2">-1</span>
+  </div>
+  <div class="slider-row">
+    <label>p<sub>2</sub> :</label>
+    <input type="range" id="sliderP2" min="-4" max="4" step="0.1" value="2">
+    <span class="val" id="valP2">2</span>
+  </div>
+  <p style="margin-top:0.6rem;font-weight:600;color:var(--heading);" id="relLabel">S&eacute;cantes</p>
+</div>
+<canvas id="c4" width="560" height="560"></canvas>
+<p class="canvas-info">d<sub>1</sub> en rouge, d<sub>2</sub> en bleu. Le point d'intersection est en vert.</p>
+</section>
+
+<!-- ===================== TAB 5 : EXERCICES ===================== -->
+<section class="sec" id="sec5">
+<h2>6. Exercices</h2>
+
+<div class="exercise">
+<h4>Exercice 1 &mdash; Lecture de coordonn&eacute;es</h4>
+<p>Dans un rep&egrave;re orthonorm&eacute;, placer les points A(3 ; 2), B(&minus;1 ; 4), C(&minus;3 ; &minus;2) et D(2 ; &minus;3). Quels points se trouvent dans le deuxi&egrave;me quadrant ?</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>Le deuxi&egrave;me quadrant correspond aux points dont l'abscisse est <strong>n&eacute;gative</strong> et l'ordonn&eacute;e <strong>positive</strong>.</p>
+<p>Parmi les points donn&eacute;s :</p>
+<ul>
+  <li>A(3 ; 2) : x &gt; 0 et y &gt; 0 &rarr; 1<sup>er</sup> quadrant</li>
+  <li><strong>B(&minus;1 ; 4) : x &lt; 0 et y &gt; 0 &rarr; 2<sup>e</sup> quadrant</strong></li>
+  <li>C(&minus;3 ; &minus;2) : x &lt; 0 et y &lt; 0 &rarr; 3<sup>e</sup> quadrant</li>
+  <li>D(2 ; &minus;3) : x &gt; 0 et y &lt; 0 &rarr; 4<sup>e</sup> quadrant</li>
+</ul>
+<p><strong>Seul B est dans le 2<sup>e</sup> quadrant.</strong></p>
+</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4>Exercice 2 &mdash; Calcul de distances</h4>
+<p>Calculer les distances suivantes :</p>
+<ol>
+  <li>A(1 ; 2) et B(4 ; 6)</li>
+  <li>C(&minus;2 ; 3) et D(1 ; &minus;1)</li>
+  <li>E(0 ; 0) et F(5 ; 12)</li>
+</ol>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p><strong>1.</strong> AB = <span class="sqrt"><span class="radicand">(4&minus;1)&sup2; + (6&minus;2)&sup2;</span></span> = <span class="sqrt"><span class="radicand">9 + 16</span></span> = <span class="sqrt"><span class="radicand">25</span></span> = <strong>5</strong></p>
+<p><strong>2.</strong> CD = <span class="sqrt"><span class="radicand">(1&minus;(&minus;2))&sup2; + (&minus;1&minus;3)&sup2;</span></span> = <span class="sqrt"><span class="radicand">9 + 16</span></span> = <span class="sqrt"><span class="radicand">25</span></span> = <strong>5</strong></p>
+<p><strong>3.</strong> EF = <span class="sqrt"><span class="radicand">25 + 144</span></span> = <span class="sqrt"><span class="radicand">169</span></span> = <strong>13</strong></p>
+</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4>Exercice 3 &mdash; Triangle isoc&egrave;le</h4>
+<p>Soient A(1 ; 1), B(5 ; 1) et C(3 ; 4). Le triangle ABC est-il isoc&egrave;le ?</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>Calculons les longueurs des trois c&ocirc;t&eacute;s :</p>
+<p>AB = <span class="sqrt"><span class="radicand">(5&minus;1)&sup2; + (1&minus;1)&sup2;</span></span> = <span class="sqrt"><span class="radicand">16</span></span> = 4</p>
+<p>AC = <span class="sqrt"><span class="radicand">(3&minus;1)&sup2; + (4&minus;1)&sup2;</span></span> = <span class="sqrt"><span class="radicand">4 + 9</span></span> = <span class="sqrt"><span class="radicand">13</span></span></p>
+<p>BC = <span class="sqrt"><span class="radicand">(3&minus;5)&sup2; + (4&minus;1)&sup2;</span></span> = <span class="sqrt"><span class="radicand">4 + 9</span></span> = <span class="sqrt"><span class="radicand">13</span></span></p>
+<p>On a AC = BC = &radic;13, donc le <strong>triangle ABC est isoc&egrave;le en C</strong>.</p>
+</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4>Exercice 4 &mdash; Coordonn&eacute;es du milieu</h4>
+<p>Calculer les coordonn&eacute;es du milieu M du segment [AB] dans chaque cas :</p>
+<ol>
+  <li>A(2 ; 6) et B(8 ; 2)</li>
+  <li>A(&minus;3 ; 5) et B(7 ; &minus;1)</li>
+</ol>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p><strong>1.</strong> x<sub>M</sub> = (2+8)/2 = 5 &emsp; y<sub>M</sub> = (6+2)/2 = 4 &emsp; donc <strong>M(5 ; 4)</strong></p>
+<p><strong>2.</strong> x<sub>M</sub> = (&minus;3+7)/2 = 2 &emsp; y<sub>M</sub> = (5+(&minus;1))/2 = 2 &emsp; donc <strong>M(2 ; 2)</strong></p>
+</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4>Exercice 5 &mdash; &Eacute;quation de droite</h4>
+<p>D&eacute;terminer l'&eacute;quation r&eacute;duite de la droite passant par A(1 ; 3) et B(3 ; 7).</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p><strong>&Eacute;tape 1 :</strong> Calcul du coefficient directeur.</p>
+<p>m = (7 &minus; 3) / (3 &minus; 1) = 4 / 2 = <strong>2</strong></p>
+<p><strong>&Eacute;tape 2 :</strong> D&eacute;termination de p.</p>
+<p>On utilise le point A(1 ; 3) : 3 = 2 &times; 1 + p &rArr; p = 1</p>
+<p><strong>L'&eacute;quation est : y = 2x + 1</strong></p>
+<p><em>V&eacute;rification avec B :</em> 2 &times; 3 + 1 = 7 &#10003;</p>
+</div>
+</details>
+</div>
+
+<div class="exercise">
+<h4>Exercice 6 &mdash; Intersection de droites</h4>
+<p>Soient d<sub>1</sub> : y = 2x + 1 et d<sub>2</sub> : y = &minus;x + 7. D&eacute;terminer les coordonn&eacute;es de leur point d'intersection.</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>Les droites sont s&eacute;cantes car m<sub>1</sub> = 2 &ne; m<sub>2</sub> = &minus;1.</p>
+<p><strong>R&eacute;solution :</strong></p>
+<p>2x + 1 = &minus;x + 7</p>
+<p>3x = 6</p>
+<p>x = 2</p>
+<p>y = 2 &times; 2 + 1 = 5</p>
+<p><strong>Le point d'intersection est I(2 ; 5).</strong></p>
+<p><em>V&eacute;rification dans d<sub>2</sub> :</em> &minus;2 + 7 = 5 &#10003;</p>
+</div>
+</details>
+</div>
+</section>
+
+<!-- ===================== TAB 6 : QCM ===================== -->
+<section class="sec" id="sec6">
+<h2>7. QCM &mdash; Testez vos connaissances</h2>
+<div class="quiz-container" id="quizBox"></div>
+<div style="text-align:center;">
+  <button class="quiz-btn" onclick="checkQuiz()">V&eacute;rifier mes r&eacute;ponses</button>
+  <button class="quiz-btn" style="background:var(--muted);margin-left:8px;" onclick="resetQuiz()">R&eacute;initialiser</button>
+</div>
+<div class="quiz-score" id="quizScore"></div>
+</section>
+
+</div><!-- /wrapper -->
+
+<script>
+/* ===== THEME ===== */
+function toggleTheme() {
+  var r = document.documentElement;
+  var t = r.getAttribute('data-theme');
+  if (t === 'dark') { r.setAttribute('data-theme', 'light'); }
+  else if (t === 'light') { r.removeAttribute('data-theme'); }
+  else { r.setAttribute('data-theme', 'dark'); }
+  Object.keys(inited).forEach(function(k) { if (inited[k]) initSection(parseInt(k)); });
+}
+
+/* ===== CSS helper ===== */
+function getCSS(v) {
+  return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+}
+
+/* ===== TABS ===== */
+var inited = {};
+function showTab(i) {
+  var btns = document.querySelectorAll('.tab-btn');
+  var secs = document.querySelectorAll('.sec');
+  btns.forEach(function(b, idx) { b.classList.toggle('active', idx === i); });
+  secs.forEach(function(s, idx) { s.classList.toggle('active', idx === i); });
+  if (!inited[i]) { initSection(i); inited[i] = true; }
+  else { initSection(i); }
+}
+
+/* ===== CANVAS HELPERS ===== */
+function dpr() { return window.devicePixelRatio || 1; }
+function setupCanvas(id) {
+  var c = document.getElementById(id);
+  var r = dpr();
+  var w = Math.min(560, c.parentElement.clientWidth - 32);
+  c.style.width = w + 'px';
+  c.style.height = w + 'px';
+  c.width = w * r;
+  c.height = w * r;
+  var ctx = c.getContext('2d');
+  ctx.setTransform(r, 0, 0, r, 0, 0);
+  return { c: c, ctx: ctx, w: w };
+}
+
+function drawGrid(ctx, w, units, ox, oy) {
+  var step = w / (units * 2);
+  ctx.fillStyle = getCSS('--surface');
+  ctx.fillRect(0, 0, w, w);
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 0.5;
+  for (var i = 0; i <= units * 2; i++) {
+    var pos = i * step;
+    ctx.beginPath(); ctx.moveTo(pos, 0); ctx.lineTo(pos, w); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, pos); ctx.lineTo(w, pos); ctx.stroke();
+  }
+  ctx.strokeStyle = getCSS('--text');
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, w); ctx.stroke();
+  /* arrows */
+  ctx.beginPath(); ctx.moveTo(w - 8, oy - 4); ctx.lineTo(w, oy); ctx.lineTo(w - 8, oy + 4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox - 4, 8); ctx.lineTo(ox, 0); ctx.lineTo(ox + 4, 8); ctx.stroke();
+  /* labels */
+  ctx.fillStyle = getCSS('--text');
+  ctx.font = '600 13px Nunito Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (var j = -units; j <= units; j++) {
+    if (j === 0) continue;
+    var px = ox + j * step;
+    ctx.fillText(j, px, oy + 5);
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (var k = -units; k <= units; k++) {
+    if (k === 0) continue;
+    var py = oy - k * step;
+    ctx.fillText(k, ox - 6, py);
+  }
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('O', ox - 10, oy + 5);
+  ctx.fillText('x', w - 5, oy + 10);
+  ctx.textAlign = 'left';
+  ctx.fillText('y', ox + 8, 5);
+}
+
+function toPixel(x, y, ox, oy, step) { return { px: ox + x * step, py: oy - y * step }; }
+function toCoord(px, py, ox, oy, step) { return { x: Math.round((px - ox) / step), y: Math.round((oy - py) / step) }; }
+
+function drawPoint(ctx, px, py, color, label, r) {
+  r = r || 6;
+  ctx.beginPath();
+  ctx.arc(px, py, r, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.strokeStyle = getCSS('--surface');
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  if (label) {
+    ctx.fillStyle = color;
+    ctx.font = '700 14px Nunito Sans, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(label, px + 10, py - 6);
+  }
+}
+
+function getMousePos(c, e) {
+  var rect = c.getBoundingClientRect();
+  var cliX, cliY;
+  if (e.touches) { cliX = e.touches[0].clientX; cliY = e.touches[0].clientY; }
+  else { cliX = e.clientX; cliY = e.clientY; }
+  return { x: cliX - rect.left, y: cliY - rect.top };
+}
+
+/* ===== SECTION INITS ===== */
+function initSection(i) {
+  if (i === 0) initRepere();
+  else if (i === 1) initDistance();
+  else if (i === 2) initMilieu();
+  else if (i === 3) initEquation();
+  else if (i === 4) initParallel();
+  else if (i === 6 && !quizBuilt) buildQuiz();
+}
+
+/* --- TAB 0: Repere --- */
+var repPoints = [];
+function initRepere() {
+  var s = setupCanvas('c0');
+  var c = s.c, ctx = s.ctx, w = s.w;
+  var units = 7, step = w / 14, ox = w / 2, oy = w / 2;
+  drawGrid(ctx, w, units, ox, oy);
+  repPoints.forEach(function(pt) {
+    var p = toPixel(pt.x, pt.y, ox, oy, step);
+    drawPoint(ctx, p.px, p.py, getCSS('--accent'), '(' + pt.x + ' ; ' + pt.y + ')');
+  });
+  c.onclick = function(e) {
+    var m = getMousePos(c, e);
+    var co = toCoord(m.x, m.y, ox, oy, step);
+    if (co.x >= -units && co.x <= units && co.y >= -units && co.y <= units) {
+      repPoints.push(co);
+      initRepere();
+    }
+  };
+  c.ondblclick = function() { repPoints = []; initRepere(); };
+}
+
+/* --- TAB 1: Distance --- */
+var distA = { x: -3, y: -2 }, distB = { x: 3, y: 3 };
+var distDrag = null;
+function initDistance() {
+  var s = setupCanvas('c1');
+  var c = s.c, ctx = s.ctx, w = s.w;
+  var units = 6, step = w / 12, ox = w / 2, oy = w / 2;
+  drawGrid(ctx, w, units, ox, oy);
+  var pA = toPixel(distA.x, distA.y, ox, oy, step);
+  var pB = toPixel(distB.x, distB.y, ox, oy, step);
+  /* dashed right triangle */
+  var pH = toPixel(distB.x, distA.y, ox, oy, step);
+  ctx.setLineDash([5, 5]);
+  ctx.strokeStyle = getCSS('--muted');
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pA.px, pA.py); ctx.lineTo(pH.px, pH.py); ctx.lineTo(pB.px, pB.py); ctx.stroke();
+  ctx.setLineDash([]);
+  /* segment AB */
+  ctx.strokeStyle = getCSS('--accent');
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(pA.px, pA.py); ctx.lineTo(pB.px, pB.py); ctx.stroke();
+  drawPoint(ctx, pA.px, pA.py, '#c62828', 'A(' + distA.x + ' ; ' + distA.y + ')', 8);
+  drawPoint(ctx, pB.px, pB.py, '#1565c0', 'B(' + distB.x + ' ; ' + distB.y + ')', 8);
+  var dx = distB.x - distA.x, dy = distB.y - distA.y;
+  var d = Math.sqrt(dx * dx + dy * dy);
+  var info = document.getElementById('info1');
+  info.innerHTML = 'AB = <span class="sqrt"><span class="radicand">' + dx + '&sup2; + ' + dy + '&sup2;</span></span> = <span class="sqrt"><span class="radicand">' + (dx*dx+dy*dy) + '</span></span> &approx; ' + d.toFixed(2);
+  function onDown(e) {
+    e.preventDefault();
+    var m = getMousePos(c, e);
+    if (Math.hypot(m.x - pA.px, m.y - pA.py) < 20) distDrag = 'A';
+    else if (Math.hypot(m.x - pB.px, m.y - pB.py) < 20) distDrag = 'B';
+  }
+  function onMove(e) {
+    if (!distDrag) return;
+    e.preventDefault();
+    var m = getMousePos(c, e);
+    var co = toCoord(m.x, m.y, ox, oy, step);
+    co.x = Math.max(-units, Math.min(units, co.x));
+    co.y = Math.max(-units, Math.min(units, co.y));
+    if (distDrag === 'A') { distA.x = co.x; distA.y = co.y; }
+    else { distB.x = co.x; distB.y = co.y; }
+    initDistance();
+  }
+  function onUp() { distDrag = null; }
+  c.onmousedown = onDown; c.onmousemove = onMove; c.onmouseup = onUp; c.onmouseleave = onUp;
+  c.ontouchstart = onDown; c.ontouchmove = onMove; c.ontouchend = onUp;
+}
+
+/* --- TAB 2: Milieu --- */
+var milA = { x: -4, y: -2 }, milB = { x: 4, y: 3 };
+var milDrag = null;
+function initMilieu() {
+  var s = setupCanvas('c2');
+  var c = s.c, ctx = s.ctx, w = s.w;
+  var units = 6, step = w / 12, ox = w / 2, oy = w / 2;
+  drawGrid(ctx, w, units, ox, oy);
+  var pA = toPixel(milA.x, milA.y, ox, oy, step);
+  var pB = toPixel(milB.x, milB.y, ox, oy, step);
+  var mx = (milA.x + milB.x) / 2, my = (milA.y + milB.y) / 2;
+  var pM = toPixel(mx, my, ox, oy, step);
+  ctx.strokeStyle = getCSS('--accent');
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(pA.px, pA.py); ctx.lineTo(pB.px, pB.py); ctx.stroke();
+  /* dashed to axes */
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = getCSS('--success');
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pM.px, pM.py); ctx.lineTo(pM.px, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pM.px, pM.py); ctx.lineTo(ox, pM.py); ctx.stroke();
+  ctx.setLineDash([]);
+  drawPoint(ctx, pA.px, pA.py, '#c62828', 'A(' + milA.x + ' ; ' + milA.y + ')', 8);
+  drawPoint(ctx, pB.px, pB.py, '#1565c0', 'B(' + milB.x + ' ; ' + milB.y + ')', 8);
+  var ml = 'M(' + (mx % 1 === 0 ? mx : mx.toFixed(1)) + ' ; ' + (my % 1 === 0 ? my : my.toFixed(1)) + ')';
+  drawPoint(ctx, pM.px, pM.py, getCSS('--success'), ml, 8);
+  var info = document.getElementById('info2');
+  info.innerHTML = 'M = ((' + milA.x + '+' + milB.x + ')/2 ; (' + milA.y + '+' + milB.y + ')/2) = ' + ml;
+  function onDown(e) {
+    e.preventDefault();
+    var m = getMousePos(c, e);
+    if (Math.hypot(m.x - pA.px, m.y - pA.py) < 20) milDrag = 'A';
+    else if (Math.hypot(m.x - pB.px, m.y - pB.py) < 20) milDrag = 'B';
+  }
+  function onMove(e) {
+    if (!milDrag) return;
+    e.preventDefault();
+    var m = getMousePos(c, e);
+    var co = toCoord(m.x, m.y, ox, oy, step);
+    co.x = Math.max(-units, Math.min(units, co.x));
+    co.y = Math.max(-units, Math.min(units, co.y));
+    if (milDrag === 'A') { milA.x = co.x; milA.y = co.y; }
+    else { milB.x = co.x; milB.y = co.y; }
+    initMilieu();
+  }
+  function onUp() { milDrag = null; }
+  c.onmousedown = onDown; c.onmousemove = onMove; c.onmouseup = onUp; c.onmouseleave = onUp;
+  c.ontouchstart = onDown; c.ontouchmove = onMove; c.ontouchend = onUp;
+}
+
+/* --- TAB 3: Equation de droite --- */
+function initEquation() {
+  var sm = document.getElementById('sliderM');
+  var sp = document.getElementById('sliderP');
+  function draw() {
+    var mv = parseFloat(sm.value);
+    var pv = parseFloat(sp.value);
+    document.getElementById('valM').textContent = mv;
+    document.getElementById('valP').textContent = pv;
+    var sign = pv >= 0 ? ' + ' : ' - ';
+    var pa = Math.abs(pv);
+    document.getElementById('eqLabel').textContent = 'y = ' + mv + 'x' + sign + pa;
+    var s = setupCanvas('c3');
+    var ctx = s.ctx, w = s.w;
+    var units = 6, step = w / 12, ox = w / 2, oy = w / 2;
+    drawGrid(ctx, w, units, ox, oy);
+    /* line */
+    ctx.strokeStyle = getCSS('--accent');
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (var px = 0; px <= w; px++) {
+      var xv = (px - ox) / step;
+      var yv = mv * xv + pv;
+      var pyv = oy - yv * step;
+      if (px === 0) ctx.moveTo(px, pyv);
+      else ctx.lineTo(px, pyv);
+    }
+    ctx.stroke();
+    /* ordonnee a l'origine */
+    var pOrd = toPixel(0, pv, ox, oy, step);
+    drawPoint(ctx, pOrd.px, pOrd.py, getCSS('--success'), 'p=' + pv, 6);
+    /* slope indicator */
+    if (Math.abs(mv) > 0.01) {
+      var x1 = 1, y1 = mv * 1 + pv;
+      var x2 = 2, y2 = mv * 2 + pv;
+      var p1 = toPixel(x1, y1, ox, oy, step);
+      var p2h = toPixel(x2, y1, ox, oy, step);
+      var p2 = toPixel(x2, y2, ox, oy, step);
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = '#1565c0';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(p1.px, p1.py); ctx.lineTo(p2h.px, p2h.py); ctx.lineTo(p2.px, p2.py); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#1565c0';
+      ctx.font = '600 12px Nunito Sans, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('1', (p1.px + p2h.px) / 2, p1.py + 15);
+      ctx.fillText('m=' + mv, p2.px + 20, (p2h.py + p2.py) / 2);
+    }
+  }
+  sm.oninput = draw;
+  sp.oninput = draw;
+  draw();
+}
+
+/* --- TAB 4: Parallel / Secant --- */
+function initParallel() {
+  var sm1 = document.getElementById('sliderM1');
+  var sp1 = document.getElementById('sliderP1');
+  var sm2 = document.getElementById('sliderM2');
+  var sp2 = document.getElementById('sliderP2');
+  function draw() {
+    var m1 = parseFloat(sm1.value), p1 = parseFloat(sp1.value);
+    var m2 = parseFloat(sm2.value), p2 = parseFloat(sp2.value);
+    document.getElementById('valM1').textContent = m1;
+    document.getElementById('valP1').textContent = p1;
+    document.getElementById('valM2').textContent = m2;
+    document.getElementById('valP2').textContent = p2;
+    var label = document.getElementById('relLabel');
+    if (Math.abs(m1 - m2) < 0.001) {
+      if (Math.abs(p1 - p2) < 0.001) label.textContent = 'Droites confondues (m₁ = m₂ et p₁ = p₂)';
+      else label.textContent = 'Droites strictement parallèles (m₁ = m₂, p₁ ≠ p₂)';
+    } else {
+      var xi = (p2 - p1) / (m1 - m2);
+      var yi = m1 * xi + p1;
+      label.textContent = 'Sécantes en (' + xi.toFixed(2) + ' ; ' + yi.toFixed(2) + ')';
+    }
+    var s = setupCanvas('c4');
+    var ctx = s.ctx, w = s.w;
+    var units = 6, step = w / 12, ox = w / 2, oy = w / 2;
+    drawGrid(ctx, w, units, ox, oy);
+    /* d1 */
+    ctx.strokeStyle = '#c62828';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (var px = 0; px <= w; px++) {
+      var xv = (px - ox) / step;
+      var yv = m1 * xv + p1;
+      if (px === 0) ctx.moveTo(px, oy - yv * step);
+      else ctx.lineTo(px, oy - yv * step);
+    }
+    ctx.stroke();
+    /* d2 */
+    ctx.strokeStyle = '#1565c0';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (var px2 = 0; px2 <= w; px2++) {
+      var xv2 = (px2 - ox) / step;
+      var yv2 = m2 * xv2 + p2;
+      if (px2 === 0) ctx.moveTo(px2, oy - yv2 * step);
+      else ctx.lineTo(px2, oy - yv2 * step);
+    }
+    ctx.stroke();
+    /* intersection point */
+    if (Math.abs(m1 - m2) > 0.001) {
+      var xI = (p2 - p1) / (m1 - m2);
+      var yI = m1 * xI + p1;
+      if (Math.abs(xI) <= units && Math.abs(yI) <= units) {
+        var pI = toPixel(xI, yI, ox, oy, step);
+        drawPoint(ctx, pI.px, pI.py, getCSS('--success'), 'I', 7);
+      }
+    }
+    /* legends */
+    ctx.font = '700 13px Nunito Sans, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#c62828';
+    ctx.fillText('d₁ : y = ' + m1 + 'x + ' + p1, 10, 20);
+    ctx.fillStyle = '#1565c0';
+    ctx.fillText('d₂ : y = ' + m2 + 'x + ' + p2, 10, 38);
+  }
+  sm1.oninput = draw; sp1.oninput = draw;
+  sm2.oninput = draw; sp2.oninput = draw;
+  draw();
+}
+
+/* ===== QCM ===== */
+var quizBuilt = false;
+var quizPool = [
+  { q: "Dans un repère orthonormé, les coordonnées du point A sont (3 ; −2). Quelle est l'abscisse de A ?",
+    opts: ["3", "−2", "(3 ; −2)", "5"], ans: 0 },
+  { q: "La distance entre A(0 ; 0) et B(3 ; 4) vaut :",
+    opts: ["7", "5", "25", "√7"], ans: 1 },
+  { q: "Le milieu de [A(2 ; 6) B(8 ; 2)] a pour coordonnées :",
+    opts: ["(10 ; 8)", "(5 ; 4)", "(3 ; 2)", "(6 ; 4)"], ans: 1 },
+  { q: "Le coefficient directeur de la droite passant par A(1 ; 2) et B(3 ; 8) vaut :",
+    opts: ["2", "3", "6", "1/3"], ans: 1 },
+  { q: "L'ordonnée à l'origine de la droite y = −3x + 5 est :",
+    opts: ["−3", "5", "3", "−5"], ans: 1 },
+  { q: "Deux droites y = 2x + 1 et y = 2x − 3 sont :",
+    opts: ["Sécantes", "Perpendiculaires", "Parallèles", "Confondues"], ans: 2 },
+  { q: "Si m > 0 dans y = mx + p, la droite est :",
+    opts: ["Décroissante", "Horizontale", "Verticale", "Croissante"], ans: 3 },
+  { q: "La distance entre C(−1 ; 3) et D(2 ; −1) vaut :",
+    opts: ["5", "7", "√25", "4"], ans: 0 },
+  { q: "Le milieu du segment [A(−4 ; 0) B(6 ; −2)] est :",
+    opts: ["(1 ; −1)", "(2 ; −2)", "(1 ; 1)", "(5 ; −1)"], ans: 0 },
+  { q: "Une droite verticale a pour équation :",
+    opts: ["y = mx + p", "y = p", "x = k", "y = x"], ans: 2 },
+  { q: "La droite y = 0x + 3 est :",
+    opts: ["Verticale", "Oblique", "Horizontale", "Indéfinie"], ans: 2 },
+  { q: "Quel est le coefficient directeur de la droite passant par (0 ; 0) et (1 ; 1) ?",
+    opts: ["0", "2", "1", "−1"], ans: 2 },
+  { q: "Les droites y = 3x + 1 et y = 3x + 1 sont :",
+    opts: ["Parallèles", "Confondues", "Sécantes", "Perpendiculaires"], ans: 1 },
+  { q: "L'intersection de y = x et y = −x est le point :",
+    opts: ["(1 ; 1)", "(0 ; 0)", "(−1 ; 1)", "Il n'y a pas d'intersection"], ans: 1 },
+  { q: "La distance AB avec A(1 ; 1) et B(1 ; 5) vaut :",
+    opts: ["6", "2", "4", "√8"], ans: 2 },
+  { q: "Le milieu de [(0;0) (0;6)] a pour ordonnée :",
+    opts: ["6", "0", "3", "12"], ans: 2 },
+  { q: "Si deux droites ont des coefficients directeurs différents, elles sont :",
+    opts: ["Parallèles", "Confondues", "Sécantes", "Verticales"], ans: 2 }
+];
+var selectedQuiz = [];
+function buildQuiz() {
+  quizBuilt = true;
+  var pool = quizPool.slice();
+  /* shuffle */
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+  selectedQuiz = pool.slice(0, 15);
+  var box = document.getElementById('quizBox');
+  box.innerHTML = '';
+  selectedQuiz.forEach(function(q, idx) {
+    var html = '<div class="quiz-q" id="qq' + idx + '"><p>' + (idx + 1) + '. ' + q.q + '</p>';
+    q.opts.forEach(function(o, oi) {
+      html += '<label><input type="radio" name="q' + idx + '" value="' + oi + '"> ' + o + '</label>';
+    });
+    html += '<div class="feedback" id="fb' + idx + '"></div></div>';
+    box.innerHTML += html;
+  });
+  document.getElementById('quizScore').style.display = 'none';
+}
+function checkQuiz() {
+  var score = 0;
+  selectedQuiz.forEach(function(q, idx) {
+    var sel = document.querySelector('input[name="q' + idx + '"]:checked');
+    var fb = document.getElementById('fb' + idx);
+    if (!sel) { fb.className = 'feedback wrong'; fb.textContent = 'Pas de réponse sélectionnée.'; fb.style.display = 'block'; return; }
+    if (parseInt(sel.value) === q.ans) {
+      score++;
+      fb.className = 'feedback correct';
+      fb.textContent = 'Correct !';
+    } else {
+      fb.className = 'feedback wrong';
+      fb.textContent = 'Incorrect. Réponse : ' + q.opts[q.ans];
+    }
+    fb.style.display = 'block';
+  });
+  var sc = document.getElementById('quizScore');
+  sc.style.display = 'block';
+  sc.textContent = 'Score : ' + score + ' / ' + selectedQuiz.length;
+}
+function resetQuiz() {
+  quizBuilt = false;
+  buildQuiz();
+}
+
+/* init first tab */
+inited[0] = true;
+initRepere();
+</script>
+</body>
+</html>

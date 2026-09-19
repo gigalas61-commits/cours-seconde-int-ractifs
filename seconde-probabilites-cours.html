@@ -1,0 +1,1312 @@
+<title>Probabilit&#233;s Seconde</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+:root {
+  --bg: #f5f2ed;
+  --surface: #ffffff;
+  --heading: #8b4513;
+  --accent: #a0522d;
+  --text: #2c2418;
+  --muted: #6b5a48;
+  --border: #d4c8b8;
+  --surface2: #ebe6de;
+  --accent-light: #faf5ef;
+  --tip: #b8860b;
+  --tip-bg: #fdf8ef;
+  --success: #2e7d42;
+  --error: #c62828;
+  --shadow: 0 2px 8px rgba(139,69,19,0.07);
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1612;
+    --surface: #252018;
+    --heading: #d4a574;
+    --accent: #c4885a;
+    --text: #e0d8ce;
+    --muted: #a89880;
+    --border: #3d352a;
+    --surface2: #2e2820;
+    --accent-light: #2a2218;
+    --tip: #daa520;
+    --tip-bg: #2a2415;
+    --success: #66bb6a;
+    --error: #ef5350;
+    --shadow: 0 2px 8px rgba(0,0,0,0.25);
+    --radius: 6px;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1612;
+  --surface: #252018;
+  --heading: #d4a574;
+  --accent: #c4885a;
+  --text: #e0d8ce;
+  --muted: #a89880;
+  --border: #3d352a;
+  --surface2: #2e2820;
+  --accent-light: #2a2218;
+  --tip: #daa520;
+  --tip-bg: #2a2415;
+  --success: #66bb6a;
+  --error: #ef5350;
+  --shadow: 0 2px 8px rgba(0,0,0,0.25);
+  --radius: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito Sans', 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  padding-inline: 16px;
+  padding-block: 0;
+  margin: 0;
+  max-width: 900px;
+  margin-inline: auto;
+}
+h1, h2, h3, h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--heading);
+  text-wrap: balance;
+  line-height: 1.25;
+}
+h1 { font-size: 2rem; font-weight: 700; margin: 1.2em 0 0.3em; }
+h2 { font-size: 1.55rem; font-weight: 600; margin: 1.4em 0 0.5em; border-bottom: 2px solid var(--border); padding-bottom: 0.25em; }
+h3 { font-size: 1.2rem; font-weight: 600; margin: 1.2em 0 0.4em; }
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  background: var(--surface2);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin: 1em 0;
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 100;
+}
+.tab-btn {
+  flex: 1 1 auto;
+  min-width: 90px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  letter-spacing: 0.02em;
+}
+.tab-btn:hover { background: var(--surface); color: var(--text); }
+.tab-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tab-btn.active {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.sec { display: none; }
+.sec.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.formula-box {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  padding: 1em 1.2em;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 1em 0;
+  font-size: 1.05em;
+}
+.tip-box {
+  background: var(--tip-bg);
+  border-left: 4px solid var(--tip);
+  padding: 0.8em 1.2em;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 1em 0;
+}
+.tip-box::before {
+  content: "Astuce";
+  display: block;
+  font-weight: 700;
+  color: var(--tip);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3em;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2em;
+  margin: 1em 0;
+  box-shadow: var(--shadow);
+}
+.exercise {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2em;
+  margin: 1.2em 0;
+  box-shadow: var(--shadow);
+}
+.exercise h3 { margin-top: 0; }
+details {
+  margin-top: 0.8em;
+}
+details summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.95em;
+  padding: 0.4em 0;
+}
+details summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details[open] summary { margin-bottom: 0.5em; }
+details .correction {
+  background: var(--accent-light);
+  border-radius: var(--radius);
+  padding: 1em;
+}
+
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  font-size: 0.92em;
+  margin: 0 3px;
+  line-height: 1.2;
+}
+.frac .num { border-bottom: 1.5px solid var(--text); padding: 0 4px 2px; }
+.frac .den { padding: 2px 4px 0; }
+
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 1em auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin: 4px;
+}
+.btn:hover { opacity: 0.85; }
+.btn:focus-visible { outline: 2px solid var(--heading); outline-offset: 2px; }
+
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  margin: 6px 0;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.quiz-option:hover { border-color: var(--accent); background: var(--accent-light); }
+.quiz-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.quiz-option.correct { border-color: var(--success); background: rgba(46,125,66,0.1); }
+.quiz-option.wrong { border-color: var(--error); background: rgba(198,40,40,0.08); }
+.quiz-option:disabled { cursor: default; opacity: 0.85; }
+
+.quiz-feedback {
+  padding: 0.6em 1em;
+  border-radius: var(--radius);
+  margin: 0.5em 0;
+  font-size: 0.92em;
+  font-weight: 600;
+}
+.quiz-feedback.ok { background: rgba(46,125,66,0.1); color: var(--success); }
+.quiz-feedback.ko { background: rgba(198,40,40,0.08); color: var(--error); }
+
+.score-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1em;
+  background: var(--surface2);
+  border-radius: var(--radius);
+  margin: 1em 0;
+  font-weight: 600;
+}
+.score-fill {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.score-fill-inner {
+  height: 100%;
+  background: var(--success);
+  border-radius: 5px;
+  transition: width 0.4s ease;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-variant-numeric: tabular-nums;
+}
+th, td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+th {
+  background: var(--surface2);
+  color: var(--heading);
+  font-weight: 600;
+  font-size: 0.92em;
+}
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.8em 0; }
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.3rem; }
+  .tab-btn { min-width: 70px; font-size: 0.72rem; padding: 6px 6px; }
+  .formula-box, .tip-box, .card, .exercise { padding: 0.9em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+
+<h1>Probabilit&#233;s &#8212; Classe de Seconde</h1>
+<p style="color:var(--muted);font-size:0.95em;margin-top:0;">Cours interactif complet &bull; Exp&#233;riences al&#233;atoires, &#233;v&#233;nements, loi de probabilit&#233;</p>
+
+<nav class="tab-bar" role="tablist" aria-label="Sections du cours">
+  <button class="tab-btn active" role="tab" onclick="showTab(0)">Exp&#233;rience</button>
+  <button class="tab-btn" role="tab" onclick="showTab(1)">Probabilit&#233;</button>
+  <button class="tab-btn" role="tab" onclick="showTab(2)">&#201;v&#233;nements</button>
+  <button class="tab-btn" role="tab" onclick="showTab(3)">Loi</button>
+  <button class="tab-btn" role="tab" onclick="showTab(4)">Arbres</button>
+  <button class="tab-btn" role="tab" onclick="showTab(5)">Exercices</button>
+  <button class="tab-btn" role="tab" onclick="showTab(6)">QCM</button>
+</nav>
+
+<!-- ===== TAB 0 : Exp&#233;rience al&#233;atoire ===== -->
+<section class="sec active" id="sec0">
+  <h2>1. Exp&#233;rience al&#233;atoire</h2>
+
+  <div class="card">
+    <h3>D&#233;finitions fondamentales</h3>
+    <p>Une <strong>exp&#233;rience al&#233;atoire</strong> est une exp&#233;rience dont on ne peut pas pr&#233;voir le r&#233;sultat avec certitude, mais dont on conna&#238;t tous les r&#233;sultats possibles.</p>
+    <ul>
+      <li><strong>&#201;preuve</strong> : la r&#233;alisation d&#8217;une exp&#233;rience al&#233;atoire.</li>
+      <li><strong>Issue</strong> (ou <strong>&#233;ventualit&#233;</strong>) : chaque r&#233;sultat possible de l&#8217;exp&#233;rience.</li>
+      <li><strong>Univers</strong> (not&#233; &#937;) : l&#8217;ensemble de toutes les issues possibles.</li>
+      <li><strong>&#201;v&#233;nement</strong> : tout sous-ensemble de l&#8217;univers. Un &#233;v&#233;nement <strong>&#233;l&#233;mentaire</strong> ne contient qu&#8217;une seule issue.</li>
+    </ul>
+  </div>
+
+  <div class="formula-box">
+    <strong>Exemple :</strong> On lance un d&#233; &#224; 6 faces.<br>
+    &#937; = {1, 2, 3, 4, 5, 6}<br>
+    L&#8217;&#233;v&#233;nement &laquo; obtenir un nombre pair &raquo; est A = {2, 4, 6}.
+  </div>
+
+  <div class="tip-box">
+    L&#8217;&#233;v&#233;nement <strong>certain</strong> est &#937; lui-m&#234;me. L&#8217;&#233;v&#233;nement <strong>impossible</strong> est l&#8217;ensemble vide &#8709;.
+  </div>
+
+  <h3>Simulation : lancer de d&#233; et pi&#232;ce</h3>
+  <div class="controls">
+    <button class="btn" onclick="simDice()">Lancer le d&#233;</button>
+    <button class="btn" onclick="simCoin()">Lancer la pi&#232;ce</button>
+    <button class="btn" onclick="resetSim0()">R&#233;initialiser</button>
+    <span id="sim0-count" style="color:var(--muted);font-size:0.9em;"></span>
+  </div>
+  <canvas id="canvas0" width="600" height="320"></canvas>
+  <div id="sim0-stats" style="color:var(--muted);font-size:0.9em;margin-top:0.5em;"></div>
+</section>
+
+<!-- ===== TAB 1 : Probabilit&#233; d'un &#233;v&#233;nement ===== -->
+<section class="sec" id="sec1">
+  <h2>2. Probabilit&#233; d&#8217;un &#233;v&#233;nement</h2>
+
+  <div class="card">
+    <h3>D&#233;finition</h3>
+    <p>D&#233;finir une <strong>probabilit&#233;</strong> sur un univers &#937;, c&#8217;est associer &#224; chaque &#233;v&#233;nement A un nombre <em>P</em>(A) v&#233;rifiant :</p>
+    <ol>
+      <li>Pour tout &#233;v&#233;nement A : 0 &#8804; <em>P</em>(A) &#8804; 1</li>
+      <li><em>P</em>(&#937;) = 1</li>
+      <li>Si A et B sont incompatibles : <em>P</em>(A &#8746; B) = <em>P</em>(A) + <em>P</em>(B)</li>
+    </ol>
+  </div>
+
+  <div class="formula-box">
+    <strong>&#201;quiprobabilit&#233; :</strong> Lorsque toutes les issues ont la m&#234;me probabilit&#233;, on dit qu&#8217;il y a &#233;quiprobabilit&#233;. Dans ce cas :<br><br>
+    <em>P</em>(A) = <span class="frac"><span class="num">nombre d&#8217;issues favorables &#224; A</span><span class="den">nombre total d&#8217;issues</span></span> = <span class="frac"><span class="num">card(A)</span><span class="den">card(&#937;)</span></span>
+  </div>
+
+  <div class="tip-box">
+    La somme des probabilit&#233;s de tous les &#233;v&#233;nements &#233;l&#233;mentaires est toujours &#233;gale &#224; 1.
+  </div>
+
+  <h3>Simulation : fr&#233;quence et probabilit&#233;</h3>
+  <p>Observez comment la fr&#233;quence d&#8217;apparition du 6 se rapproche de <span class="frac"><span class="num">1</span><span class="den">6</span></span> quand le nombre de lancers augmente.</p>
+  <div class="controls">
+    <button class="btn" onclick="simFreq(10)">+10 lancers</button>
+    <button class="btn" onclick="simFreq(100)">+100 lancers</button>
+    <button class="btn" onclick="simFreq(1000)">+1000 lancers</button>
+    <button class="btn" onclick="resetFreq()">R&#233;initialiser</button>
+  </div>
+  <canvas id="canvas1" width="600" height="300"></canvas>
+  <div id="freq-info" style="color:var(--muted);font-size:0.9em;margin-top:0.5em;"></div>
+</section>
+
+<!-- ===== TAB 2 : &#201;v&#233;nements ===== -->
+<section class="sec" id="sec2">
+  <h2>3. Op&#233;rations sur les &#233;v&#233;nements</h2>
+
+  <div class="card">
+    <h3>Union, intersection, contraire</h3>
+    <ul>
+      <li><strong>A &#8746; B</strong> (union) : &laquo; A ou B &raquo; &mdash; au moins l&#8217;un des deux se r&#233;alise.</li>
+      <li><strong>A &#8745; B</strong> (intersection) : &laquo; A et B &raquo; &mdash; les deux se r&#233;alisent simultan&#233;ment.</li>
+      <li><strong>&#256;</strong> (contraire de A) : &laquo; non A &raquo; &mdash; A ne se r&#233;alise pas.</li>
+      <li>A et B sont <strong>incompatibles</strong> (ou mutuellement exclusifs) si A &#8745; B = &#8709;.</li>
+    </ul>
+  </div>
+
+  <div class="formula-box">
+    <strong>Formules :</strong><br>
+    <em>P</em>(&#256;) = 1 &#8722; <em>P</em>(A)<br>
+    <em>P</em>(A &#8746; B) = <em>P</em>(A) + <em>P</em>(B) &#8722; <em>P</em>(A &#8745; B)<br>
+    Si A et B incompatibles : <em>P</em>(A &#8746; B) = <em>P</em>(A) + <em>P</em>(B)
+  </div>
+
+  <h3>Diagramme de Venn interactif</h3>
+  <p>Cliquez sur les zones pour voir les probabilit&#233;s correspondantes.</p>
+  <canvas id="canvas2" width="600" height="360"></canvas>
+  <div id="venn-info" style="color:var(--muted);font-size:0.9em;margin-top:0.5em;text-align:center;">Cliquez sur une zone du diagramme.</div>
+</section>
+
+<!-- ===== TAB 3 : Loi de probabilit&#233; ===== -->
+<section class="sec" id="sec3">
+  <h2>4. Loi de probabilit&#233;</h2>
+
+  <div class="card">
+    <h3>D&#233;finition</h3>
+    <p>La <strong>loi de probabilit&#233;</strong> d&#8217;une variable al&#233;atoire X est le tableau qui associe &#224; chaque valeur x<sub>i</sub> prise par X sa probabilit&#233; <em>P</em>(X = x<sub>i</sub>).</p>
+  </div>
+
+  <div class="formula-box">
+    <strong>Esp&#233;rance math&#233;matique :</strong><br><br>
+    E(X) = &#8721; x<sub>i</sub> &times; <em>P</em>(X = x<sub>i</sub>) = x<sub>1</sub>&middot;p<sub>1</sub> + x<sub>2</sub>&middot;p<sub>2</sub> + &#8230; + x<sub>n</sub>&middot;p<sub>n</sub>
+  </div>
+
+  <div class="tip-box">
+    L&#8217;esp&#233;rance repr&#233;sente la valeur moyenne que l&#8217;on peut attendre apr&#232;s un grand nombre de r&#233;p&#233;titions de l&#8217;exp&#233;rience. C&#8217;est un indicateur de tendance centrale.
+  </div>
+
+  <h3>Exemple : somme de deux d&#233;s</h3>
+  <p>Variable al&#233;atoire X = somme obtenue en lan&#231;ant deux d&#233;s.</p>
+  <div class="controls">
+    <button class="btn" onclick="drawDistrib()">Afficher la loi</button>
+  </div>
+  <canvas id="canvas3" width="600" height="320"></canvas>
+  <div id="distrib-info" style="color:var(--muted);font-size:0.9em;margin-top:0.5em;text-align:center;"></div>
+</section>
+
+<!-- ===== TAB 4 : Arbres ===== -->
+<section class="sec" id="sec4">
+  <h2>5. Arbres de probabilit&#233;s</h2>
+
+  <div class="card">
+    <h3>Principe</h3>
+    <p>Un <strong>arbre de probabilit&#233;s</strong> est un outil graphique qui permet de repr&#233;senter et de calculer les probabilit&#233;s dans une exp&#233;rience &#224; plusieurs &#233;tapes.</p>
+    <ul>
+      <li>Chaque branche porte la probabilit&#233; de l&#8217;issue correspondante.</li>
+      <li>La somme des probabilit&#233;s des branches issues d&#8217;un m&#234;me n&#339;ud vaut 1.</li>
+      <li>La probabilit&#233; d&#8217;un chemin est le <strong>produit</strong> des probabilit&#233;s de ses branches.</li>
+    </ul>
+  </div>
+
+  <div class="formula-box">
+    <strong>Exemple :</strong> On tire deux boules successivement dans une urne contenant 3 rouges et 2 bleues (avec remise).<br>
+    <em>P</em>(Rouge puis Bleue) = <span class="frac"><span class="num">3</span><span class="den">5</span></span> &times; <span class="frac"><span class="num">2</span><span class="den">5</span></span> = <span class="frac"><span class="num">6</span><span class="den">25</span></span>
+  </div>
+
+  <h3>Arbre interactif</h3>
+  <p>Passez la souris sur les chemins pour voir le calcul de probabilit&#233;.</p>
+  <canvas id="canvas4" width="600" height="400"></canvas>
+  <div id="tree-info" style="color:var(--muted);font-size:0.9em;margin-top:0.5em;text-align:center;">Survolez un chemin de l&#8217;arbre.</div>
+</section>
+
+<!-- ===== TAB 5 : Exercices ===== -->
+<section class="sec" id="sec5">
+  <h2>6. Exercices</h2>
+
+  <div class="exercise">
+    <h3>Exercice 1 &#8212; Le d&#233; &#224; six faces</h3>
+    <p>On lance un d&#233; &#233;quilibr&#233; &#224; six faces. Calculer la probabilit&#233; des &#233;v&#233;nements suivants :</p>
+    <ol type="a">
+      <li>A : &laquo; obtenir un nombre pair &raquo;</li>
+      <li>B : &laquo; obtenir un nombre strictement sup&#233;rieur &#224; 4 &raquo;</li>
+      <li>A &#8745; B</li>
+      <li>A &#8746; B</li>
+    </ol>
+    <details><summary>Voir la correction</summary>
+      <div class="correction">
+        <p>&#937; = {1, 2, 3, 4, 5, 6}, &#233;quiprobabilit&#233;.</p>
+        <p>a) A = {2, 4, 6} &#8658; <em>P</em>(A) = <span class="frac"><span class="num">3</span><span class="den">6</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span></p>
+        <p>b) B = {5, 6} &#8658; <em>P</em>(B) = <span class="frac"><span class="num">2</span><span class="den">6</span></span> = <span class="frac"><span class="num">1</span><span class="den">3</span></span></p>
+        <p>c) A &#8745; B = {6} &#8658; <em>P</em>(A &#8745; B) = <span class="frac"><span class="num">1</span><span class="den">6</span></span></p>
+        <p>d) <em>P</em>(A &#8746; B) = <em>P</em>(A) + <em>P</em>(B) &#8722; <em>P</em>(A &#8745; B) = <span class="frac"><span class="num">3</span><span class="den">6</span></span> + <span class="frac"><span class="num">2</span><span class="den">6</span></span> &#8722; <span class="frac"><span class="num">1</span><span class="den">6</span></span> = <span class="frac"><span class="num">4</span><span class="den">6</span></span> = <span class="frac"><span class="num">2</span><span class="den">3</span></span></p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 2 &#8212; Jeu de cartes</h3>
+    <p>On tire une carte au hasard dans un jeu de 52 cartes. Calculer :</p>
+    <ol type="a">
+      <li>La probabilit&#233; de tirer un as.</li>
+      <li>La probabilit&#233; de tirer une carte rouge.</li>
+      <li>La probabilit&#233; de tirer un as rouge.</li>
+      <li>La probabilit&#233; de tirer un as ou une carte rouge.</li>
+    </ol>
+    <details><summary>Voir la correction</summary>
+      <div class="correction">
+        <p>&#937; : 52 cartes, &#233;quiprobabilit&#233;.</p>
+        <p>a) 4 as &#8658; <em>P</em>(As) = <span class="frac"><span class="num">4</span><span class="den">52</span></span> = <span class="frac"><span class="num">1</span><span class="den">13</span></span></p>
+        <p>b) 26 cartes rouges &#8658; <em>P</em>(Rouge) = <span class="frac"><span class="num">26</span><span class="den">52</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span></p>
+        <p>c) 2 as rouges &#8658; <em>P</em>(As &#8745; Rouge) = <span class="frac"><span class="num">2</span><span class="den">52</span></span> = <span class="frac"><span class="num">1</span><span class="den">26</span></span></p>
+        <p>d) <em>P</em>(As &#8746; Rouge) = <span class="frac"><span class="num">4</span><span class="den">52</span></span> + <span class="frac"><span class="num">26</span><span class="den">52</span></span> &#8722; <span class="frac"><span class="num">2</span><span class="den">52</span></span> = <span class="frac"><span class="num">28</span><span class="den">52</span></span> = <span class="frac"><span class="num">7</span><span class="den">13</span></span></p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 3 &#8212; Urne</h3>
+    <p>Une urne contient 5 boules rouges, 3 boules bleues et 2 boules vertes. On tire une boule au hasard.</p>
+    <ol type="a">
+      <li>Quelle est la probabilit&#233; d&#8217;obtenir une boule rouge ?</li>
+      <li>Quelle est la probabilit&#233; de ne pas obtenir une boule verte ?</li>
+      <li>Quelle est la probabilit&#233; d&#8217;obtenir une boule rouge ou bleue ?</li>
+    </ol>
+    <details><summary>Voir la correction</summary>
+      <div class="correction">
+        <p>10 boules au total, &#233;quiprobabilit&#233;.</p>
+        <p>a) <em>P</em>(Rouge) = <span class="frac"><span class="num">5</span><span class="den">10</span></span> = <span class="frac"><span class="num">1</span><span class="den">2</span></span></p>
+        <p>b) <em>P</em>(<span style="text-decoration:overline">Vert</span>) = 1 &#8722; <em>P</em>(Vert) = 1 &#8722; <span class="frac"><span class="num">2</span><span class="den">10</span></span> = <span class="frac"><span class="num">8</span><span class="den">10</span></span> = <span class="frac"><span class="num">4</span><span class="den">5</span></span></p>
+        <p>c) Rouge et Bleue sont incompatibles : <em>P</em>(R &#8746; B) = <span class="frac"><span class="num">5</span><span class="den">10</span></span> + <span class="frac"><span class="num">3</span><span class="den">10</span></span> = <span class="frac"><span class="num">8</span><span class="den">10</span></span> = <span class="frac"><span class="num">4</span><span class="den">5</span></span></p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 4 &#8212; Deux d&#233;s</h3>
+    <p>On lance deux d&#233;s &#233;quilibr&#233;s et on note la somme. Calculer :</p>
+    <ol type="a">
+      <li>La probabilit&#233; d&#8217;obtenir une somme &#233;gale &#224; 7.</li>
+      <li>La probabilit&#233; d&#8217;obtenir une somme sup&#233;rieure ou &#233;gale &#224; 10.</li>
+      <li>L&#8217;esp&#233;rance de la somme.</li>
+    </ol>
+    <details><summary>Voir la correction</summary>
+      <div class="correction">
+        <p>36 issues &#233;quiprobables (6 &times; 6).</p>
+        <p>a) Somme = 7 : (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) &#8658; 6 cas.<br>
+        <em>P</em>(S = 7) = <span class="frac"><span class="num">6</span><span class="den">36</span></span> = <span class="frac"><span class="num">1</span><span class="den">6</span></span></p>
+        <p>b) S &#8805; 10 : S=10 (3 cas), S=11 (2 cas), S=12 (1 cas) &#8658; 6 cas.<br>
+        <em>P</em>(S &#8805; 10) = <span class="frac"><span class="num">6</span><span class="den">36</span></span> = <span class="frac"><span class="num">1</span><span class="den">6</span></span></p>
+        <p>c) E(S) = E(D<sub>1</sub>) + E(D<sub>2</sub>) = 3,5 + 3,5 = <strong>7</strong></p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 5 &#8212; Tirages successifs</h3>
+    <p>Une urne contient 4 boules blanches et 6 boules noires. On tire successivement 2 boules <strong>avec remise</strong>.</p>
+    <ol type="a">
+      <li>Construire l&#8217;arbre de probabilit&#233;s.</li>
+      <li>Calculer la probabilit&#233; d&#8217;obtenir deux boules blanches.</li>
+      <li>Calculer la probabilit&#233; d&#8217;obtenir exactement une boule blanche.</li>
+    </ol>
+    <details><summary>Voir la correction</summary>
+      <div class="correction">
+        <p>a) 1<sup>er</sup> tirage : B (<span class="frac"><span class="num">4</span><span class="den">10</span></span>) ou N (<span class="frac"><span class="num">6</span><span class="den">10</span></span>). 2<sup>e</sup> tirage : m&#234;mes probabilit&#233;s (remise).</p>
+        <p>b) <em>P</em>(BB) = <span class="frac"><span class="num">4</span><span class="den">10</span></span> &times; <span class="frac"><span class="num">4</span><span class="den">10</span></span> = <span class="frac"><span class="num">16</span><span class="den">100</span></span> = <span class="frac"><span class="num">4</span><span class="den">25</span></span></p>
+        <p>c) Exactement 1 blanche : chemins BN et NB.<br>
+        <em>P</em>(BN) + <em>P</em>(NB) = <span class="frac"><span class="num">4</span><span class="den">10</span></span>&times;<span class="frac"><span class="num">6</span><span class="den">10</span></span> + <span class="frac"><span class="num">6</span><span class="den">10</span></span>&times;<span class="frac"><span class="num">4</span><span class="den">10</span></span> = <span class="frac"><span class="num">48</span><span class="den">100</span></span> = <span class="frac"><span class="num">12</span><span class="den">25</span></span></p>
+      </div>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercice 6 &#8212; Jeu &#233;quitable</h3>
+    <p>Un joueur lance un d&#233; &#233;quilibr&#233;. S&#8217;il obtient 6, il gagne 10 &#8364;. Sinon, il perd une mise de <em>m</em> euros. D&#233;terminer la mise <em>m</em> pour que le jeu soit &#233;quitable.</p>
+    <details><summary>Voir la correction</summary>
+      <div class="correction">
+        <p>Soit X le gain du joueur.</p>
+        <p><em>P</em>(X = 10) = <span class="frac"><span class="num">1</span><span class="den">6</span></span> et <em>P</em>(X = &#8722;m) = <span class="frac"><span class="num">5</span><span class="den">6</span></span></p>
+        <p>Le jeu est &#233;quitable si E(X) = 0 :</p>
+        <p>E(X) = 10 &times; <span class="frac"><span class="num">1</span><span class="den">6</span></span> + (&#8722;m) &times; <span class="frac"><span class="num">5</span><span class="den">6</span></span> = 0</p>
+        <p><span class="frac"><span class="num">10</span><span class="den">6</span></span> = <span class="frac"><span class="num">5m</span><span class="den">6</span></span> &#8658; m = <strong>2 &#8364;</strong></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== TAB 6 : QCM ===== -->
+<section class="sec" id="sec6">
+  <h2>7. QCM &#8212; Testez vos connaissances</h2>
+  <div class="score-bar">
+    <span id="quiz-score">Score : 0 / 0</span>
+    <div class="score-fill"><div class="score-fill-inner" id="quiz-bar" style="width:0%"></div></div>
+  </div>
+  <div id="quiz-container"></div>
+  <div class="controls" style="margin-top:1.2em;">
+    <button class="btn" onclick="resetQuiz()">Recommencer le QCM</button>
+  </div>
+</section>
+
+<footer style="text-align:center;color:var(--muted);font-size:0.82em;padding:2em 0 1em;border-top:1px solid var(--border);margin-top:2em;">
+  Probabilit&#233;s &bull; Seconde &bull; Cours interactif
+</footer>
+
+<script>
+// ============ GLOBAL HELPERS ============
+function getCSS(v) {
+  return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+}
+
+var sectionInited = [false,false,false,false,false,false,false];
+var tabs = null, secs = null;
+
+function showTab(i) {
+  if (!tabs) { tabs = document.querySelectorAll('.tab-btn'); secs = document.querySelectorAll('.sec'); }
+  for (var t = 0; t < tabs.length; t++) { tabs[t].classList.remove('active'); secs[t].classList.remove('active'); }
+  tabs[i].classList.add('active');
+  secs[i].classList.add('active');
+  if (!sectionInited[i]) { initSection(i); sectionInited[i] = true; }
+  try { localStorage.setItem('probTab', i); } catch(e) {}
+}
+
+function initSection(i) {
+  switch(i) {
+    case 0: drawSim0(); break;
+    case 1: resetFreq(); break;
+    case 2: drawVenn(); break;
+    case 3: drawDistrib(); break;
+    case 4: drawTree(); break;
+    case 6: initQuiz(); break;
+  }
+}
+
+// ============ TAB 0: DICE/COIN ============
+var diceResults = [], coinResults = [];
+
+function drawSim0() {
+  var c = document.getElementById('canvas0');
+  var ctx = c.getContext('2d');
+  var W = c.width, H = c.height;
+  var dpr = window.devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = getCSS('--surface');
+  ctx.fillRect(0, 0, W, H);
+
+  // dice area
+  ctx.fillStyle = getCSS('--surface2');
+  ctx.fillRect(20, 20, W/2 - 40, H - 40);
+  ctx.strokeStyle = getCSS('--border');
+  ctx.strokeRect(20, 20, W/2 - 40, H - 40);
+
+  // coin area
+  ctx.fillStyle = getCSS('--surface2');
+  ctx.fillRect(W/2 + 20, 20, W/2 - 40, H - 40);
+  ctx.strokeRect(W/2 + 20, 20, W/2 - 40, H - 40);
+
+  ctx.fillStyle = getCSS('--heading');
+  ctx.font = '600 15px Cormorant Garamond, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Dé', W/4, 50);
+  ctx.fillText('Pièce', 3*W/4, 50);
+
+  // draw last dice result
+  if (diceResults.length > 0) {
+    var last = diceResults[diceResults.length - 1];
+    drawDieFace(ctx, W/4 - 35, 70, 70, last);
+  }
+  // draw last coin result
+  if (coinResults.length > 0) {
+    var lastC = coinResults[coinResults.length - 1];
+    drawCoinFace(ctx, 3*W/4, 110, lastC);
+  }
+
+  // histograms
+  if (diceResults.length > 0) {
+    var counts = [0,0,0,0,0,0];
+    for (var k = 0; k < diceResults.length; k++) counts[diceResults[k]-1]++;
+    var maxC = Math.max.apply(null, counts);
+    var bw = 30, bx = 40, by = H - 40;
+    for (var j = 0; j < 6; j++) {
+      var bh = maxC > 0 ? (counts[j] / maxC) * 120 : 0;
+      ctx.fillStyle = getCSS('--accent');
+      ctx.fillRect(bx + j * (bw + 8), by - bh, bw, bh);
+      ctx.fillStyle = getCSS('--text');
+      ctx.font = '13px Nunito Sans, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('' + (j+1), bx + j*(bw+8) + bw/2, by + 16);
+      if (counts[j] > 0) ctx.fillText('' + counts[j], bx + j*(bw+8) + bw/2, by - bh - 5);
+    }
+  }
+
+  if (coinResults.length > 0) {
+    var pH = 0, pT = 0;
+    for (var k2 = 0; k2 < coinResults.length; k2++) { if (coinResults[k2] === 'P') pH++; else pT++; }
+    var maxCo = Math.max(pH, pT);
+    var cx2 = W/2 + 60, bw2 = 50;
+    var by2 = H - 40;
+    var hP = maxCo > 0 ? (pH / maxCo) * 120 : 0;
+    var hT = maxCo > 0 ? (pT / maxCo) * 120 : 0;
+    ctx.fillStyle = getCSS('--accent');
+    ctx.fillRect(cx2, by2 - hP, bw2, hP);
+    ctx.fillRect(cx2 + bw2 + 20, by2 - hT, bw2, hT);
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '13px Nunito Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Pile', cx2 + bw2/2, by2 + 16);
+    ctx.fillText('Face', cx2 + bw2 + 20 + bw2/2, by2 + 16);
+    if (pH > 0) ctx.fillText('' + pH, cx2 + bw2/2, by2 - hP - 5);
+    if (pT > 0) ctx.fillText('' + pT, cx2 + bw2 + 20 + bw2/2, by2 - hT - 5);
+  }
+
+  document.getElementById('sim0-count').textContent = 'Dé : ' + diceResults.length + ' lancers | Pièce : ' + coinResults.length + ' lancers';
+}
+
+function drawDieFace(ctx, x, y, s, val) {
+  ctx.fillStyle = getCSS('--surface');
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 2;
+  var r = 8;
+  ctx.beginPath();
+  ctx.moveTo(x+r, y); ctx.lineTo(x+s-r, y); ctx.arcTo(x+s, y, x+s, y+r, r);
+  ctx.lineTo(x+s, y+s-r); ctx.arcTo(x+s, y+s, x+s-r, y+s, r);
+  ctx.lineTo(x+r, y+s); ctx.arcTo(x, y+s, x, y+s-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = getCSS('--accent');
+  var dots = {
+    1: [[0.5,0.5]],
+    2: [[0.25,0.25],[0.75,0.75]],
+    3: [[0.25,0.25],[0.5,0.5],[0.75,0.75]],
+    4: [[0.25,0.25],[0.75,0.25],[0.25,0.75],[0.75,0.75]],
+    5: [[0.25,0.25],[0.75,0.25],[0.5,0.5],[0.25,0.75],[0.75,0.75]],
+    6: [[0.25,0.25],[0.75,0.25],[0.25,0.5],[0.75,0.5],[0.25,0.75],[0.75,0.75]]
+  };
+  var dd = dots[val] || [];
+  for (var i = 0; i < dd.length; i++) {
+    ctx.beginPath();
+    ctx.arc(x + dd[i][0]*s, y + dd[i][1]*s, s*0.08, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+function drawCoinFace(ctx, cx, cy, val) {
+  ctx.beginPath();
+  ctx.arc(cx, cy, 32, 0, Math.PI*2);
+  ctx.fillStyle = val === 'P' ? getCSS('--tip') : getCSS('--accent');
+  ctx.fill();
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = '700 18px Cormorant Garamond, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(val === 'P' ? 'P' : 'F', cx, cy);
+  ctx.textBaseline = 'alphabetic';
+}
+
+function simDice() {
+  diceResults.push(Math.floor(Math.random()*6)+1);
+  drawSim0();
+}
+function simCoin() {
+  coinResults.push(Math.random() < 0.5 ? 'P' : 'F');
+  drawSim0();
+}
+function resetSim0() {
+  diceResults = []; coinResults = [];
+  drawSim0();
+}
+
+// ============ TAB 1: FREQUENCY ============
+var freqData = [];
+
+function simFreq(n) {
+  for (var i = 0; i < n; i++) freqData.push(Math.floor(Math.random()*6)+1);
+  drawFreqChart();
+}
+function resetFreq() {
+  freqData = [];
+  drawFreqChart();
+}
+
+function drawFreqChart() {
+  var c = document.getElementById('canvas1');
+  var ctx = c.getContext('2d');
+  var W = 600, H = 300;
+  var dpr = window.devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = getCSS('--surface');
+  ctx.fillRect(0, 0, W, H);
+
+  if (freqData.length === 0) {
+    ctx.fillStyle = getCSS('--muted');
+    ctx.font = '14px Nunito Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Cliquez sur un bouton pour lancer des dés.', W/2, H/2);
+    document.getElementById('freq-info').textContent = '';
+    return;
+  }
+
+  // compute running frequency of 6
+  var pts = [];
+  var count6 = 0;
+  var step = Math.max(1, Math.floor(freqData.length / 300));
+  for (var i = 0; i < freqData.length; i++) {
+    if (freqData[i] === 6) count6++;
+    if (i % step === 0 || i === freqData.length - 1) {
+      pts.push({ x: i+1, y: count6/(i+1) });
+    }
+  }
+
+  var mx = 60, my = 30, mxr = 30, mb = 40;
+  var gw = W - mx - mxr, gh = H - my - mb;
+
+  // axes
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(mx, my); ctx.lineTo(mx, my+gh); ctx.lineTo(mx+gw, my+gh);
+  ctx.stroke();
+
+  // horizontal ref at 1/6
+  ctx.strokeStyle = getCSS('--error');
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  var refY = my + gh - (1/6) * gh * 2;
+  if (refY < my) refY = my + 10;
+  var yScale = 0.5;
+  refY = my + gh - (1/6 / yScale) * gh;
+  ctx.moveTo(mx, refY); ctx.lineTo(mx+gw, refY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = getCSS('--error');
+  ctx.font = '12px Nunito Sans, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('1/6 ≈ 0,167', mx + gw + 3, refY + 4);
+
+  // y labels
+  ctx.fillStyle = getCSS('--muted');
+  ctx.textAlign = 'right';
+  ctx.font = '11px Nunito Sans, sans-serif';
+  for (var yv = 0; yv <= yScale; yv += 0.1) {
+    var yy = my + gh - (yv/yScale)*gh;
+    ctx.fillText(yv.toFixed(1), mx - 6, yy + 4);
+    ctx.strokeStyle = getCSS('--border');
+    ctx.globalAlpha = 0.3;
+    ctx.beginPath(); ctx.moveTo(mx, yy); ctx.lineTo(mx+gw, yy); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // x label
+  ctx.fillStyle = getCSS('--muted');
+  ctx.textAlign = 'center';
+  ctx.fillText('Nombre de lancers', mx + gw/2, H - 5);
+
+  // curve
+  ctx.strokeStyle = getCSS('--accent');
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (var j = 0; j < pts.length; j++) {
+    var px = mx + (pts[j].x / freqData.length) * gw;
+    var py = my + gh - (pts[j].y / yScale) * gh;
+    if (py < my) py = my;
+    if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  var lastFreq = count6 / freqData.length;
+  document.getElementById('freq-info').textContent =
+    'Lancers : ' + freqData.length + ' | Nombre de 6 : ' + count6 +
+    ' | Fréquence du 6 : ' + lastFreq.toFixed(4) + ' (théorique : 0,1667)';
+}
+
+// ============ TAB 2: VENN DIAGRAM ============
+function drawVenn(highlight) {
+  var c = document.getElementById('canvas2');
+  var ctx = c.getContext('2d');
+  var W = 600, H = 360;
+  var dpr = window.devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = getCSS('--surface');
+  ctx.fillRect(0, 0, W, H);
+
+  var cx1 = W/2 - 65, cx2 = W/2 + 65, cy = H/2 - 10, r = 110;
+  var pA = 0.5, pB = 0.4, pAB = 0.15;
+
+  // universe rect
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 2;
+  ctx.strokeRect(30, 20, W-60, H-50);
+  ctx.fillStyle = getCSS('--heading');
+  ctx.font = '600 16px Cormorant Garamond, serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('Ω', W-40, 42);
+
+  // fill areas based on highlight
+  var alphaFill = 0.2;
+  // A only
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx1, cy, r, 0, Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.rect(0,0,W,H);
+  ctx.arc(cx2, cy, r, 0, Math.PI*2, true); ctx.closePath();
+  ctx.fillStyle = highlight === 'A' || highlight === 'AuB' ? 'rgba(160,82,45,0.35)' : 'rgba(160,82,45,' + alphaFill + ')';
+  ctx.fill();
+  ctx.restore();
+
+  // B only
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx2, cy, r, 0, Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.rect(0,0,W,H);
+  ctx.arc(cx1, cy, r, 0, Math.PI*2, true); ctx.closePath();
+  ctx.fillStyle = highlight === 'B' || highlight === 'AuB' ? 'rgba(184,134,11,0.35)' : 'rgba(184,134,11,' + alphaFill + ')';
+  ctx.fill();
+  ctx.restore();
+
+  // intersection
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx1, cy, r, 0, Math.PI*2); ctx.clip();
+  ctx.beginPath(); ctx.arc(cx2, cy, r, 0, Math.PI*2); ctx.clip();
+  ctx.fillStyle = highlight === 'AB' || highlight === 'A' || highlight === 'B' || highlight === 'AuB' ? 'rgba(139,69,19,0.4)' : 'rgba(139,69,19,0.15)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.restore();
+
+  // outlines
+  ctx.strokeStyle = getCSS('--accent');
+  ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(cx1, cy, r, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = getCSS('--tip');
+  ctx.beginPath(); ctx.arc(cx2, cy, r, 0, Math.PI*2); ctx.stroke();
+
+  // labels
+  ctx.fillStyle = getCSS('--heading');
+  ctx.font = '700 20px Cormorant Garamond, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('A', cx1 - 55, cy - r + 25);
+  ctx.fillText('B', cx2 + 55, cy - r + 25);
+
+  // probabilities
+  ctx.font = '600 14px Nunito Sans, sans-serif';
+  ctx.fillStyle = getCSS('--text');
+  ctx.fillText((pA - pAB).toFixed(2), cx1 - 45, cy + 5);
+  ctx.fillText((pAB).toFixed(2), W/2, cy + 5);
+  ctx.fillText((pB - pAB).toFixed(2), cx2 + 45, cy + 5);
+
+  ctx.fillStyle = getCSS('--muted');
+  ctx.font = '12px Nunito Sans, sans-serif';
+  ctx.fillText('P(A)=' + pA, cx1 - 45, cy + 25);
+  ctx.fillText('P(A∩B)=' + pAB, W/2, cy + 25);
+  ctx.fillText('P(B)=' + pB, cx2 + 45, cy + 25);
+
+  // complement
+  ctx.fillStyle = getCSS('--muted');
+  ctx.font = '12px Nunito Sans, sans-serif';
+  ctx.textAlign = 'left';
+  var pComp = (1 - pA - pB + pAB).toFixed(2);
+  ctx.fillText('P(Ā ∩ ĀB) = ' + pComp, 40, H - 35);
+  ctx.fillText('P(A ∪ B) = ' + (pA + pB - pAB).toFixed(2), 40, H - 18);
+
+  // click handler
+  c.onclick = function(e) {
+    var rect = c.getBoundingClientRect();
+    var scX = W / rect.width;
+    var mx2 = (e.clientX - rect.left) * scX;
+    var my2 = (e.clientY - rect.top) * (H / rect.height);
+    var inA = Math.hypot(mx2 - cx1, my2 - cy) < r;
+    var inB = Math.hypot(mx2 - cx2, my2 - cy) < r;
+    var zone = '';
+    var info = '';
+    if (inA && inB) { zone = 'AB'; info = 'A ∩ B : P(A ∩ B) = ' + pAB; }
+    else if (inA) { zone = 'A'; info = 'A seul : P(A \\ B) = ' + (pA - pAB).toFixed(2) + ' | P(A) = ' + pA; }
+    else if (inB) { zone = 'B'; info = 'B seul : P(B \\ A) = ' + (pB - pAB).toFixed(2) + ' | P(B) = ' + pB; }
+    else { zone = 'comp'; info = 'Complémentaire : P(Ā ∩ ĀB) = ' + pComp; }
+    drawVenn(zone === 'comp' ? null : zone);
+    document.getElementById('venn-info').textContent = info;
+  };
+}
+
+// ============ TAB 3: DISTRIBUTION ============
+function drawDistrib() {
+  var c = document.getElementById('canvas3');
+  var ctx = c.getContext('2d');
+  var W = 600, H = 320;
+  var dpr = window.devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = getCSS('--surface');
+  ctx.fillRect(0, 0, W, H);
+
+  // P(S=k) for two dice
+  var probs = [];
+  for (var s = 2; s <= 12; s++) {
+    var count = 0;
+    for (var a = 1; a <= 6; a++) for (var b = 1; b <= 6; b++) if (a+b === s) count++;
+    probs.push({ val: s, p: count/36, count: count });
+  }
+
+  var mx = 55, my = 30, mxr = 30, mb = 55;
+  var gw = W - mx - mxr, gh = H - my - mb;
+  var maxP = 6/36;
+  var barW = gw / probs.length - 6;
+
+  // axes
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx, my+gh); ctx.lineTo(mx+gw, my+gh); ctx.stroke();
+
+  // bars
+  for (var i = 0; i < probs.length; i++) {
+    var bx = mx + i * (barW + 6) + 3;
+    var bh = (probs[i].p / maxP) * (gh - 10);
+    ctx.fillStyle = getCSS('--accent');
+    ctx.fillRect(bx, my + gh - bh, barW, bh);
+
+    // x label
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '12px Nunito Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('' + probs[i].val, bx + barW/2, my + gh + 16);
+
+    // probability on top
+    ctx.fillStyle = getCSS('--muted');
+    ctx.font = '10px Nunito Sans, sans-serif';
+    var fracText = probs[i].count + '/36';
+    ctx.fillText(fracText, bx + barW/2, my + gh - bh - 5);
+  }
+
+  // y axis labels
+  ctx.fillStyle = getCSS('--muted');
+  ctx.textAlign = 'right';
+  ctx.font = '11px Nunito Sans, sans-serif';
+  for (var yv = 0; yv <= maxP + 0.001; yv += 1/36) {
+    if (Math.round(yv*36) % 2 !== 0 && Math.round(yv*36) !== 1) continue;
+    var yy = my + gh - (yv / maxP) * (gh - 10);
+    ctx.fillText((Math.round(yv*36)) + '/36', mx - 5, yy + 4);
+  }
+
+  // x axis label
+  ctx.fillStyle = getCSS('--heading');
+  ctx.textAlign = 'center';
+  ctx.font = '600 13px Cormorant Garamond, serif';
+  ctx.fillText('Somme S', mx + gw/2, H - 8);
+
+  // title
+  ctx.font = '600 15px Cormorant Garamond, serif';
+  ctx.fillText('Loi de probabilité de S = somme de deux dés', W/2, 20);
+
+  // Esperance
+  var esp = 0;
+  for (var j = 0; j < probs.length; j++) esp += probs[j].val * probs[j].p;
+  document.getElementById('distrib-info').textContent = 'E(S) = ' + esp.toFixed(2) + ' (la somme moyenne attendue est 7)';
+
+  // E line
+  var eX = mx + ((esp - 2) / 10) * gw;
+  ctx.strokeStyle = getCSS('--success');
+  ctx.setLineDash([5,4]);
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(eX, my); ctx.lineTo(eX, my+gh); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = getCSS('--success');
+  ctx.font = '600 12px Nunito Sans, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('E(S)=7', eX + 4, my + 12);
+}
+
+// ============ TAB 4: PROBABILITY TREE ============
+function drawTree() {
+  var c = document.getElementById('canvas4');
+  var ctx = c.getContext('2d');
+  var W = 600, H = 400;
+  var dpr = window.devicePixelRatio || 1;
+  c.width = W * dpr; c.height = H * dpr;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = getCSS('--surface');
+  ctx.fillRect(0, 0, W, H);
+
+  // Tree: urn with 3 Red, 2 Blue, two draws with replacement
+  var root = { x: 60, y: H/2 };
+  var level1 = [
+    { label: 'R', prob: '3/5', x: 230, y: 120, color: getCSS('--error') },
+    { label: 'B', prob: '2/5', x: 230, y: 300, color: getCSS('--accent') }
+  ];
+  var level2 = [
+    { label: 'R', prob: '3/5', x: 440, y: 50, color: getCSS('--error'), path: 'RR', pval: '9/25' },
+    { label: 'B', prob: '2/5', x: 440, y: 150, color: getCSS('--accent'), path: 'RB', pval: '6/25' },
+    { label: 'R', prob: '3/5', x: 440, y: 250, color: getCSS('--error'), path: 'BR', pval: '6/25' },
+    { label: 'B', prob: '2/5', x: 440, y: 350, color: getCSS('--accent'), path: 'BB', pval: '4/25' }
+  ];
+
+  var treeNodes = [];
+
+  // draw branches
+  function drawBranch(x1,y1,x2,y2,label,color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    var mx2 = (x1+x2)/2, my2 = (y1+y2)/2 - 10;
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '600 13px Nunito Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, mx2, my2);
+  }
+
+  // root
+  ctx.fillStyle = getCSS('--heading');
+  ctx.font = '700 14px Nunito Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('●', root.x, root.y + 5);
+
+  // level 1
+  for (var i = 0; i < level1.length; i++) {
+    var n = level1[i];
+    drawBranch(root.x, root.y, n.x, n.y, n.prob, n.color);
+    ctx.fillStyle = n.color;
+    ctx.font = '700 16px Cormorant Garamond, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.label, n.x, n.y + 6);
+  }
+
+  // level 2
+  for (var j = 0; j < level2.length; j++) {
+    var n2 = level2[j];
+    var parent = j < 2 ? level1[0] : level1[1];
+    drawBranch(parent.x, parent.y, n2.x, n2.y, n2.prob, n2.color);
+    ctx.fillStyle = n2.color;
+    ctx.font = '700 16px Cormorant Garamond, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(n2.label, n2.x, n2.y + 6);
+
+    // path result
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '600 12px Nunito Sans, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(n2.path + ' → P = ' + n2.pval, n2.x + 18, n2.y + 5);
+
+    treeNodes.push({ x: n2.x, y: n2.y, path: n2.path, pval: n2.pval,
+      calc: j < 2 ? '3/5 × ' + n2.prob : '2/5 × ' + n2.prob });
+  }
+
+  // labels
+  ctx.fillStyle = getCSS('--muted');
+  ctx.font = '12px Nunito Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('1er tirage', 150, 22);
+  ctx.fillText('2e tirage', 350, 22);
+  ctx.fillText('Issue', 530, 22);
+
+  // hover handler
+  c.onmousemove = function(e) {
+    var rect = c.getBoundingClientRect();
+    var scX = W / rect.width;
+    var scY = H / rect.height;
+    var ex = (e.clientX - rect.left) * scX;
+    var ey = (e.clientY - rect.top) * scY;
+    var hit = null;
+    for (var k = 0; k < treeNodes.length; k++) {
+      if (Math.abs(ex - treeNodes[k].x) < 50 && Math.abs(ey - treeNodes[k].y) < 30) {
+        hit = treeNodes[k]; break;
+      }
+    }
+    if (hit) {
+      document.getElementById('tree-info').textContent =
+        'Chemin ' + hit.path + ' : P = ' + hit.calc + ' = ' + hit.pval;
+      c.style.cursor = 'pointer';
+    } else {
+      document.getElementById('tree-info').textContent = 'Survolez un chemin de l’arbre.';
+      c.style.cursor = 'default';
+    }
+  };
+}
+
+// ============ TAB 6: QUIZ ============
+var quizPool = [
+  { q: "On lance un dé équilibré. Quelle est la probabilité d’obtenir un 3 ?",
+    opts: ["1/3", "1/6", "1/2", "3/6"], correct: 1, expl: "Il y a 6 issues équiprobables, une seule favorable." },
+  { q: "Quelle est la probabilité de l’événement impossible ?",
+    opts: ["1", "0", "0,5", "Indéfini"], correct: 1, expl: "L’événement impossible a une probabilité nulle." },
+  { q: "Si P(A) = 0,3, que vaut P(Ā) ?",
+    opts: ["0,3", "0,7", "1,3", "0"], correct: 1, expl: "P(Ā) = 1 − P(A) = 1 − 0,3 = 0,7." },
+  { q: "Deux événements incompatibles A et B vérifient P(A) = 0,4 et P(B) = 0,3. Que vaut P(A ∪ B) ?",
+    opts: ["0,12", "0,7", "0,1", "1"], correct: 1, expl: "Incompatibles : P(A ∪ B) = P(A) + P(B) = 0,7." },
+  { q: "La somme des probabilités de toutes les issues de l’univers vaut :",
+    opts: ["0", "0,5", "1", "Cela dépend"], correct: 2, expl: "C’est un axiome fondamental : P(Ω) = 1." },
+  { q: "On lance deux dés. Combien y a-t-il d’issues possibles ?",
+    opts: ["12", "36", "6", "11"], correct: 1, expl: "6 × 6 = 36 couples possibles." },
+  { q: "Quelle est l’espérance d’un dé équilibré à 6 faces ?",
+    opts: ["3", "3,5", "4", "6"], correct: 1, expl: "E = (1+2+3+4+5+6)/6 = 21/6 = 3,5." },
+  { q: "P(A ∪ B) = P(A) + P(B) est vrai :",
+    opts: ["Toujours", "Jamais", "Si A et B sont incompatibles", "Si A ⊂ B"], correct: 2,
+    expl: "Cette formule n’est valable que si A ∩ B = ∅." },
+  { q: "On tire une carte dans un jeu de 52. P(cœur) = ?",
+    opts: ["1/13", "1/4", "1/2", "4/52"], correct: 1, expl: "13 cœurs sur 52 cartes = 13/52 = 1/4." },
+  { q: "Un arbre de probabilités : la probabilité d’un chemin est :",
+    opts: ["La somme des branches", "Le produit des branches", "La dernière branche", "1"], correct: 1,
+    expl: "On multiplie les probabilités le long du chemin." },
+  { q: "Urne : 4 rouges, 6 bleues. P(rouge) = ?",
+    opts: ["4/6", "2/5", "6/10", "4/10"], correct: 1,
+    expl: "P(rouge) = 4/10 = 2/5." },
+  { q: "Si P(A) = 0,6 et P(B) = 0,5 et P(A ∩ B) = 0,2, alors P(A ∪ B) = ?",
+    opts: ["1,1", "0,9", "0,3", "0,8"], correct: 1,
+    expl: "P(A ∪ B) = 0,6 + 0,5 − 0,2 = 0,9." },
+  { q: "L’univers d’un lancer de pièce est :",
+    opts: ["{1, 2}", "{Pile, Face}", "{Pile}", "{0, 1, 2}"], correct: 1,
+    expl: "Ω = {Pile, Face}, deux issues possibles." },
+  { q: "Que signifie « équiprobabilité » ?",
+    opts: ["P(A)=1 pour tout A", "Toutes les issues ont la même probabilité",
+           "Il n’y a que 2 issues", "P(Ω)=0"], correct: 1,
+    expl: "Chaque issue a la même chance de se réaliser." },
+  { q: "On lance deux pièces. P(deux Piles) = ?",
+    opts: ["1/2", "1/3", "1/4", "2/4"], correct: 2,
+    expl: "4 issues équiprobables : PP, PF, FP, FF. P(PP) = 1/4." },
+  { q: "L’espérance d’un jeu équitable vaut :",
+    opts: ["1", "0,5", "0", "−1"], correct: 2,
+    expl: "Un jeu est équitable quand E(X) = 0 : ni gain ni perte en moyenne." },
+  { q: "P(A) peut valoir :",
+    opts: ["−0,3", "0,8", "1,2", "2"], correct: 1,
+    expl: "Une probabilité est toujours comprise entre 0 et 1." }
+];
+
+var quizQuestions, quizCurrent, quizCorrect, quizTotal;
+
+function initQuiz() {
+  // shuffle and pick 15
+  var pool = quizPool.slice();
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+  quizQuestions = pool.slice(0, 15);
+  quizCurrent = 0; quizCorrect = 0; quizTotal = 0;
+  renderQuiz();
+}
+
+function resetQuiz() { initQuiz(); }
+
+function renderQuiz() {
+  var container = document.getElementById('quiz-container');
+  if (quizCurrent >= quizQuestions.length) {
+    container.innerHTML = '<div class="card" style="text-align:center"><h3>QCM terminé !</h3>' +
+      '<p style="font-size:1.2em">Score final : <strong>' + quizCorrect + ' / ' + quizTotal + '</strong></p>' +
+      '<p>' + (quizCorrect >= 12 ? 'Excellent !' : quizCorrect >= 9 ? 'Bon travail !' : quizCorrect >= 6 ? 'Continuez vos efforts.' : 'À revoir, courage !') + '</p></div>';
+    updateScoreBar();
+    return;
+  }
+  var q = quizQuestions[quizCurrent];
+  var html = '<div class="card"><p style="font-weight:600;margin-bottom:0.3em">Question ' + (quizCurrent+1) + ' / ' + quizQuestions.length + '</p>';
+  html += '<p>' + q.q + '</p>';
+  for (var i = 0; i < q.opts.length; i++) {
+    html += '<button class="quiz-option" data-idx="' + i + '" onclick="answerQuiz(' + i + ')">' +
+      String.fromCharCode(65+i) + '. ' + q.opts[i] + '</button>';
+  }
+  html += '<div id="quiz-fb"></div></div>';
+  container.innerHTML = html;
+  updateScoreBar();
+}
+
+function answerQuiz(idx) {
+  var q = quizQuestions[quizCurrent];
+  var btns = document.querySelectorAll('#quiz-container .quiz-option');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].disabled = true;
+    if (i === q.correct) btns[i].classList.add('correct');
+    if (i === idx && idx !== q.correct) btns[i].classList.add('wrong');
+  }
+  quizTotal++;
+  var fb = document.getElementById('quiz-fb');
+  if (idx === q.correct) {
+    quizCorrect++;
+    fb.innerHTML = '<div class="quiz-feedback ok">Correct ! ' + q.expl + '</div>';
+  } else {
+    fb.innerHTML = '<div class="quiz-feedback ko">Incorrect. ' + q.expl + '</div>';
+  }
+  updateScoreBar();
+  setTimeout(function() { quizCurrent++; renderQuiz(); }, 2200);
+}
+
+function updateScoreBar() {
+  document.getElementById('quiz-score').textContent = 'Score : ' + quizCorrect + ' / ' + quizTotal;
+  var pct = quizTotal > 0 ? (quizCorrect / quizTotal * 100) : 0;
+  document.getElementById('quiz-bar').style.width = pct + '%';
+}
+
+// ============ INIT ============
+(function() {
+  var saved = 0;
+  try { saved = parseInt(localStorage.getItem('probTab')) || 0; } catch(e) {}
+  if (saved < 0 || saved > 6) saved = 0;
+  showTab(saved);
+
+  // redraw canvases on theme change
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  mq.addEventListener('change', function() {
+    sectionInited = [false,false,false,false,false,false,false];
+    var active = document.querySelector('.tab-btn.active');
+    if (active) {
+      var idx = Array.prototype.indexOf.call(document.querySelectorAll('.tab-btn'), active);
+      initSection(idx);
+      sectionInited[idx] = true;
+    }
+  });
+})();
+</script>
